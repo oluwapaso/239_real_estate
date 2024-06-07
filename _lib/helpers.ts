@@ -938,7 +938,7 @@ export class Helpers {
             }else if((req_body.min_square_feet=='0' || req_body.min_square_feet=='') && (req_body.max_square_feet!='0' && req_body.max_square_feet!='')){
                 qry_sqft = ` AND (CAST(ApproxLivingArea AS DECIMAL) <= ${req_body.min_square_feet} AND ApproxLivingArea IS NOT NULL) `;
             }else if((req_body.min_square_feet!='0' && req_body.min_square_feet!='') && (req_body.max_square_feet!='0' && req_body.max_square_feet!='')){
-                qry_sqft = ` AND (CAST(ApproxLivingArea AS DECIMAL) >= ${req_body.min_square_feet} AND CAST(ApproxLivingArea AS DECIMAL) <= ${req_body.max_square_feet} AND ApproxLivingArea IS NOT NULL) `; 
+                qry_sqft = ` AND (CAST(ApproxLivingArea AS DECIMAL) >= ${req_body.min_square_feet} AND CAST(ApproxLivingArea AS DECIMAL) <= ${req_body.max_square_feet} AND LivingArea IS NOT NULL) `; 
             }  
         
         }
