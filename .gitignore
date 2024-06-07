@@ -31,7 +31,7 @@ yarn-error.log*
 # production env file
 .env 
 
-php-cron-jobs/
+/php-cron-jobs/
 
 # vercel
 .vercel
