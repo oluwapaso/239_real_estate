@@ -1,0 +1,5 @@
+{
+    "require": {
+        "troydavisson/phrets": "^2.6"
+    }
+}

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,16 +21,406 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: "Jost";
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+    .text-shadow-primary {
+      text-shadow: 0 0 12px #222;
+    }
+  
+    .active-search-tab {
+      @apply border-b-4 border-white font-bold
+    }
+  
+    .form-control {
+      @apply py-2 px-3 font-normal border border-gray-300 w-full focus:outline-none
+    }
+  
+  
+    .styled-checkbox {
+      position: relative;
+      opacity: 0;
+      cursor: pointer;
+    }
+  
+    .styled-checkbox.fomik-checkbox {
+      left: 1.5px;
+      z-index: 10;
+    }
+  
+    .styled-checkbox+label {
+      position: relative;
+      cursor: pointer;
+      padding: 0;
+    }
+  
+    .styled-checkbox.fomik-checkbox+label {
+      left: -15px;
+    }
+  
+    .styled-checkbox+label:before {
+      content: "";
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: text-top;
+      min-width: 20px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border: 2px solid rgba(0, 0, 0, 0.12);
+      margin-top: 2px;
+    }
+  
+    .styled-checkbox:hover+label:before {
+      @apply bg-red-400
+    }
+  
+    .styled-checkbox:focus+label:before {
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    }
+  
+    .styled-checkbox:checked+label:before {
+      @apply bg-red-500
+    }
+  
+    .styled-checkbox:disabled+label {
+      color: #b8b8b8;
+      cursor: auto;
+    }
+  
+    .styled-checkbox:disabled+label:before {
+      box-shadow: none;
+      background: #ddd;
+    }
+  
+    .styled-checkbox:checked+label:after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 11px;
+      background: white;
+      width: 2px;
+      height: 2px;
+      box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+      transform: rotate(45deg);
+    }
+  
+    .settings-card {
+      @apply bg-white shadow-sm hover:drop-shadow-xl py-8 px-2 flex flex-col items-center cursor-pointer border border-gray-200
+    }
+  
+    .form-label {
+      @apply w-full font-semibold text-base text-gray-800
+    }
+  
+    .form-field {
+      @apply w-full font-normal text-base border border-slate-400 py-3 px-3 outline-none focus:border-sky-600 focus:drop-shadow-md
+    }
+}
+
+@layer base {
+
+  input[type=number].appearance-none::-webkit-inner-spin-button,
+  input[type=number].appearance-none::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number].appearance-none {
+    -moz-appearance: textfield;
+  }
+}
+
+
+.ck-editor__editable {
+  min-height: 500px;
+  max-height: 620px;
+  overflow-y: auto;
+}
+
+.ck-editor__editable ol,
+.ck-editor__editable ul,
+.ck-editor__editable menu {
+  margin-left: 15px !important;
+}
+
+.swal2-title {
+  font-size: 1.375em !important;
+}
+
+.custom_radio {
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+input[class="custom_radio"],
+input[type=radio] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  -moz-appearance: none;
+  appearance: none;
+  /* For iOS < 15 */
+  background-color: var(--form-background);
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 22px;
+  height: 22px;
+  border: 0.15em solid currentColor;
+  border-radius: 50%;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[class="custom_radio"]::before,
+input[type=radio]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em blue;
+  /* Windows High Contrast Mode */
+  background-color: CanvasText;
+}
+
+input[class="custom_radio"]:checked::before,
+input[type=radio]:checked::before {
+  transform: scale(1);
+}
+
+
+/** Slick starts **/
+/** Slick starts **/
+/** Slick starts **/
+
+.slick-slider {
+  z-index: 10;
+  height: 300px;
+}
+
+.gallery .slick-slider {
+  z-index: 10;
+  height: 100% !important;
+}
+
+.map-props .slick-slider {
+  height: 265px !important;
+}
+
+.testimonial-slick-body .slick-slider {
+  height: auto !important;
+}
+
+.slick-dots-container {
+  width: 6rem;
+  overflow: hidden;
+  display: none;
+  padding: 6px 5px;
+  margin: 0.625rem auto;
+  position: relative;
+  bottom: 60px;
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.slick-dots-container>ul {
+  padding: 0;
+  display: flex !important;
+  transition: all 0.5s;
+  position: relative;
+  margin: 0;
+  list-style: none;
+  transform: translateX(0);
+  align-items: center;
+  bottom: unset;
+  height: 100%;
+}
+
+.slick-dots-container>ul li {
+  width: 0.625rem !important;
+  height: 0.625rem !important;
+  margin: 0 0.25rem !important;
+  background-color: #efd5d5 !important;
+  border: none !important;
+  border-radius: 50% !important;
+}
+
+.slick-dots-container>ul li button {
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0.3125rem;
+  cursor: pointer;
+  color: transparent;
+  border: 0;
+  outline: 0;
+  background: 0 0;
+}
+
+.slick-dots-container>ul li.p-small-1,
+.slick-dots-container>ul li.n-small-1 {
+  transform: scale(0.6) !important;
+}
+
+.slick-dots-container>ul li.slick-active {
+  transform: scale(1.4) !important;
+  transform-origin: center !important;
+  background: #3498db !important;
+}
+
+.slick-dots li button:before {
+  display: none;
+}
+
+.slick-prev:not(.testimonial-slick-body .slick-prev) {
+  left: 0px !important;
+}
+
+.slick-next:not(.testimonial-slick-body .slick-next) {
+  right: 0px !important; 
+}
+
+.slick-next:not(.testimonial-slick-body .slick-next):hover {
+  background-image: linear-gradient(to left, rgb(0 0 0 / 0.4), rgb(0 0 0 / 0)) !important;
+}
+
+.slick-prev:not(.testimonial-slick-body .slick-prev):hover {
+  background-image: linear-gradient(to right, rgb(0 0 0 / 0.4), rgb(0 0 0 / 0)) !important;
+}
+
+.slick-prev:not(.testimonial-slick-body .slick-prev),
+.slick-next:not(.testimonial-slick-body .slick-next) {
+  z-index: 50 !important;
+  color: white !important;
+  display: none !important;
+  width: 70px!important;
+  height: 100%!important;
+}
+
+.slick-next:before {
+  opacity: 1 !important;
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" /></svg>') !important;
+}
+
+.slick-prev:before {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" /></svg>') !important;
+  opacity: 1 !important;
+}
+
+.testimonial-slick-body .slick-prev:before {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="black" d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" /></svg>') !important;
+  opacity: 1 !important;
+}
+
+.testimonial-slick-body .slick-next:before {
+  opacity: 1 !important;
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="black" d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" /></svg>') !important;
+}
+
+.testimonial-slick-body .slick-prev {
+  left: -50px !important;
+}
+
+.testimonial-slick-body .slick-next {
+  right: -50px !important;
+}
+
+.slick-slider:hover .slick-next,
+.slick-slider:hover .slick-prev,
+.slick-slider:hover .slick-dots-container {
+  display: block !important;
+}
+
+@media (min-width: 960px) {
+  .testimonial-slick-body .slick-prev {
+    left: -50px !important;
+  }
+
+  .testimonial-slick-body .slick-next {
+    right: -50px !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .testimonial-slick-body .slick-prev {
+    left: 10px !important;
+    display: none !important;
+  }
+
+  .testimonial-slick-body .slick-next {
+    right: 10px !important;
+    display: none !important;
+  }
+
+  .testimonial-slick-body .slick-slider:hover .slick-next,
+  .testimonial-slick-body .slick-slider:hover .slick-prev,
+  testimonial-slick-body .slick-slider:hover .slick-dots-container {
+    display: none !important;
+  }
+}
+
+.map-props .slick-prev,
+.map-props .slick-next {
+  top: 38% !important;
+}
+
+.gallery .slick-dots li {
+  background-color: rgb(216, 214, 214);
+  border-radius: 100%;
+  bottom: -60;
+  width: 10px;
+  height: 10px;
+  transition: all 0.5s;
+}
+
+.gallery .slick-dots li.slick-active {
+  background-color: white;
+  transform: scale(1.7);
+}
+
+/** Slick ends **/
+/** Slick ends **/
+/** Slick ends **/
+
+
+/** Google map info box starts **/
+/** Google map info box starts **/
+/** Google map info box starts **/
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+.gm-ui-hover-effect {
+  display: none !important;
+}
+
+.gm-style-iw.gm-style-iw-c {
+  padding: 0px !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.gm-style .gm-style-iw-c {
+  -webkit-transform: translate3d(-51%, -100%, 0) !important;
+  transform: translate3d(-51%, -100%, 0) !important;
+}
+
+/** Google map info box ends **/
+/** Google map info box ends **/
+/** Google map info box ends **/
+
+.rti--container{
+  border-radius: 0px!important;
 }
