@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleMap, DrawingManager, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import CustomMarker from './CustomMarker';
 import { GoPencil } from 'react-icons/go';
 import { MdClear } from 'react-icons/md';
 import { useSearchParams } from 'next/navigation';
-import { Helpers } from '../../thecatskillsrealtor/_lib/helpers';
+import { Helpers } from '@/_lib/helpers';
 
 const helper = new Helpers();
 const containerStyle = {

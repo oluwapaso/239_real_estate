@@ -361,7 +361,7 @@ const PropertyDetails = () => {
             setFormData((prev_data) => {
                 return {
                     ...prev_data,
-                    fullname: `${user.firstname} ${user.lastname}`,
+                    fullname: `${user?.firstname} ${user?.lastname}`,
                     phone_number: user.phone_1,
                     email: user.email,
                 }
