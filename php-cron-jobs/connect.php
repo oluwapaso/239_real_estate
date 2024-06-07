@@ -1,5 +1,4 @@
 <?php
-
 error_reporting(0);
 $conn = mysqli_connect("localhost", "root", "", "first_1_us");
 //$conn = mysqli_connect("localhost","u110616855_hybrid_pro","J#i1qwPNBQ","u110616855_real_estate");
