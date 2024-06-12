@@ -14,7 +14,7 @@ import { RootState } from '../GlobalRedux/store'
 import { menu_toggled } from '../GlobalRedux/app/appSlice'
 import { logout, showPageLoader } from '../GlobalRedux/user/userSlice'
 import { useRouter } from 'next/navigation'
-import { FaCity, FaRobot, FaUsers } from 'react-icons/fa6'
+import { FaCity, FaGears, FaRobot, FaUsers } from 'react-icons/fa6'
 import useCurrentBreakpoint from '@/_hooks/useMediaQuery'
 import { HiChatBubbleLeftEllipsis } from 'react-icons/hi2'
 import { CiViewList } from 'react-icons/ci'
@@ -88,6 +88,7 @@ const SideBars = () => {
                 { "title": "New Testimonial", "link": "/admin/add-new-testimonial", "icon": <BiAddToQueue /> },
             ],
         },
+        //{ "title": "Automations", "link": "/admin/automations?page=1", "icon": <FaGears /> },
         {
             "title": "Templates", "link": "", "icon": <TbTemplate />,
             "subMenu": [

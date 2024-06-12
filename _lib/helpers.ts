@@ -1,5 +1,5 @@
 import { RootState } from "@/app/(admin)/admin/GlobalRedux/store";
-import { APIResponseProps, AgentsType, Appointment, AutoResponderDetails, AutoResponderLists, BlogCategories, BlogCommentsListsParams, 
+import { APIResponseProps, AgentsType, Appointment, AutoResponderDetails, AutoResponderLists, AutomationDetails, AutomationInfoAndStep, Automations, BlogCategories, BlogCommentsListsParams, 
     BlogPostInfoParams, CityInfo, CommunityInfo, ServiceLists, Task, TemplateDetails, TemplateLists, User } from "@/components/types";
 import { NextApiRequest } from "next";
 import { useRouter } from "next/navigation";
@@ -783,6 +783,55 @@ export class Helpers {
         }).then(data => {
             return data
         });
+
+    }
+
+    public LoadAutomations = async (payload: {
+        paginated: boolean;
+        page: number;
+        limit: number;
+        search_type: string;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(automations)/load-automations`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<Automations[]> => {
+            if (!resp.ok) {
+                throw new Error("Unable to load automations.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public async LoadAutomationInfoStep(automation_id: number): Promise<AutomationInfoAndStep> {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(automations)/load-automation-info-step`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({automation_id: automation_id }),
+        }).then((resp): Promise<AutomationInfoAndStep> => {
+            
+            if (!resp.ok) {
+                throw new Error("Unable to load automation info.")
+            }
+
+            return resp.json();
+        }).then(data => {
+            return data
+        })
 
     }
 

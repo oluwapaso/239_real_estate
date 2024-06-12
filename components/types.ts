@@ -1,5 +1,3 @@
-import exp from "constants"
-import { Settings } from "http2"
 
 export type NavProps = {
     page: string,
@@ -835,4 +833,44 @@ export type LoadUsersActivities = {
     type: string
     skip: number
     limit: number
+}
+
+export type Automations = {
+    automation_id: number
+    name: string
+    date_created: string
+    parent_id: number
+    status: "Inactive" | "Active"
+    published_version: "Yes" | "No"
+    trigger: any
+    last_save: string
+    stop_on_comm: "Yes" | "No"
+    version_number: number
+    total_records?: number
+}
+
+export type AutomationDetails = Omit<Automations, 'total_records'>
+
+export type AutomationSeps = {
+    step_id: number
+    automation_id: number
+    step_uid: string
+    step_type: string
+    parent_id: string
+    parent_uid: string
+    parent_type: string
+    step_position: string
+    children: any
+    event_info: any
+}
+
+export type AutomationInfoAndStep = {
+    total_records: number
+    automation_id: number
+    automation_name: string
+    trigger: string
+    automation_status: string 
+    published_version: string
+    steps: any
+    versions: any
 }

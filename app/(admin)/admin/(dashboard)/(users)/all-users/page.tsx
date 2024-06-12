@@ -38,7 +38,7 @@ const AllUsers = () => {
         search_type: "User Lists",
         keyword: keyword,
         lead_stage: lead_stage,
-        page: curr_page,
+        page: initialPage,
         limit: page_size
     }
 
@@ -80,15 +80,20 @@ const AllUsers = () => {
         }
 
         if (!users_fetched) {
-            dispatch(showPageLoader());
             fetch_comp();
-            fetchUsers();
+        }
+        dispatch(showPageLoader());
+        fetchUsers();
+
+    }, [initialPage, users_fetched]); //keyword //lead_stage
+
+    const DoSearch = (stage?: string) => {
+        let leadStg = lead_stage;
+        if (stage && stage != "") {
+            leadStg = stage;
         }
 
-    }, [curr_page, users_fetched]); //keyword //lead_stage
-
-    const DoSearch = () => {
-        let link = `/admin/all-users?stage=${lead_stage}`;
+        let link = `/admin/all-users?stage=${leadStg}`;
         if (keyword && keyword != "") {
             link += `keyword=${keyword}&page=1`;
         } else {
@@ -102,11 +107,11 @@ const AllUsers = () => {
 
     const TriggerStage = (stage: string) => {
         //setUsersFetched(false);
-        setStage(stage);
-        DoSearch();
+        setStage(() => stage);
+        DoSearch(stage);
     }
 
-    const add_new_comp = <CustomLink href={`/admin/add-new-community`} className='bg-primary text-white flex items-center justify-center ml-2 py-1 
+    const add_new_comp = <CustomLink href={`/admin/add-new-user`} className='bg-primary text-white flex items-center justify-center ml-2 py-1 
         h-10 px-4 text-sm font-medium cursor-pointer hover:drop-shadow-xl rounded-md shadow-lg hover:shadow-2xl'>
         <BiAddToQueue className='mr-1 !text-xl' /> <span>Add New <span className='hidden xs:inline-block'>User</span></span>
     </CustomLink>
@@ -127,7 +132,7 @@ const AllUsers = () => {
                         bg-gray-50 outline:border-0 focus:outline-none focus:shadow-lg" placeholder="Search by name, email or phone number..." />
                         <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 
                         focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-4 py-2 dark:bg-blue-600 
-                        dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:shadow-lg" onClick={DoSearch}>Search</button>
+                        dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:shadow-lg" onClick={() => DoSearch(lead_stage)}>Search</button>
                     </div>
 
                     <div className='ml-auto flex items-center'>
@@ -190,7 +195,7 @@ const AllUsers = () => {
                 </div>
 
                 <div className='w-full h-[90px]'>
-                    {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/all-users?' /> : null}
+                    {total_page > 0 ? <Pagination totalPage={total_page} curr_page={initialPage} url_path={`/admin/all-users?stage=${lead_stage}&keyword=${keyword}&`} /> : null}
                 </div>
             </div>
             <ToastContainer />
