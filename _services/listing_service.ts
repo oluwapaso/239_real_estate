@@ -81,6 +81,7 @@ export class ListingsService {
             default_resp.message = "Invalid search type provided.";
         }else{
 
+            console.log("Host:", process.env.NEXT_PUBLIC_DB_HOST)
             const [search_filter, order_by] = this.helpers.BuildSearchFilter(req);
             if(req_body.log_search == "Yes" && req_body.user_id && req_body.user_id !=""){
                 this.listings_repo.LogSearch(req);
