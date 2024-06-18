@@ -9,5 +9,8 @@ const pool = mysql.createPool({
     connectionLimit: 25,
     queueLimit: 0,
 })
-
+console.log("process.env.NEXT_PUBLIC_DB_HOST:", process.env.NEXT_PUBLIC_DB_HOST)
+console.log("process.env.NEXT_PUBLIC_DB_USER:", process.env.NEXT_PUBLIC_DB_USER)
+console.log("process.env.NEXT_PUBLIC_DB_PWORD:", process.env.NEXT_PUBLIC_DB_PWORD)
+console.log("process.env.NEXT_PUBLIC_DB_NAME:", process.env.NEXT_PUBLIC_DB_NAME)
 export default pool

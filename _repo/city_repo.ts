@@ -26,7 +26,7 @@ export class MYSQLCityRepo implements CityRepo {
             if(rows.length){
                 const formattedRows = rows.map((row) => {
                     
-                    ['header_image', 'show_on_menus'].forEach((field) => {
+                    ['header_image', 'draft_header_image', 'show_on_menus'].forEach((field) => {
                         if (row[field] && row[field].length && typeof row[field] === 'string') {
                             row[field] = JSON.parse(row[field]);
                         }
@@ -121,7 +121,7 @@ export class MYSQLCityRepo implements CityRepo {
 
         const formattedRows = rows.map((row) => {
 
-            ['header_image', 'show_on_menus'].forEach((field) => {
+            ['header_image', 'draft_header_image', 'show_on_menus'].forEach((field) => {
                 if (row[field] && row[field].length && typeof row[field] === 'string') {
                     row[field] = JSON.parse(row[field]);
                 }
