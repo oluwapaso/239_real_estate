@@ -2,7 +2,6 @@ import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
     host: process.env.NEXT_PUBLIC_DB_HOST,
-    port: process.env.NEXT_PUBLIC_DB_PORT as unknown as number,
     user: process.env.NEXT_PUBLIC_DB_USER,
     password: process.env.NEXT_PUBLIC_DB_PWORD,
     database: process.env.NEXT_PUBLIC_DB_NAME,
