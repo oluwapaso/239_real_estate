@@ -7,7 +7,7 @@ import React, { createContext, useContext, useState } from 'react';
 type ModalContextType = {
     showModal: boolean;
     closeModal: () => void;
-    handleLoginModal: (show_close: boolean) => void;
+    handleLoginModal: (show_close?: boolean) => void;
     handleForgotPwrdModal: () => void;
     handleSignupModal: () => void;
     modalTitle: string;
