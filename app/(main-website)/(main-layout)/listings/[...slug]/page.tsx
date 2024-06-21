@@ -229,6 +229,21 @@ const PropertyDetails = () => {
         }
     }, [isMapLoaded]);
 
+    useEffect(() => {
+
+        const handleBeforeUnload = (event: any) => {
+            // Perform actions before the component unloads
+            alert(event)
+            event.preventDefault();
+            event.returnValue = '';
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+
+    }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData((prev_data) => {
             return {
@@ -352,7 +367,7 @@ const PropertyDetails = () => {
                     theme: "colored"
                 });
 
-                handleLoginModal();
+                handleLoginModal(false);
             } else {
                 toast.dismiss();
                 close_modal();

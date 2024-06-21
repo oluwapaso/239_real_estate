@@ -120,7 +120,7 @@ const SideBars = () => {
             <div className='inline-flex items-center h-[30px] w-full overflow-x-hidden overflow-y-hidden'>
                 <MdDashboard className={`min-w-[30px] text-3xl bg-amber-300 rounded block cursor-pointer float-left text-black p-1 mr-3
                 ${menuOpen && "rotate-[360deg]"} duration-300`} />
-                <h2 className={`font-medium text-white text-md origin-left duration-300 ${!menuOpen && "scale-0"}`}>Tic Toc Group</h2>
+                <h2 className={`font-medium text-white text-md origin-left duration-300 ${!menuOpen && "scale-0"}`}>239re CRM</h2>
             </div>
 
             <ul className='pt-2 w-full overflow-x-hidden'>

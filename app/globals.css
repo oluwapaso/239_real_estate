@@ -417,6 +417,10 @@ input[type=radio]:checked::before {
   transform: translate3d(-51%, -100%, 0) !important;
 }
 
+.gm-style-iw-chr{
+  display: none!important;
+}
+
 /** Google map info box ends **/
 /** Google map info box ends **/
 /** Google map info box ends **/

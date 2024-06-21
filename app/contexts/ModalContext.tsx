@@ -7,7 +7,7 @@ import React, { createContext, useContext, useState } from 'react';
 type ModalContextType = {
     showModal: boolean;
     closeModal: () => void;
-    handleLoginModal: () => void;
+    handleLoginModal: (show_close: boolean) => void;
     handleForgotPwrdModal: () => void;
     handleSignupModal: () => void;
     modalTitle: string;
@@ -32,6 +32,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('Login');
+    const [showClose, setShowClose] = useState(true);
     const [modalChildren, setModalChildren] = useState({} as React.ReactNode);
 
     const closeModal = () => {
@@ -39,11 +40,12 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
         setShowModal(false);
     };
 
-    const handleLoginModal = () => {
+    const handleLoginModal = (show_close: boolean = true) => {
         const curr_url = window.location.href;
         setModalTitle("Login");
         setModalChildren(<LoginComponent page='Modal' redirect={curr_url} handleForgotPwrdModal={handleForgotPwrdModal} handleSignupModal={handleSignupModal} />);
         setShowModal(true);
+        setShowClose(show_close);
         document.body.style.overflowY = 'hidden';
     };
 
@@ -68,7 +70,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
             modalTitle, modalChildren
         }}>
             {children}
-            <AuthModal show={showModal} children={modalChildren} closeModal={closeModal} title={modalTitle} />
+            <AuthModal show={showModal} children={modalChildren} closeModal={closeModal} title={modalTitle} show_close={showClose} />
         </ModalContext.Provider>
     );
 };

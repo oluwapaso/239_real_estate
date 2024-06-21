@@ -763,8 +763,14 @@ const SearchPage = () => {
         const controller = new AbortController();
         setMapSrchController(controller);
 
-        // Cancel previous API request
-        mapSrchController.abort();
+        try {
+            // Cancel previous API request
+            if (mapSrchController) {
+                mapSrchController.abort();
+            }
+        } catch (e: any) {
+            console.log(e)
+        }
 
         setTotalRecord(0);
         setTotalPage(0);
