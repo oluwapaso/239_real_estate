@@ -323,7 +323,7 @@ function NavBar({ page }: NavProps) {
                     </div>
                         : <div className='auth-container mr-5'>
                             <button className={`border-2 border-white ${signup_brdr} px-6 py-1 transition duration-300 ${btn_hover}`}
-                                onClick={() => handleLoginModal()}>Sign In</button>
+                                onClick={handleLoginModal}>Sign In</button>
                         </div>
                 }
 
@@ -427,7 +427,7 @@ function NavBar({ page }: NavProps) {
                             </Link>
 
                             {
-                                session?.user ? <div onClick={() => signOut()}>Sign Out</div> : <div onClick={() => handleLoginModal()}>Sign In</div>
+                                session?.user ? <div onClick={() => signOut()}>Sign Out</div> : <div onClick={handleLoginModal}>Sign In</div>
                             }
                         </div>
                     </div>

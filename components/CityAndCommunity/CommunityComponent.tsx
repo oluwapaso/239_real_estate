@@ -10,6 +10,7 @@ import PageHeader from './PageHeader';
 import Filters from './Filters';
 import Listings from './Listings';
 import { useSearchParams } from 'next/navigation';
+import { useModal } from '@/app/contexts/ModalContext';
 
 const helpers = new Helpers();
 function CommunityComponent(params: any) {
@@ -19,6 +20,7 @@ function CommunityComponent(params: any) {
     const [community_fetched, setCommunityityFetched] = useState(false);
     const [community_found, setCommunityFound] = useState(true);
     const [comm_data, setCityData] = useState<any>();
+    const { closeModal: close_auth_modal } = useModal();
     let sort_by = searchParams?.get("sort-by");
     if (!sort_by) {
         sort_by = "Date-DESC";
@@ -44,6 +46,13 @@ function CommunityComponent(params: any) {
         CityInfo();
 
     }, []);
+
+    //Close modal if it's opened, this usually happen after returning from property details page without signing in
+    useEffect(() => {
+        if (close_auth_modal) {
+            close_auth_modal();
+        }
+    }, [])
 
     if (community_fetched && !community_found) {
         return <div className='w-full bg-red-300 h-20 flex items-center justify-center'>Invalid community info provided.</div>

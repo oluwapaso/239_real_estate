@@ -6,6 +6,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { Helpers } from '@/_lib/helpers';
 import Link from 'next/link';
 import Pagination from '../pagination';
+import { useModal } from '@/app/contexts/ModalContext';
 
 const helpers = new Helpers();
 function CommunitiesComponent(params: any) {
@@ -15,6 +16,7 @@ function CommunitiesComponent(params: any) {
 
     const [communities, setCommunities] = useState<any[]>([]);
     const [communities_fetched, setCommunitiesFetched] = useState(false);
+    const { closeModal: close_auth_modal } = useModal();
     let all_comms: React.JSX.Element[] = [];
 
     const page_size = 24;
@@ -57,6 +59,13 @@ function CommunitiesComponent(params: any) {
         fetchCommunities();
 
     }, [curr_page]);
+
+    //Close modal if it's opened, this usually happen after returning from property details page without signing in
+    useEffect(() => {
+        if (close_auth_modal) {
+            close_auth_modal();
+        }
+    }, [])
 
 
     const no_post_added = <div className='w-full bg-red-100 text-red-600 flex justify-center items-center min-h-60 col-span-3'>

@@ -229,21 +229,6 @@ const PropertyDetails = () => {
         }
     }, [isMapLoaded]);
 
-    useEffect(() => {
-
-        const handleBeforeUnload = (event: any) => {
-            // Perform actions before the component unloads
-            alert(event)
-            event.preventDefault();
-            event.returnValue = '';
-        };
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-
-    }, []);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData((prev_data) => {
             return {
@@ -362,12 +347,13 @@ const PropertyDetails = () => {
 
         if (!user) {
             if (!user || !user.user_id) {
+                toast.dismiss();
                 toast.error("You need to login to view property details", {
                     position: "top-center",
                     theme: "colored"
                 });
 
-                handleLoginModal(false);
+                handleLoginModal();
             } else {
                 toast.dismiss();
                 close_modal();
@@ -386,22 +372,39 @@ const PropertyDetails = () => {
         }
 
         const handleScroll = () => {
-            const windscroll = window.scrollY || document.documentElement.scrollTop;
-            document.querySelectorAll('.section').forEach(function (section, i) {
-                let id = section.id;
 
-                // The number at the end of the next line is how many pixels from the top you want it to activate.
-                if (section instanceof HTMLElement) {
-                    var sectionTop = section.offsetTop - 105;
-                    if (sectionTop <= windscroll) {
-                        const all_actives = document.querySelector('.section.active')
-                        all_actives?.classList.remove('active');
-                        document.querySelectorAll('.section')[i].classList.add('active');
-                        setActiveDivId(id);
-                    }
+            if (!user) {
+                if (!user || !user.user_id) {
+
+                    toast.dismiss();
+                    document.documentElement.scrollTop = 0;
+                    toast.error("You need to login to view property details", {
+                        position: "top-center",
+                        theme: "colored"
+                    });
+
+                    handleLoginModal();
+                } else {
+                    toast.dismiss();
+                    close_modal();
                 }
-            });
+            } else {
+                const windscroll = window.scrollY || document.documentElement.scrollTop;
+                document.querySelectorAll('.section').forEach(function (section, i) {
+                    let id = section.id;
 
+                    // The number at the end of the next line is how many pixels from the top you want it to activate.
+                    if (section instanceof HTMLElement) {
+                        var sectionTop = section.offsetTop - 105;
+                        if (sectionTop <= windscroll) {
+                            const all_actives = document.querySelector('.section.active')
+                            all_actives?.classList.remove('active');
+                            document.querySelectorAll('.section')[i].classList.add('active');
+                            setActiveDivId(id);
+                        }
+                    }
+                });
+            }
         };
 
         window.addEventListener('scroll', handleScroll);

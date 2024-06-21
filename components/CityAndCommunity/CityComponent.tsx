@@ -10,6 +10,7 @@ import PageHeader from './PageHeader';
 import Filters from './Filters';
 import Listings from './Listings';
 import { useSearchParams } from 'next/navigation';
+import { useModal } from '@/app/contexts/ModalContext';
 
 const helpers = new Helpers();
 function CityComponent(params: any) {
@@ -19,11 +20,19 @@ function CityComponent(params: any) {
     const [city_fetched, setCityFetched] = useState(false);
     const [city_found, setCityFound] = useState(true);
     const [city_data, setCityData] = useState<any>();
+    const { closeModal: close_auth_modal } = useModal();
     let sort_by = searchParams?.get("sort-by");
     if (!sort_by) {
         sort_by = "Date-DESC";
     }
     const pagination_path = `${path}?`; //sort-by=${sort_by}
+
+    //Close modal if it's opened, this usually happen after returning from property details page without signing in
+    useEffect(() => {
+        if (close_auth_modal) {
+            close_auth_modal();
+        }
+    }, [])
 
     useEffect(() => {
 

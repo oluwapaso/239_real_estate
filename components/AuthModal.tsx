@@ -2,8 +2,7 @@
 
 import { MdClose } from "react-icons/md";
 
-function AuthModal({ children, show, closeModal, title, show_close = true }:
-    { children: React.ReactNode, show: boolean, closeModal: () => void, title: string, show_close?: boolean }) {
+function AuthModal({ children, show, closeModal, title }: { children: React.ReactNode, show: boolean, closeModal: () => void, title: string }) {
 
     return (
         show && (
@@ -12,12 +11,10 @@ function AuthModal({ children, show, closeModal, title, show_close = true }:
                 <div className={`bg-white m-autorelative rounded overflow-hidden w-[500px] max-w-[95%]`}>
                     <div className="w-full px-6 py-4 flex justify-between items-center relative bg-gray-50">
                         <h2 className="font-semibold text-md uppercase text-xl">{title}</h2>
-                        {
-                            show_close && <div className="text-black flex justify-center items-center cursor-pointer self-start "
-                                onClick={closeModal}>
-                                <MdClose size={25} className="font-bold text-red-600" />
-                            </div>
-                        }
+                        <div className="text-black flex justify-center items-center cursor-pointer self-start "
+                            onClick={closeModal}>
+                            <MdClose size={25} className="font-bold text-red-600" />
+                        </div>
                     </div>
                     <div className="flex flex-col items-center w-full px-3 xs:px-6 py-3 mt-2 mb-2">
                         {children}
