@@ -121,7 +121,15 @@ body {
     .form-field {
       @apply w-full font-normal text-base border border-slate-400 py-3 px-3 outline-none focus:border-sky-600 focus:drop-shadow-md
     }
-}
+
+    .nav-menu {
+      @apply bg-white shadow-xl w-full *:text-primary *:font-light flex flex-col divide-y divide-primary/20 overflow-hidden *:text-sm *:uppercase *:py-4 rounded-bl-lg rounded-br-lg
+    }
+
+    .nav-menu-item {
+      @apply hover:bg-primary hover:text-white transition duration-500 font-medium
+    }
+  }
 
 @layer base {
 

@@ -121,7 +121,7 @@ function NavBar({ page }: NavProps) {
 
             <div className={`nav-menu-container hidden tab:flex justify-end items-center select-none flex-wrap ${nav_color}`}>
                 <div className='menu-container mr-5'>
-                    <ul className={`flex flex-row justify-end items-center space-x-5 cursor-pointer *:py-3 *:font-normal ${text_shadow}`}>
+                    <ul className={`flex flex-row justify-end items-center space-x-5 cursor-pointer *:py-3 *:font-normal`}>
                         <li>
                             <Link href={`/search`} shallow>
                                 <div className='flex flex-row items-center'>
@@ -134,23 +134,14 @@ function NavBar({ page }: NavProps) {
                                 <span className='mr-1 uppercase text-sm'>Top Cities</span>
                                 <span className='group-hover:rotate-180 transition-all duration-300'><MdOutlineKeyboardArrowDown size={20} /></span>
                             </div>
-                            <div className='absolute hidden w-[350px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-2'>
-                                <ul className='bg-primary shadow-lg w-full *:text-white *:font-light flex flex-wrap pb-2 *:text-sm 
-                                *:uppercase *:py-3 *:w-[50%] [&>*:nth-child(odd)]:border-l [&>*:nth-child(odd)]:border-gray-500'>
-                                    <li className='hover:bg-gray-600 transition duration-500 !w-full border-b border-gray-500 mb-2 
-                                    !border-l-0 hidden'>
-                                        <Link href={`/our-communities?page=1`} shallow>
-                                            <div className='flex items-center px-4'>Local Communities</div>
-                                        </Link>
-                                    </li>
+                            <div className='absolute hidden w-[270px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-[30px]'>
+                                <ul className='nav-menu'>
                                     {
                                         (city_lists.cities && city_lists.cities.length) && (
                                             city_lists.cities.map((city, index) => (
-                                                <li key={index} className='hover:bg-gray-600 transition duration-500'>
-                                                    <Link href={`/${city.slug}`} shallow>
-                                                        <div className='flex items-center px-4'>{city.friendly_name}</div>
-                                                    </Link>
-                                                </li>
+                                                <Link key={index} href={`/${city.slug}`} className='nav-menu-item'>
+                                                    <div className='flex items-center px-4'>{city.friendly_name}</div>
+                                                </Link>
                                             ))
                                         )
                                     }
@@ -162,35 +153,24 @@ function NavBar({ page }: NavProps) {
                                 <span className='mr-1 uppercase text-sm'>Buyers</span>
                                 <span className='group-hover:rotate-180 transition-all duration-300'><MdOutlineKeyboardArrowDown size={20} /></span>
                             </div>
-                            <div className='absolute hidden w-[350px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-2'>
-                                <ul className=' bg-primary drop-shadow-2xl w-full *:text-white *:font-light flex flex-wrap pb-2 *:text-sm 
-                                *:uppercase *:py-3 *:w-[50%] [&>*:nth-child(odd)]:border-l [&>*:nth-child(odd)]:border-gray-500'>
-                                    <li className='hover:bg-gray-600 transition duration-500 !w-full border-b border-gray-500 mb-2 
-                                    !border-l-0'>
-                                        <Link href="/search" shallow>
-                                            <div className='flex items-center px-4'>Search Listings</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href="/buying" shallow>
-                                            <div className='flex items-center px-4'>Ready To Buy?</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href="/mortgage-calculator" shallow>
-                                            <div className='flex items-center px-4'>Mortgage Calculator</div>
-                                        </Link>
-                                    </li>
+                            <div className='absolute hidden w-[350px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-[30px]'>
+                                <ul className='nav-menu'>
+                                    <Link href="/search" className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Search Listings</div>
+                                    </Link>
+                                    <Link href="/buying" className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Ready To Buy?</div>
+                                    </Link>
+                                    <Link href="/mortgage-calculator" className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Mortgage Calculator</div>
+                                    </Link>
                                     {
                                         (menus_list && menus_list.menus.length) && (
                                             menus_list.menus.map((menu, index) => (
                                                 menu.show_on_menus.buyer_menu == "Yes" ? (
-
-                                                    <li key={index} className='hover:bg-gray-600 transition duration-500'>
-                                                        <Link href={`/read-post/${menu.slug}`} shallow>
-                                                            <div className='flex items-center px-4'>{menu.post_title}</div>
-                                                        </Link>
-                                                    </li>
+                                                    <Link href={`/read-post/${menu.slug}`} className='nav-menu-item'>
+                                                        <div className='flex items-center px-4'>{menu.post_title}</div>
+                                                    </Link>
                                                 ) : ""
                                             ))
                                         )
@@ -204,27 +184,17 @@ function NavBar({ page }: NavProps) {
                                 <span className='group-hover:rotate-180 transition-all duration-300'><MdOutlineKeyboardArrowDown size={20} /></span>
                             </div>
 
-                            <div className='absolute hidden w-[350px] left-[-175px] xl:left-0 max-w-[350px] z-[200] bg-transparent group-hover:block pt-2'>
-                                <ul className='bg-primary shadow-lg w-full *:text-white *:font-light flex flex-wrap pb-2 *:text-sm 
-                                *:uppercase *:py-3 *:w-[50%] [&>*:nth-child(odd)]:border-l [&>*:nth-child(odd)]:border-gray-500'>
+                            <div className='absolute hidden w-[300px] left-[-150px] xl:left-0 max-w-[300px] z-[200] bg-transparent group-hover:block pt-[30px]'>
+                                <ul className='nav-menu'>
                                     {
                                         (menus_list.menus && menus_list.menus.length) && (
                                             menus_list.menus.map((menu, index) => {
 
-                                                let li_class = 'hover:bg-gray-600 transition duration-500';
-                                                if (index == 0) {
-                                                    li_class = `hover:bg-gray-600 transition duration-500 !w-full border-b border-gray-500 
-                                                    mb-2 !border-l-0`;
-                                                }
-
                                                 return (
                                                     menu.show_on_menus.seller_menu == "Yes" ? (
-
-                                                        <li key={index} className={li_class}>
-                                                            <Link href={`/read-post/${menu.slug}`} shallow>
-                                                                <div className='flex items-center px-4'>{menu.post_title}</div>
-                                                            </Link>
-                                                        </li>
+                                                        <Link href={`/read-post/${menu.slug}`} className='nav-menu-item'>
+                                                            <div className='flex items-center px-4'>{menu.post_title}</div>
+                                                        </Link>
                                                     ) : ""
                                                 )
                                             })
@@ -238,45 +208,29 @@ function NavBar({ page }: NavProps) {
                                 <span className='mr-1 text-sm uppercase'>About Us</span>
                                 <span className='group-hover:rotate-180 transition-all duration-300'><MdOutlineKeyboardArrowDown size={20} /></span>
                             </div>
-                            <div className='absolute hidden w-[350px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-2'>
-                                <ul className='bg-primary shadow-lg w-full *:text-white *:font-light flex flex-wrap pb-2 *:text-sm 
-                                *:uppercase *:py-3 *:w-[50%] [&>*:nth-child(odd)]:border-l [&>*:nth-child(odd)]:border-gray-500'>
-                                    <li className='hover:bg-gray-600 transition duration-500 !w-full border-b border-gray-500 mb-2 
-                                    !border-l-0'>
-                                        <Link href='/about-us' shallow>
-                                            <div className='flex items-center px-4'>About {comp_info.company_name}</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/our-team?page=1' shallow>
-                                            <div className='flex items-center px-4'>Meet The Team</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/our-services?page=1' shallow>
-                                            <div className='flex items-center px-4'>Our Services</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/homes-sold-by-us?page=1' shallow>
-                                            <div className='flex items-center px-4'>Homes We've Sold</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/contact-us' shallow>
-                                            <div className='flex items-center px-4'>Contact Us</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/blog-posts?page=1' shallow>
-                                            <div className='flex items-center px-4'>Blog</div>
-                                        </Link>
-                                    </li>
-                                    <li className='hover:bg-gray-600 transition duration-500'>
-                                        <Link href='/terms-of-service' shallow>
-                                            <div className='flex items-center px-4'>Terms of Use</div>
-                                        </Link>
-                                    </li>
+                            <div className='absolute hidden w-[270px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-[30px]'>
+                                <ul className='nav-menu'>
+                                    <Link href='/about-us' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>About {comp_info.company_name}</div>
+                                    </Link>
+                                    <Link href='/our-team?page=1' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Meet The Team</div>
+                                    </Link>
+                                    <Link href='/our-services?page=1' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Our Services</div>
+                                    </Link>
+                                    <Link href='/homes-sold-by-us?page=1' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Homes We've Sold</div>
+                                    </Link>
+                                    <Link href='/contact-us' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Contact Us</div>
+                                    </Link>
+                                    <Link href='/blog-posts?page=1' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Blog</div>
+                                    </Link>
+                                    <Link href='/terms-of-service' className='nav-menu-item'>
+                                        <div className='flex items-center px-4'>Terms of Use</div>
+                                    </Link>
                                 </ul>
                             </div>
                         </li>
