@@ -436,3 +436,8 @@ input[type=radio]:checked::before {
 .rti--container{
   border-radius: 0px!important;
 }
+
+#sidebar ::-webkit-scrollbar-track {
+  background: rgb(58, 58, 58) !important;
+  border-radius: 99999px !important;
+}

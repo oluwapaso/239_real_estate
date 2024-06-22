@@ -17,6 +17,7 @@ import AddBlogCategory from '../../../_components/AddBlogCategory'
 import { HiOutlineViewGridAdd } from 'react-icons/hi'
 import EditBlogCategory from '../../../_components/EditBlogCategory'
 import { useSearchParams } from 'next/navigation'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const helpers = new Helpers();
 const BlogCategories = () => {
@@ -143,20 +144,6 @@ const BlogCategories = () => {
 
     }
 
-    const no_cat_added = <tr>
-        <td colSpan={4} className='bg-white text-red-600'>
-
-            <div className='my-10 flex flex-col justify-center items-center min-h-6'>
-                <div className='w-full text-center'>No blog category added yet</div>
-                <div className='bg-primary py-3 px-6 mt-2 hover:shadow-lg text-white flex items-center justify-center font-normal 
-                    text-base cursor-pointer hover:drop-shadow-xl' onClick={handleAdd}>
-                    <HiOutlineViewGridAdd className='mr-1 !text-xl' /> <span>Add New Category</span>
-                </div>
-            </div>
-
-        </td>
-    </tr>
-
     if (Array.isArray(categories)) {
 
         if (categories.length > 0) {
@@ -165,73 +152,74 @@ const BlogCategories = () => {
             const total_returned = categories.length
             total_page = Math.ceil(total_records / page_size)
 
-            if (total_records > 0 && total_returned > 0) {
-
-                all_categories = categories.map((cat) => {
-                    return (
-                        <tr key={cat.category_id} id={`category_${cat.category_id}`} className='transition-all duration-500'>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500'>{cat.name}</td>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500'>{cat.slug}</td>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500'>{cat.number_of_posts}</td>
-                            <td className='border-b border-slate-100 p-4 pl-8 w-[250px]'>
-                                <div className='flex justify-end'>
-                                    <div className='hover:scale-110 transition-all duration-500 mr-3'>
-                                        <button className='flex items-center bg-sky-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
-                                            onClick={() => handleEdit(cat.category_id, cat.name)}>
-                                            <FaEdit size={16} /> <span className='font-normal ml-1'>Edit</span>
-                                        </button>
-                                    </div>
-                                    <div className='hover:scale-110 transition-all duration-500'>
-                                        <button className='flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
-                                            onClick={() => handleDelete(cat.category_id)}>
-                                            <PiTrashThin size={16} /> <span className='font-normal ml-1'>Delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    )
-                })
-
-            } else {
-                all_categories[0] = no_cat_added
-            }
-
-        } else {
-
-            //Making sure request has been sent
-            if (cat_fetched) {
-                all_categories[0] = no_cat_added
-            }
-
         }
 
     }
 
     const add_new_comp = <div className='bg-primary text-white flex items-center justify-center ml-2 py-1 h-10 px-4 text-sm font-medium 
-    cursor-pointer hover:drop-shadow-xl' onClick={handleAdd}>
+    cursor-pointer hover:drop-shadow-xl rounded-md' onClick={handleAdd}>
         <HiOutlineViewGridAdd className='mr-1 !text-xl' /> <span>Add New Category</span>
     </div>
 
     return (
         <div className='w-full box-border !max-w-[100%]'>
             <PageTitle text="Blog Categories" show_back={false} right_component={add_new_comp} />
-            <div className='!w-full !max-w-[100%] relative overflow-auto box-border'>
-                <table className="shadow-xl table-fixed w-[900px] lg:w-full text-sm mt-8 bg-slate-200 rounded-md border border-slate-300">
-                    <thead className='w-full'>
-                        <tr className='w-full'>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left'>Name</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left'>Slug</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left'>Number of Posts</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left w-[250px]'>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className='bg-white dark:bg-slate-800'>
-                        {all_categories}
-                    </tbody>
-                </table>
+            <div className='!w-full !max-w-[100%] h-auto relative box-border pb-5'>
+
+                <div className="w-full mt-3 border border-gray-200 rounded-md overflow-hidden shadow-xl">
+                    {/* Header */}
+                    <div className=" bg-gray-100 grid grid-cols-[repeat(4,1fr)] *:text-wrap *:break-all *:px-4 *:py-3 *:font-medium">
+                        <div className="cell-header">Name</div>
+                        <div className="cell-header">Slug</div>
+                        <div className="cell-header">Number of Posts</div>
+                        <div className="cell-header">Actions</div>
+                    </div>
+
+                    <div className='w-full divide-y divide-gray-200'>
+                        {/* Loader */}
+                        {!cat_fetched && <div className='col-span-full h-[250px] bg-white flex items-center justify-center'>
+                            <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
+                        </div>}
+
+                        {/* Rows */}
+                        {
+                            cat_fetched && (
+                                (categories.length && categories.length > 0)
+                                    ? (categories.map((cat) => {
+
+                                        return (<div key={cat.category_id} id={`category_${cat.category_id}`}
+                                            className="bg-white grid grid-cols-[repeat(4,1fr)] items-center *:text-wrap *:break-all *:px-4 *:py-3 *:font-normal">
+                                            <div>{cat.name}</div>
+                                            <div>{cat.slug}</div>
+                                            <div>{cat.number_of_posts}</div>
+                                            <div className='flex justify-end'>
+                                                <div className='hover:scale-110 transition-all duration-500 mr-3'>
+                                                    <button className='flex items-center bg-sky-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
+                                                        onClick={() => handleEdit(cat.category_id, cat.name)}>
+                                                        <FaEdit size={16} /> <span className='font-normal ml-1'>Edit</span>
+                                                    </button>
+                                                </div>
+                                                <div className='hover:scale-110 transition-all duration-500'>
+                                                    <button className='flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
+                                                        onClick={() => handleDelete(cat.category_id)}>
+                                                        <PiTrashThin size={16} /> <span className='font-normal ml-1'>Delete</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>)
+                                    }))
+                                    : <div className='col-span-full h-[250px] bg-white flex items-center justify-center'>
+                                        No categories added yet.
+                                    </div>)
+                        }
+
+                    </div>
+                </div>
+
             </div>
-            {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/blog-categories?' /> : null}
+            <div className='w-full h-[90px]'>
+                {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/blog-categories?' /> : null}
+            </div>
             <ToastContainer />
             <Modal show={showModal} children={modal_children} width={550} closeModal={closeModal} title={modal_title} />
         </div>

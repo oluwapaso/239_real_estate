@@ -112,8 +112,8 @@ const SideBars = () => {
     }
 
     return (
-        <div className={`bg-gray-900 flex fixed flex-col h-screen pt-8 duration-300 text-white z-[25] 
-        ${menuOpen ? "w-72 p-5" : "w-0 md:w-20 p-0 md:p-5 -left-5 md:left-0"}`}>
+        <div id='sidebar' className={`bg-gray-900 flex fixed flex-col h-screen pt-8 duration-300 text-white z-[25] 
+        ${menuOpen ? "w-72 p-5 !pr-[5px]" : "w-0 md:w-20 p-0 md:p-5 -left-5 md:left-0"}`}>
             <BsArrowLeftShort className={`text-gray-900 bg-white text-3xl rounded-full absolute -right-3 top-8
             border border-gray-900 cursor-pointer ${!menuOpen && "rotate-180"}`} onClick={closeMenu} />
 
@@ -123,7 +123,8 @@ const SideBars = () => {
                 <h2 className={`font-medium text-white text-md origin-left duration-300 ${!menuOpen && "scale-0"}`}>239re CRM</h2>
             </div>
 
-            <ul className='pt-2 w-full overflow-x-hidden'>
+            <ul className='py-2 w-full scrollbar scrollbar-w-3 scrollbar-thumb-rounded-full
+            scrollbar-thumb-amber-500 cursor-pointer overflow-y-auto pr-3'>
                 {menuList.map((menu, index) => (
                     <MenuItem key={index} menu={menu} menuOpen={menuOpen} closeMenu={closeMenu} />
                 ))}

@@ -100,7 +100,7 @@ const Cities = () => {
 
                                         return (<div key={city.city_id} className="bg-white grid grid-cols-[repeat(3,1fr)_minmax(130px,130px)] items-center *:text-wrap *:break-all *:px-4 *:py-3 *:font-normal">
                                             <div>
-                                                <CustomLink href={`/admin/edit-city?city_id=/${city.city_id}`}>{city.mls_name}</CustomLink>
+                                                <CustomLink href={`/admin/edit-city?city_id=${city.city_id}`}>{city.mls_name}</CustomLink>
                                             </div>
                                             <div>{city.friendly_name}</div>
                                             <div>

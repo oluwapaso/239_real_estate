@@ -2,7 +2,7 @@
 
 import { Helpers } from '@/_lib/helpers'
 import Pagination from '@/components/pagination'
-import type { APIResponseProps, BlogCategories, Testimonials } from '@/components/types'
+import type { APIResponseProps } from '@/components/types'
 import React, { useEffect, useState } from 'react'
 import { FaEdit } from 'react-icons/fa'
 import { PiTrashThin } from 'react-icons/pi'
@@ -12,12 +12,10 @@ import { hidePageLoader, showPageLoader } from '../../../GlobalRedux/user/userSl
 import Swal from 'sweetalert2'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Modal from '@/components/Modal'
-import AddBlogCategory from '../../../_components/AddBlogCategory'
 import { HiOutlineViewGridAdd } from 'react-icons/hi'
-import EditBlogCategory from '../../../_components/EditBlogCategory'
 import { useSearchParams } from 'next/navigation'
 import CustomLink from '@/components/CustomLink'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const helpers = new Helpers();
 const AllTestimonials = () => {
@@ -31,7 +29,6 @@ const AllTestimonials = () => {
     const page_size = 20;
     let total_page = 0;
     const curr_page = parseInt(searchParams?.get("page") as string) || 1;
-    let all_testimonials: React.JSX.Element[] = [];
 
     const payload = {
         paginated: true,
@@ -146,73 +143,72 @@ const AllTestimonials = () => {
             const total_returned = testimonials.length
             total_page = Math.ceil(total_records / page_size)
 
-            if (total_records > 0 && total_returned > 0) {
-
-                all_testimonials = testimonials.map((testi) => {
-                    return (
-                        <tr key={testi.testimonial_id} id={`testimonial_${testi.testimonial_id}`} className='transition-all duration-500'>
-                            <td className='border-b border-slate-100 p-4 text-slate-500'>{testi.fullname}</td>
-                            <td className='border-b border-slate-100 p-4 text-slate-500'>{testi.account_type}</td>
-                            <td className='border-b border-slate-100 p-4 text-slate-500'>{testi.testimonial}</td>
-                            <td className='border-b border-slate-100 p-4 w-[250px]'>
-                                <div className='flex justify-end'>
-                                    <div className='hover:scale-110 transition-all duration-500 mr-3'>
-                                        <CustomLink href={`/admin/edit-testimonial?testimonial_id=${testi.testimonial_id}`}
-                                            className='flex items-center bg-sky-600 text-white py-2 px-4 rounded-md hover:shadow-xl'>
-                                            <FaEdit size={16} /> <span className='font-normal ml-1'>Edit</span>
-                                        </CustomLink>
-                                    </div>
-                                    <div className='hover:scale-110 transition-all duration-500'>
-                                        <button className='flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
-                                            onClick={() => handleDelete(testi.testimonial_id)}>
-                                            <PiTrashThin size={16} /> <span className='font-normal ml-1'>Delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    )
-                })
-
-            } else {
-                testimonials[0] = no_testi_added
-            }
-
-        } else {
-
-            //Making sure request has been sent
-            if (testi_fetched) {
-                testimonials[0] = no_testi_added
-            }
-
         }
 
     }
 
     const add_new_comp = <CustomLink href={`/admin/add-new-testimonial`} className='bg-primary text-white flex items-center justify-center 
-    ml-2 py-1 h-10 px-4 text-sm font-medium cursor-pointer hover:drop-shadow-xl'>
+    ml-2 py-1 h-10 px-4 text-sm font-medium cursor-pointer hover:drop-shadow-xl rounded-md'>
         <HiOutlineViewGridAdd className='mr-1 !text-xl' /> <span>Add New Testimonial</span>
     </CustomLink>
 
     return (
         <div className='w-full box-border !max-w-[100%]'>
             <PageTitle text="Testimonials" show_back={false} right_component={add_new_comp} />
-            <div className='!w-full !max-w-[100%] relative overflow-auto box-border pb-8'>
-                <table className="shadow-xl table-auto w-[900px] lg:w-full text-sm mt-8 bg-slate-200 rounded-md border border-slate-300">
-                    <thead className='w-full'>
-                        <tr className='w-full'>
-                            <th className='border-b font-medium p-4 pt-3 pb-3 text-primary text-left w-[200px]'>Name</th>
-                            <th className='border-b font-medium p-4 pt-3 pb-3 text-primary text-left w-[150px]'>Account Type</th>
-                            <th className='border-b font-medium p-4 pt-3 pb-3 text-primary text-left'>Testimonial</th>
-                            <th className='border-b font-medium p-4 pt-3 pb-3 text-primary text-left w-[250px]'>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className='bg-white dark:bg-slate-800'>
-                        {all_testimonials}
-                    </tbody>
-                </table>
+            <div className='!w-full !max-w-[100%] h-auto relative box-border pb-5'>
+
+                <div className="w-full mt-3 border border-gray-200 rounded-md overflow-hidden shadow-xl">
+                    {/* Header */}
+                    <div className=" bg-gray-100 grid grid-cols-[200px_150px_1fr_250px] *:text-wrap *:break-all *:px-4 *:py-3 *:font-medium">
+                        <div className="cell-header">Name</div>
+                        <div className="cell-header">Account Type</div>
+                        <div className="cell-header">Testimonial</div>
+                        <div className="cell-header">Actions</div>
+                    </div>
+
+                    <div className='w-full divide-y divide-gray-200'>
+                        {/* Loader */}
+                        {!testi_fetched && <div className='col-span-full h-[250px] bg-white flex items-center justify-center'>
+                            <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
+                        </div>}
+
+                        {/* Rows */}
+                        {
+                            testi_fetched && (
+                                (testimonials.length && testimonials.length > 0)
+                                    ? (testimonials.map((testi: any) => {
+
+                                        return (<div key={testi.category_id} id={`testimonial_${testi.category_id}`}
+                                            className="bg-white grid grid-cols-[200px_150px_1fr_250px] items-center *:text-wrap *:break-all *:px-4 *:py-3 *:font-normal">
+                                            <div>{testi.fullname}</div>
+                                            <div>{testi.account_type}</div>
+                                            <div>{testi.testimonial}</div>
+                                            <div className='flex justify-end'>
+                                                <div className='hover:scale-110 transition-all duration-500 mr-3'>
+                                                    <CustomLink href={`/admin/edit-testimonial?testimonial_id=${testi.testimonial_id}`}
+                                                        className='flex items-center bg-sky-600 text-white py-2 px-4 rounded-md hover:shadow-xl'>
+                                                        <FaEdit size={16} /> <span className='font-normal ml-1'>Edit</span>
+                                                    </CustomLink>
+                                                </div>
+                                                <div className='hover:scale-110 transition-all duration-500'>
+                                                    <button className='flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:shadow-xl'
+                                                        onClick={() => handleDelete(testi.testimonial_id)}>
+                                                        <PiTrashThin size={16} /> <span className='font-normal ml-1'>Delete</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>)
+                                    }))
+                                    : <div className='col-span-full h-[250px] bg-white flex items-center justify-center'>
+                                        No categories added yet.
+                                    </div>)
+                        }
+                    </div>
+                </div>
             </div>
-            {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/all-testimonials?' /> : null}
+            <div className='w-full h-[90px]'>
+                {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/all-testimonials?' /> : null}
+            </div>
             <ToastContainer />
         </div>
     )
