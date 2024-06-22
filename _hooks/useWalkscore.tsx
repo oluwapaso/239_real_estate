@@ -22,7 +22,7 @@ const useWalkScore = (lat: string, lon: string, address: string) => {
                     throw new Error('Walk score API key not found in database');
                 }
 
-                const url = `${process.env.NEXT_PUBLIC_PHP_REQUESTS_URL}/php-requests/walk_score.php?address=${address}&lat=${lat}&lon=${lon}&transit=1&bike=1&api_key=${apiKey}`;
+                const url = `${process.env.NEXT_PUBLIC_PHP_REQUESTS_URL}/next-requests/walk_score.php?address=${address}&lat=${lat}&lon=${lon}&transit=1&bike=1&api_key=${apiKey}`;
                 const response = await fetch(url);
 
                 if (!response.ok) {

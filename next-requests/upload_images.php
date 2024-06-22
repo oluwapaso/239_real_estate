@@ -22,6 +22,7 @@ if ($_FILES["image"]["error"] == UPLOAD_ERR_OK) {
 
     $tmp_name = $_FILES["image"]["tmp_name"];
     $name = basename($_FILES["image"]["name"]);
+    $name = preg_replace('/[^a-zA-Z0-9]/', '-', $name);
 
     // Move the uploaded file to a desired location
     if (move_uploaded_file($tmp_name, $target_dir . $name)) {

@@ -259,7 +259,7 @@ export class CommunityService {
                             
                             if(files.file?.length){
 
-                                const imageName = `logo-${Date.now()}-${files.file[0].originalFilename}`; // Use a unique name for the image
+                                const imageName = `community-header-${Date.now()}-${files.file[0].originalFilename}`; // Use a unique name for the image
                                 const formData = new FormData();
 
                                 const stream = fs.createReadStream(files.file[0].filepath);

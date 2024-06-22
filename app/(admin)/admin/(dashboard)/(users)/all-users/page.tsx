@@ -190,7 +190,6 @@ const AllUsers = () => {
                                         No users added yet.
                                     </div>)
                         }
-
                     </div>
                 </div>
 

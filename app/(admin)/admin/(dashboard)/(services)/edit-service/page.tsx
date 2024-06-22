@@ -217,7 +217,7 @@ const EditCommunity = () => {
         <div className='w-full'>
 
             <div className='container m-auto max-w-[600px] lg:max-w-[1100px]'>
-                <PageTitle text="Edit Community" show_back={true} />
+                <PageTitle text="Edit Service" show_back={true} />
                 <div className='w-full grid grid-cols-1 lg:grid-cols-4 gap-5 mt-4'>
                     <div className='col-span-1 lg:col-span-3 order-2 lg:order-1 bg-white px-3 sm:px-4 lg:px-6 py-5 flex flex-col'>
 

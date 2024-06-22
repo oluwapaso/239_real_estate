@@ -9,9 +9,10 @@ import { useDispatch } from 'react-redux'
 import { hidePageLoader, showPageLoader } from '../../../GlobalRedux/user/userSlice'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BiEditAlt } from 'react-icons/bi'
+import { BiEdit, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { useSearchParams } from 'next/navigation'
 import CustomLink from '@/components/CustomLink'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const helpers = new Helpers();
 const Cities = () => {
@@ -20,7 +21,7 @@ const Cities = () => {
     const dispatch = useDispatch();
 
     const [cities, setCities] = useState<any[]>([]);
-    const [post_fetched, setPostFetched] = useState(false);
+    const [cities_fetched, setCitiesFetched] = useState(false);
 
     const page_size = 20;
     let total_page = 0;
@@ -43,7 +44,7 @@ const Cities = () => {
                 const cityPromise: Promise<CityInfo[]> = helpers.LoadCities(payload)
                 const cityResp = await cityPromise;
                 setCities(cityResp);
-                setPostFetched(true);
+                setCitiesFetched(true);
                 dispatch(hidePageLoader());
 
             } catch (e: any) {
@@ -58,91 +59,76 @@ const Cities = () => {
 
     }, [curr_page]);
 
-    const no_comm_added = <tr>
-        <td colSpan={4} className='bg-white text-red-600'>
-
-            <div className='my-10 flex flex-col justify-center items-center min-h-6'>
-                <div className='w-full text-center'>No city added yet</div>
-            </div>
-
-        </td>
-    </tr>
 
     if (Array.isArray(cities)) {
-
         if (cities.length > 0) {
-
             const total_records = cities[0].total_records
-            const total_returned = cities.length
             total_page = Math.ceil(total_records / page_size)
-
-            if (total_records > 0 && total_returned > 0) {
-
-                all_comms = cities.map((comm) => {
-
-                    let dirty_icon;
-                    if (comm.is_dirty == "Yes") {
-                        dirty_icon = <BiEditAlt size={17} className='ml-1 text-orange-500' />
-                    }
-
-                    return (
-                        <tr key={comm.city_id} id={`city_${comm.city_id}`} className='transition-all duration-500'>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500'>
-                                <CustomLink href={`/admin/edit-city?city_id=${comm.city_id}`} className='font-medium text-sky-800'>{comm.mls_name}</CustomLink>
-                            </td>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500'>{comm.friendly_name}</td>
-                            <td className='border-b border-slate-100 p-4 pl-8 text-slate-500 text-center'>
-                                {
-                                    comm.is_published == "Yes" ? <div className='!text-green-600 font-medium flex items-center justify-center'>
-                                        <span>Published</span> {dirty_icon}
-                                    </div> : <div className='!text-red-500'>Draft</div>
-                                }
-                            </td>
-                            <td className='border-b border-slate-100 p-4 pl-8 w-[130px]'>
-                                <div className='flex justify-end'>
-                                    <CustomLink href={`/admin/edit-city?city_id=${comm.city_id}`}
-                                        className='font-medium px-6 py-2 bg-primary text-white rounded'>Edit</CustomLink>
-                                </div>
-                            </td>
-                        </tr>
-                    )
-                })
-
-            } else {
-                all_comms[0] = no_comm_added
-            }
-
-        } else {
-
-            //Making sure request has been sent
-            if (post_fetched) {
-                all_comms[0] = no_comm_added
-            }
-
         }
-
     }
 
     return (
         <div className='w-full flex flex-col'>
             <PageTitle text="Cities" show_back={false} />
-            <div className='!w-full !max-w-[100%] relative overflow-x-auto overflow-y-visible box-border'>
-                <table className="shadow-xl table-fixed w-[900px] lg:w-full text-sm mt-8 bg-slate-200 rounded-md border border-slate-300">
-                    <thead className='w-full'>
-                        <tr className='w-full'>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left'>MLS Name</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left'>Friendly Name</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-center w-[150px]'>Status</th>
-                            <th className='border-b font-medium p-4 pl-8 pt-3 pb-3 text-primary text-left w-[130px]'>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className='bg-white dark:bg-slate-800'>
-                        {all_comms}
-                    </tbody>
-                    <tfoot className='bg-white'></tfoot>
-                </table>
+            <div className='!w-full !max-w-[100%] h-auto relative box-border pb-5'>
+
+                <div className="w-full mt-3 border border-gray-200 rounded-md overflow-hidden shadow-xl">
+                    {/* Header */}
+                    <div className=" bg-gray-100 grid grid-cols-[repeat(3,1fr)_minmax(130px,130px)] *:text-wrap *:break-all *:px-4 *:py-3 *:font-medium">
+                        <div className="cell-header">MLS Name</div>
+                        <div className="cell-header">Friendly Name</div>
+                        <div className="cell-header">Status</div>
+                        <div className="cell-header">Actions</div>
+                    </div>
+
+                    <div className='w-full divide-y divide-gray-200'>
+                        {/* Loader */}
+                        {!cities_fetched && <div className=' col-span-full h-[250px] bg-white flex items-center justify-center'>
+                            <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
+                        </div>}
+
+                        {/* Rows */}
+                        {
+                            cities_fetched && (
+                                (cities.length && cities.length > 0)
+                                    ? (cities.map((city) => {
+
+                                        let dirty_icon;
+                                        if (city.is_dirty == "Yes") {
+                                            dirty_icon = <BiEditAlt size={17} className='ml-1 text-orange-500' />
+                                        }
+
+                                        return (<div key={city.city_id} className="bg-white grid grid-cols-[repeat(3,1fr)_minmax(130px,130px)] items-center *:text-wrap *:break-all *:px-4 *:py-3 *:font-normal">
+                                            <div>
+                                                <CustomLink href={`/admin/edit-city?city_id=/${city.city_id}`}>{city.mls_name}</CustomLink>
+                                            </div>
+                                            <div>{city.friendly_name}</div>
+                                            <div>
+                                                {
+                                                    city.is_published == "Yes" ? <div className='!text-green-600 font-medium flex items-center'>
+                                                        <span>Published</span> {dirty_icon}
+                                                    </div> : <div className='!text-red-500'>Draft</div>
+                                                }
+                                            </div>
+                                            <div className='flex justify-end'>
+                                                <CustomLink href={`/admin/edit-city?city_id=${city.city_id}`} className='font-normal px-6 
+                                                py-2 bg-primary text-white rounded'>Edit</CustomLink>
+
+                                            </div>
+                                        </div>)
+                                    }))
+                                    : <div className='col-span-full h-[250px] bg-white flex items-center justify-center'>
+                                        No cities added yet.
+                                    </div>)
+                        }
+                    </div>
+                </div>
+
             </div>
-            {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/all-cities?' /> : null}
+
+            <div className='w-full h-[90px]'>
+                {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path='/admin/all-cities?' /> : null}
+            </div>
             <ToastContainer />
         </div>
     )
