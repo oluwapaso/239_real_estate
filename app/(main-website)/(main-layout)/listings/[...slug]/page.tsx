@@ -105,6 +105,8 @@ const PropertyDetails = () => {
 
     const [mapCenter, setMapCenter] = useState(center);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const [is_api_loaded, setAPILoaded] = useState(false);
+    const [google_map_key, setGoogleMapKey] = useState("");
     const [formData, setFormData] = useState(empty_form_data);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -216,9 +218,26 @@ const PropertyDetails = () => {
     };
 
     useEffect(() => {
-        if (!isMapLoaded) {
+
+        const Get_API_Info = async () => {
+            const api_info_prms = helper.FetchAPIInfo();
+            const api_info = await api_info_prms
+            if (api_info.success && api_info.data) {
+                setGoogleMapKey(api_info.data.google_map_key);
+                setAPILoaded(true)
+            } else {
+                throw new Error('Google map API key not found in database');
+            }
+        }
+
+        Get_API_Info();
+
+    }, []);
+
+    useEffect(() => {
+        if (!isMapLoaded && is_api_loaded) {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${google_map_key}`;
             script.async = true;
             script.onload = () => setIsMapLoaded(true);
             document.body.appendChild(script);
@@ -227,7 +246,7 @@ const PropertyDetails = () => {
                 document.body.removeChild(script);
             };
         }
-    }, [isMapLoaded]);
+    }, [isMapLoaded, is_api_loaded]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData((prev_data) => {

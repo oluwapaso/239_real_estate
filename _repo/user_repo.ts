@@ -745,7 +745,7 @@ export class MYSQLUserRepo implements UserRepo {
             if(check_view.length){
                 toatal_view = check_view[0].total_views;
             }
-
+ 
             if(toatal_view < 1 && user_id > 0){
                 
                 const [result] = await pool.query<ResultSetHeader>(`INSERT INTO property_views(user_id, listing_key, date_added) 
