@@ -1,6 +1,7 @@
 import pool from "@/_lib/db_conn";
 import { APIResponseProps, AddTestimonialParams, AgentsType, GetTestimonialParams, Testimonials, UpdateTestimonialParams } from "@/components/types";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { PoolConnection } from "mysql2/promise";
 
 export interface TestimonialRepo {
     GetAllTestimonial({params}:{params: GetTestimonialParams}): Promise<APIResponseProps>
@@ -25,23 +26,36 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
         const start_from = (page - 1) * limit
         let rows: RowDataPacket[] = [];
 
-        if(paginated){
-            [rows] = await pool.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM testimonials) AS total_records 
-            FROM testimonials LIMIT ${start_from}, ${limit}`); 
-        }else{
-            [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM testimonials`);  
+        let connection: PoolConnection | null = null;
+        try{
+
+            connection = await pool.getConnection();
+            if(paginated){
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM testimonials) AS total_records 
+                FROM testimonials LIMIT ${start_from}, ${limit}`); 
+            }else{
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM testimonials`);  
+            }
+
+            const formattedRows = rows.map((row) => {
+                return {
+                    ...row,
+                } as Testimonials
+            });
+            
+            default_rep.data = formattedRows;
+            default_rep.success = true;
+
+            return default_rep;
+
+        }catch(e: any){
+            console.log(e.message);
+            return default_rep;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
-
-        const formattedRows = rows.map((row) => {
-            return {
-                ...row,
-            } as Testimonials
-        });
-        
-        default_rep.data = formattedRows;
-        default_rep.success = true;
-
-        return default_rep;
 
     }
 
@@ -53,18 +67,31 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
             success: false,
         }
 
-        const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM testimonials WHERE testimonial_id=?`, [testimonial_id]); 
+        let connection: PoolConnection | null = null;
+        try{
 
-        const formattedRows = rows.map((row) => {
-            return {
-                ...row,
-            } as Testimonials
-        });
-        
-        default_rep.data = formattedRows[0];
-        default_rep.success = true;
+            connection = await pool.getConnection();
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM testimonials WHERE testimonial_id=?`, [testimonial_id]); 
 
-        return default_rep;
+            const formattedRows = rows.map((row) => {
+                return {
+                    ...row,
+                } as Testimonials
+            });
+            
+            default_rep.data = formattedRows[0];
+            default_rep.success = true;
+
+            return default_rep;
+
+        }catch(e: any){
+            console.log(e.message);
+            return default_rep;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
 
     }
 
@@ -76,9 +103,12 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
             data: null
         }
 
+        let connection: PoolConnection | null = null;
         const p = params;
         try{
-            const [result] = await pool.query<ResultSetHeader>(`INSERT INTO testimonials(fullname, account_type, testimonial) 
+
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`INSERT INTO testimonials(fullname, account_type, testimonial) 
             VALUES (?, ?, ?) `, [p.fullname, p.account_type, p.testimonial]);
             
             default_resp.success = true;
@@ -87,6 +117,10 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
 
         }catch(e: any){
             default_resp.message = e.sqlMessage
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
         return default_resp
@@ -101,10 +135,12 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
             success: false,
         }
 
-        const p = params
+        let connection: PoolConnection | null = null;
+        const p = params;
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE testimonials SET fullname=?, account_type=?, testimonial=? 
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE testimonials SET fullname=?, account_type=?, testimonial=? 
             WHERE testimonial_id=?`, [p.fullname, p.account_type, p.testimonial, p.testimonial_id]);
             if(result.affectedRows >= 0){
                 
@@ -120,6 +156,10 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -132,9 +172,11 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
             success: false,
         }
 
+        let connection: PoolConnection | null = null;
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`DELETE FROM testimonials WHERE testimonial_id=?`, [testimonial_id]);
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`DELETE FROM testimonials WHERE testimonial_id=?`, [testimonial_id]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -149,6 +191,10 @@ export class MYSQLTestimonialRepo implements TestimonialRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }

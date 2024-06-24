@@ -7,6 +7,7 @@ import { Helpers } from "@/_lib/helpers";
 import moment from "moment";
 import path from "path";
 import fs from 'fs';
+import { PoolConnection } from "mysql2/promise";
 
 export interface AgentsRepo {
     GetAllAgents({params}:{params: GetAgentsParams}): Promise<AgentsType[] | null>
@@ -26,28 +27,43 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
     public async GetAllAgents({params}:{params: GetAgentsParams}): Promise<AgentsType[] | null>{
 
-        const page = params.page
-        const limit = params.limit
-        const start_from = (page - 1) * limit
+        const page = params.page;
+        const limit = params.limit;
+        const start_from = (page - 1) * limit;
+        let connection: PoolConnection | null = null;
 
-        const [rows] = await pool.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM agents) AS total_records FROM agents LIMIT ${start_from}, ${limit}`);
-        //await pool.end();
-        //return rows as AgentsType[] | null;
+        try{
+            
+            connection = await pool.getConnection();
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM agents) AS total_records FROM agents LIMIT ${start_from}, ${limit}`);
+            //await pool.end();
+            //return rows as AgentsType[] | null;
 
-        const formattedRows = rows.map((row) => {
+            const formattedRows = rows.map((row) => {
 
-            ['image'].forEach((field) => {
-                if (row[field] && row[field].length && typeof row[field] === 'string') {
-                    row[field] = JSON.parse(row[field]);
-                }
+                ['image'].forEach((field) => {
+                    if (row[field] && row[field].length && typeof row[field] === 'string') {
+                        row[field] = JSON.parse(row[field]);
+                    }
+                });
+
+                return {
+                    ...row,
+                } as AgentsType
             });
-
-            return {
-                ...row,
-            } as AgentsType
-        });
         
-        return formattedRows;
+            return formattedRows;
+
+        }catch(e:any){
+
+            console.log("e.sqlMessage", e.sqlMessage)
+            return null;
+            
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
 
     }
 
@@ -56,14 +72,20 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         const search_type = params.search_by
         const field = params.fields
         const email = params?.email
+        let connection: PoolConnection | null = null;
 
         if(search_type == "Email"){
 
             try{
-                const [row] = await pool.query<RowDataPacket[]>(`SELECT ${field} FROM admins WHERE email=? `, [email]);
+                connection = await pool.getConnection();
+                const [row] = await connection.query<RowDataPacket[]>(`SELECT ${field} FROM admins WHERE email=? `, [email]);
                 return row.length ? row[0] as AgentsType : null
             }catch(e: any){
                 return e.sqlMessage
+            }finally{
+                if (connection) { 
+                    connection.release();
+                }
             }
 
         }else{
@@ -75,8 +97,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
     public async GetResetToken({params}:{params: GetResetTokenParams}): Promise<string | null>{
         
         const search_by = params.search_by
+        let connection: PoolConnection | null = null;
         try{    
 
+            connection = await pool.getConnection();
             let query = ``
             let qry_params:(string | number)[] = []
 
@@ -94,12 +118,16 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
             }
 
-            const [row] = await pool.query<RowDataPacket[]>(query, [...qry_params]);
+            const [row] = await connection.query<RowDataPacket[]>(query, [...qry_params]);
             return  row.length ? row[0].token as string : null
 
         }catch(e:any){
             console.log(e.sqlMessage)
             return null
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
     }
 
@@ -108,14 +136,20 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         const search_type = params.search_by
         const field = params.fields
         const email = params?.email
+        let connection: PoolConnection | null = null;
 
         if(search_type == "Email"){
 
             try{
-                const [row] = await pool.query<RowDataPacket[]>(`SELECT ${field} FROM admins WHERE email=? `, [email]);
+                connection = await pool.getConnection();
+                const [row] = await connection.query<RowDataPacket[]>(`SELECT ${field} FROM admins WHERE email=? `, [email]);
                 return row.length ? row[0] as AdminsType : null
             }catch(e: any){
                 return e.sqlMessage
+            }finally{
+                if (connection) { 
+                    connection.release();
+                }
             }
 
         }else{
@@ -129,14 +163,20 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         const email = params.email
         const date = params.date
         const token = params.token
+        let connection: PoolConnection | null = null;
 
         try{
-            const [result] = await pool.query<ResultSetHeader>(`INSERT INTO reset_tokens(email, token, date) VALUES (?, ?, ?) `, [email, token, date]);
-            await pool.query(`UPDATE admins SET status='Reset Password' WHERE email=? `, [email]);
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`INSERT INTO reset_tokens(email, token, date) VALUES (?, ?, ?) `, [email, token, date]);
+            await connection.query(`UPDATE admins SET status='Reset Password' WHERE email=? `, [email]);
             return result.affectedRows > 0
         }catch(e: any){
             console.log(e.sqlMessage)
             return false
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -146,25 +186,32 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         const email = params.account_email
         const admin_id = params.admin_id
         const password = params.password
+        let connection: PoolConnection | null = null;
         
         try{
             
-            const [up_result] = await pool.query<ResultSetHeader>(`UPDATE admins SET password=?, status=? WHERE admin_id=? `, [password, 'Active', admin_id]);
-            const [del_result] = await pool.query<ResultSetHeader>(`DELETE FROM reset_tokens WHERE email=? `, [email]);
+            connection = await pool.getConnection();
+            const [up_result] = await connection.query<ResultSetHeader>(`UPDATE admins SET password=?, status=? WHERE admin_id=? `, [password, 'Active', admin_id]);
+            const [del_result] = await connection.query<ResultSetHeader>(`DELETE FROM reset_tokens WHERE email=? `, [email]);
             return (up_result.affectedRows > 0 && del_result.affectedRows > 0)
 
         }catch(e: any){
             console.log(e.sqlMessage)
             return false
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
 
     public async AdminLogin(params:AdminLoginParams): Promise<any>{
 
-        const username_or_email = params.username
-        const password = params.password
-        const helpers = new Helpers()
+        const username_or_email = params.username;
+        const password = params.password;
+        const helpers = new Helpers();
+        let connection: PoolConnection | null = null;
 
         if(!username_or_email || !password){
             return {"message":"Provide a valid login credential.", "success": false}
@@ -174,7 +221,8 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         let message = ""
         try{
 
-            const [admin_row] = await pool.query<RowDataPacket[]>(`SELECT * FROM admins WHERE (email=? OR username=?) `, [username_or_email, username_or_email]);
+            connection = await pool.getConnection();
+            const [admin_row] = await connection.query<RowDataPacket[]>(`SELECT * FROM admins WHERE (email=? OR username=?) `, [username_or_email, username_or_email]);
             if(admin_row.length){
 
                 const admin_info = admin_row[0]
@@ -182,13 +230,13 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
                 const isValidPwrd = await bcrypt.compare(password, hashed_password).then(async (result) => {
 
-                    if (result) {
+                    if (result && connection) {
 
                         const adminInfo = admin_row[0]
                         const token = helpers.GenarateRandomString(50)
                         const expire_on = moment().add(30, "days").unix()
                         
-                        const [sess_result] = await pool.query<ResultSetHeader>(`INSERT INTO admin_session(admin_id, token, expire_on) VALUES (?, ?, ?) `, 
+                        const [sess_result] = await connection.query<ResultSetHeader>(`INSERT INTO admin_session(admin_id, token, expire_on) VALUES (?, ?, ?) `, 
                         [adminInfo.admin_id, token, expire_on]);
                         
                         if(sess_result.affectedRows > 0){
@@ -228,6 +276,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
         }catch(e: any){
             return {"message":e.message, "data":null, "success": false}
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -240,9 +292,12 @@ export class MYSQLAgentsRepo implements AgentsRepo {
             data: null
         }
 
-        const p = params
+        const p = params;
+        let connection: PoolConnection | null = null;
         try{
-            const [result] = await pool.query<ResultSetHeader>(`INSERT INTO agents(name, email, phone, role, license_number, facebook, twitter, 
+
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`INSERT INTO agents(name, email, phone, role, license_number, facebook, twitter, 
                 instagram, bio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `, [p.name, p.email, p.phone, p.role, p.license_number, 
                 p.facebook, p.twitter, p.instagram, p.bio]);
             
@@ -252,6 +307,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
         }catch(e: any){
             default_resp.message = e.sqlMessage
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
         return default_resp
@@ -265,10 +324,13 @@ export class MYSQLAgentsRepo implements AgentsRepo {
             success:false,
             data: null
         }
+
+        let connection: PoolConnection | null = null;
  
         try{
             
-            const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM agents WHERE agent_id=? `, [agent_id]);
+            connection = await pool.getConnection();
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM agents WHERE agent_id=? `, [agent_id]);
             
             if(rows.length > 0){
 
@@ -289,6 +351,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
 
         }catch(e: any){
             default_resp.message = e.sqlMessage
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
         return default_resp
@@ -304,9 +370,11 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         }
 
         const p = params
+        let connection: PoolConnection | null = null;
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE agents SET name=?, email=?, phone=?, role=?, license_number=?, 
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE agents SET name=?, email=?, phone=?, role=?, license_number=?, 
             facebook=?, twitter=?, instagram=?, bio=? WHERE agent_id=?`, [p.name, p.email, p.phone, p.role, p.license_number, p.facebook, 
                 p.twitter, params.instagram, p.bio, p.agent_id]);
             if(result.affectedRows >= 0){
@@ -323,6 +391,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -335,9 +407,11 @@ export class MYSQLAgentsRepo implements AgentsRepo {
             success: false,
         }
 
+        let connection: PoolConnection | null = null;
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`DELETE FROM agents WHERE agent_id=?`, [agent_id]);
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`DELETE FROM agents WHERE agent_id=?`, [agent_id]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -352,6 +426,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -365,10 +443,12 @@ export class MYSQLAgentsRepo implements AgentsRepo {
             success: false,
         }
         
-         try{
+        let connection: PoolConnection | null = null;
+        try{
             
+            connection = await pool.getConnection();
             image_data = JSON.stringify(image_data);
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE agents SET image=? WHERE agent_id=?`, [image_data, agent_id]);
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE agents SET image=? WHERE agent_id=?`, [image_data, agent_id]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -384,6 +464,10 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -392,6 +476,7 @@ export class MYSQLAgentsRepo implements AgentsRepo {
         
         // Path to the directory where images are stored
         const imagesDirectory = path.join(process.cwd(), 'public', 'images');
+        let connection: PoolConnection | null = null;
 
         try {
             // Check if the image exists

@@ -3,6 +3,7 @@ import { AddServiceParams, AddTemplateParams, GetSingleUserParams, LoadSingleTem
 import { ResultSetHeader, RowDataPacket } from "mysql2"; 
 import { MYSQLUserRepo } from "./user_repo";
 import { MYSQLCompanyRepo } from "./company_repo";
+import { PoolConnection } from "mysql2/promise";
 
 export interface TemplateRepo { 
     AddNewTemplate(params: AddTemplateParams) : Promise<[boolean, number, string]>
@@ -21,9 +22,11 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         const email_body = params.email_body;
         const email_subject = params.email_subject;
         const sms_body = params.sms_body;
+        let connection: PoolConnection | null = null;
 
         try{
             
+            connection = await pool.getConnection();
             let isAdded: boolean = false;
             const temp_info = await this.LoadTemplateInfo({search_by: "Name", search_value: template_name, template_type: template_type})
 
@@ -32,7 +35,7 @@ export class MYSQLTemplateRepo implements TemplateRepo {
                     return [false, 0, "Template name already exist, please try another"];
                 }
 
-                const [result] = await pool.query<ResultSetHeader>(`
+                const [result] = await connection.query<ResultSetHeader>(`
                     INSERT INTO templates(template_type, template_name, email_subject, email_body, sms_body) VALUES (?, ?, ?, ?, ?) `, 
                     [template_type, template_name, email_subject, email_body, sms_body]
                 );
@@ -45,30 +48,36 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         }catch(e: any){
             console.log(e.sqlMessage)
             return [false, 0, e.sqlMessage]
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
 
     public async LoadTemplateInfo(params: LoadSingleTemplateParams): Promise<TemplateDetails | null> {
 
+        let connection: PoolConnection | null = null;
         try{
 
             let rows: RowDataPacket[] = []
             const search_by = params.search_by;
             const value = params.search_value;
             const type = params.template_type;
+            connection = await pool.getConnection();
 
             if(!type || type == ''){
                 if(search_by == "Name"){
-                    [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_name=? `, [value]);
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_name=? `, [value]);
                 }else if(search_by == "Temp Id"){
-                    [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_id=? `, [value]);
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_id=? `, [value]);
                 }
             }else{
                 if(search_by == "Name"){
-                    [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_name=? AND template_type=? `, [value, type]);
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_name=? AND template_type=? `, [value, type]);
                 }else if(search_by == "Temp Id"){
-                    [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_id=? AND template_type=? `, [value, type]);
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates WHERE template_id=? AND template_type=? `, [value, type]);
                 }
             }
 
@@ -86,6 +95,10 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         }catch(e: any){
             console.log(e.sqlMessage);
             return e.sqlMessage
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     } 
@@ -99,9 +112,11 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         const email_subject = params.email_subject;
         const sms_body = params.sms_body;
 
+        let connection: PoolConnection | null = null;
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`
                 UPDATE templates SET template_type=?, template_name=?, email_subject=?, email_body=?, sms_body=? WHERE template_id=? `, 
                 [template_type, template_name, email_subject, email_body, sms_body, template_id]
             );
@@ -111,6 +126,10 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         }catch(e: any){
             console.log(e.sqlMessage)
             return false; 
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -122,35 +141,48 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         const template_type = params.template_type;
         let rows: RowDataPacket[] = [];
 
-        if(paginated){
+        let connection: PoolConnection | null = null;
+        try{
             
-            const page = params.page;
-            const limit = params.limit;
-            const start_from = (page - 1) * limit;
+            connection = await pool.getConnection();
+            if(paginated){
+            
+                const page = params.page;
+                const limit = params.limit;
+                const start_from = (page - 1) * limit;
 
-            let type_filter = "";
-            if(template_type != "any"){
-                type_filter = ` WHERE template_type='${template_type}' `;
+                let type_filter = "";
+                if(template_type != "any"){
+                    type_filter = ` WHERE template_type='${template_type}' `;
+                }
+
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM templates ${type_filter}) 
+                AS total_records FROM templates ${type_filter} ORDER BY template_name ASC LIMIT ${start_from}, ${limit}`);
+                
+            }else{
+
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates ORDER BY template_name ASC `);
+
             }
+    
+            const formattedRows = rows.map((row) => {
+    
+                return {
+                    ...row,
+                }
 
-            [rows] = await pool.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM templates ${type_filter}) 
-            AS total_records FROM templates ${type_filter} ORDER BY template_name ASC LIMIT ${start_from}, ${limit}`);
-            
-        }else{
+            });
 
-            [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM templates ORDER BY template_name ASC `);
+            return formattedRows as TemplateLists[] | null;
 
+        }catch(e: any){
+            console.log(e.sqlMessage)
+            return null; 
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
- 
-        const formattedRows = rows.map((row) => {
- 
-            return {
-                ...row,
-            }
-
-        });
-
-        return formattedRows as TemplateLists[] | null;
 
     }
     
@@ -215,16 +247,22 @@ export class MYSQLTemplateRepo implements TemplateRepo {
 
     public async DeleteService(draft_id: number): Promise<boolean> {
         
+        let connection: PoolConnection | null = null;
         try{
 
-            const [del_draft] = await pool.query<ResultSetHeader>(`DELETE FROM service_drafts WHERE draft_id=? `, [draft_id]);
-            const [del_post] = await pool.query<ResultSetHeader>(`DELETE FROM services WHERE service_draft_id=? `, [draft_id]);
+            connection = await pool.getConnection();
+            const [del_draft] = await connection.query<ResultSetHeader>(`DELETE FROM service_drafts WHERE draft_id=? `, [draft_id]);
+            const [del_post] = await connection.query<ResultSetHeader>(`DELETE FROM services WHERE service_draft_id=? `, [draft_id]);
             
             return del_draft.affectedRows >= 0;
 
         }catch(e: any){
             console.log(e.message);
             return false;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }

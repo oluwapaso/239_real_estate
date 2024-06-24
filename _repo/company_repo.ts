@@ -1,6 +1,7 @@
 import pool from "@/_lib/db_conn";
 import { APIResponseProps, BlogDraftsInfo, UpdateAPIParams, UpdateCompanyParams, UpdatePrivacyAndTermsParams } from "@/components/types";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { PoolConnection } from "mysql2/promise";
 
 export interface CompanyRepo {
     GetCompayInfo(): Promise<APIResponseProps>
@@ -12,7 +13,7 @@ export interface CompanyRepo {
 }
 
 export class MYSQLCompanyRepo implements CompanyRepo {
-
+    
     public async GetCompayInfo(): Promise<APIResponseProps> {
 
         const default_rep: APIResponseProps = {
@@ -21,9 +22,11 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             success: false,
         }
 
+        let connection: PoolConnection | null = null;
         try{
-            
-            const [row] = await pool.query<RowDataPacket[]>(`SELECT * FROM company_info WHERE company_id='1' `);
+
+            connection = await pool.getConnection();
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM company_info WHERE company_id='1' `);
             if(row.length){
                 
                 default_rep.success = true;
@@ -53,6 +56,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -64,13 +71,15 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
             
+            connection = await pool.getConnection();
             const field = `google_auth_client_id, google_auth_client_secret, facebook_auth_app_id, facebook_auth_app_secret, google_map_key, 
             facebook_short_token, facebook_long_token, sendgrid_key, sendgrid_mailer, walkscore_api, twillio_account_sid, twillio_auth_token, 
             twillio_twiml_sid, twillio_phone_number`;
-            const [row] = await pool.query<RowDataPacket[]>(`SELECT ${field} FROM company_info WHERE company_id='1' `);
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT ${field} FROM company_info WHERE company_id='1' `);
             if(row.length){
                  
                 default_rep.success = true;
@@ -85,6 +94,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -96,10 +109,12 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
             
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET company_name=?, default_email=?, phone_number=?, 
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET company_name=?, default_email=?, phone_number=?, 
             contact_us_email=?, buying_email=?, selling_req_email=?, address_1=?, address_2=?, facebook=?, instagram=?, twitter=?, youtube=?, 
             mls_office_key=? WHERE company_id=?`, [params.company_name, params.default_email, params.phone_number, params.contact_us_email, params.buying_email, 
             params.selling_req_email, params.address_1, params.address_2, params.facebook, params.instagram, params.twitter, params.youtube, 
@@ -118,6 +133,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -129,10 +148,12 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
 
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET google_auth_client_id=?, google_auth_client_secret=?, 
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET google_auth_client_id=?, google_auth_client_secret=?, 
             facebook_auth_app_id=?, facebook_auth_app_secret=?, google_map_key=?, facebook_short_token=?, facebook_long_token=?, 
             sendgrid_key=?, sendgrid_mailer=?, walkscore_api=?, twillio_account_sid=?, twillio_auth_token=?, twillio_twiml_sid=?, 
             twillio_phone_number=? WHERE company_id=?`, [params.google_auth_client_id, params.google_auth_client_secret, 
@@ -156,6 +177,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             default_rep.message = e.sqlMessage;
             console.log("e.sqlMessagee", e.sqlMessage)
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -167,10 +192,12 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
 
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET lead_stages=? WHERE company_id=?`, 
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET lead_stages=? WHERE company_id=?`, 
             [JSON.stringify(lead_stages), "1"]);
             if(result.affectedRows > 0){
                 
@@ -187,6 +214,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             default_rep.message = e.sqlMessage;
             console.log("e.sqlMessagee", e.sqlMessage)
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -198,6 +229,7 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
             
@@ -217,7 +249,8 @@ export class MYSQLCompanyRepo implements CompanyRepo {
                 type_resp = "About us"
             }
 
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET ${field}=? WHERE company_id=?`, [params.value, "1"]);
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET ${field}=? WHERE company_id=?`, [params.value, "1"]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -232,6 +265,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -243,6 +280,7 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
         
          try{
             
@@ -256,7 +294,9 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             }
 
             logo_data = JSON.stringify(logo_data);
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET ${update_fld}=? WHERE company_id=?`, [logo_data, "1"]);
+            connection = await pool.getConnection();
+
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET ${update_fld}=? WHERE company_id=?`, [logo_data, "1"]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -272,6 +312,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -283,8 +327,9 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
         
-         try{
+        try{
             
             let update_fld = "home_header";
             if(upload_type == "Home Header"){
@@ -296,7 +341,9 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             }
 
             header_data = JSON.stringify(header_data);
-            const [result] = await pool.query<ResultSetHeader>(`UPDATE company_info SET ${update_fld}=? WHERE company_id=?`, [header_data, "1"]);
+            connection = await pool.getConnection();
+
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET ${update_fld}=? WHERE company_id=?`, [header_data, "1"]);
             if(result.affectedRows > 0){
                 
                 default_rep.success = true
@@ -312,6 +359,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
 
     }
@@ -323,10 +374,12 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             data: null,
             success: false,
         }
+        let connection: PoolConnection | null = null;
 
         try{
-            
-            const [rows] = await pool.query<RowDataPacket[]>(`SELECT slug, post_title, show_on_menus FROM blog_posts 
+
+            connection = await pool.getConnection();
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT slug, post_title, show_on_menus FROM blog_posts 
             WHERE (JSON_EXTRACT(show_on_menus, '$.buyer_menu')=? OR JSON_EXTRACT(show_on_menus, '$.seller_menu')=?) `, ["Yes", "Yes"]);
             
             if(rows.length){
@@ -349,6 +402,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         }catch(e: any){
             default_rep.message = e.sqlMessage
             return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
         }
     
     }
