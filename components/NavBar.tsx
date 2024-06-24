@@ -245,31 +245,21 @@ function NavBar({ page }: NavProps) {
                             </button>
                         </div>
 
-                        <div className='absolute hidden w-[220px] z-[200] bg-transparent group-hover:block pt-2 right-0'>
-                            <ul className='bg-primary shadow-lg w-full *:text-white *:font-light grid grid-col-2 *:text-sm 
-                                *:uppercase *:mb-2 *:py-3 *:cursor-pointer'>
-                                <li className='hover:bg-gray-600 transition duration-500 col-span-2 border-b border-gray-600'>
-                                    <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' shallow>
-                                        <div className=' flex items-center px-4'>My Dashboard</div>
-                                    </Link>
-                                </li>
-                                <li className='hover:bg-gray-600 transition duration-500 col-span-2'>
-                                    <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' shallow>
-                                        <div className=' flex items-center px-4'>Favorites {`(${logged_user?.favorites ? logged_user?.favorites.length : "0"})`}</div>
-                                    </Link>
-                                </li>
-                                <li className='hover:bg-gray-600 transition duration-500 col-span-2'>
-                                    <Link href='/my-dashboard?tab=Searches&page=1' shallow>
-                                        <div className=' flex items-center px-4'>Saved Searches</div>
-                                    </Link>
-                                </li>
-                                <li className='hover:bg-gray-600 transition duration-500 col-span-2'>
-                                    <Link href='/my-dashboard?tab=Preferences' shallow>
-                                        <div className=' flex items-center px-4'>Preferences</div>
-                                    </Link>
-                                </li>
-                                <li className='hover:bg-gray-600 transition duration-500 col-span-2'
-                                    onClick={() => signOut()}>
+                        <div className='absolute hidden w-[220px] z-[200] bg-transparent group-hover:block pt-[24px] right-0'>
+                            <ul className='nav-menu'>
+                                <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
+                                    <div className=' flex items-center px-4'>My Dashboard</div>
+                                </Link>
+                                <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
+                                    <div className=' flex items-center px-4'>Favorites {`(${logged_user?.favorites ? logged_user?.favorites.length : "0"})`}</div>
+                                </Link>
+                                <Link href='/my-dashboard?tab=Searches&page=1' className='nav-menu-item'>
+                                    <div className=' flex items-center px-4'>Saved Searches</div>
+                                </Link>
+                                <Link href='/my-dashboard?tab=Preferences' className='nav-menu-item'>
+                                    <div className=' flex items-center px-4'>Preferences</div>
+                                </Link>
+                                <li className='nav-menu-item' onClick={() => signOut()}>
                                     <div className='flex items-center px-4'>Sign Out</div>
                                 </li>
                             </ul>

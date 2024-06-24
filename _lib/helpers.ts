@@ -931,31 +931,36 @@ export class Helpers {
         }
         
         if(req_body.home_type && req_body.home_type !=""){
-            
+             
             if(req_body.home_type.Any != 'Yes'){
+                
+                if(req_body.home_type.House == 'Yes' || req_body.home_type.Residential == 'Yes'){
+                    prop_type_query += ` PropertyType='Residential' OR `;
+                }
+
+                if(req_body.home_type.Commercial == 'Yes'){
+                    prop_type_query += ` PropertyType='Commercial' OR `;
+                }
+                
+                if(req_body.home_type.Dock == "Yes"){
+                    prop_type_query += ` PropertyType='Boat Dock' OR`;   
+                } 
+                
+                if(req_body.home_type.Land == "Yes"){
+                    prop_type_query += ` PropertyType='Lot & Land' OR`;   
+                }
+
                 if(req_body.home_type.SingleFamily == 'Yes'){
-                    prop_type_query += ` PropertyType='Single Family' OR`; 
+                    prop_type_query += ` OwnershipDesc='Single Family' OR`;
                 }
                 
                 if(req_body.home_type.Condo == 'Yes'){
                     prop_type_query += ` OwnershipDesc='Condo' OR`;
                 }
                 
-                if(req_body.home_type.Townhouse == "Yes"){
-                    prop_type_query += ` OwnershipDesc='Townhouse' OR`;   
-                } 
-                
-                if(req_body.home_type.MultiFamily == "Yes"){
-                    prop_type_query += ` PropertySubType='Multi Family' OR`;   
+                if(req_body.home_type.CoOp == 'Yes'){
+                    prop_type_query += ` OwnershipDesc='Co-Op' OR `;
                 }
-                
-                if(req_body.home_type.Farm == "Yes"){
-                    prop_type_query += ` PropertyType='Lot & Land' OR`;   
-                } 
-                
-                if(req_body.home_type.Dock == "Yes"){
-                    prop_type_query += ` PropertyType='Boat Dock' OR`;   
-                } 
 
                 prop_type_query = this.rTrim(prop_type_query, "OR");
                 if(prop_type_query!=""){

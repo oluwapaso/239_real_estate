@@ -2,11 +2,15 @@ import moment from 'moment'
 import Link from 'next/link'
 import numeral from 'numeral'
 import React, { useState } from 'react'
-import { FaArrowDownLong, FaArrowUpLong, FaRegHeart, FaStar } from 'react-icons/fa6'
+import { FaArrowDownLong, FaArrowUpLong, FaPeopleRoof, FaRegHeart, FaRulerCombined, FaStar } from 'react-icons/fa6'
 import { GoDotFill } from 'react-icons/go'
 import PropCarousel from './PropCarousel'
 import PropFavs from './PropFavs'
 import useCurrentBreakpoint from '@/_hooks/useMediaQuery'
+import { MdOutlineBed } from 'react-icons/md'
+import { LiaBathSolid } from 'react-icons/lia'
+import { HiOutlineBuildingOffice2, HiOutlineHomeModern } from 'react-icons/hi2'
+import { GiIsland } from 'react-icons/gi'
 
 const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
 
@@ -22,6 +26,14 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
         card_height = "h-[265px]";
     }
     const link_address = prop.FullAddress.replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;
+
+    let prop_icon = <HiOutlineHomeModern size={15} className='text-green-700 mr-1' />
+    if (prop.PropertyType == "Lot & Land") {
+        prop_icon = <GiIsland size={15} className='text-green-700 mr-1' />
+    } else if (prop.PropertyType == "Commercial") {
+        prop_icon = <HiOutlineBuildingOffice2 size={15} className='text-green-700 mr-1' />
+    }
+
     return (
         <div key={prop.matrix_unique_id} className='prop-card group cursor-pointer border border-primary/40 rounded-md overflow-hidden
         shadow-md hover:shadow-xl'> {/** hover:scale-105 duration-200 hover:z-50 **/}
@@ -72,16 +84,20 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                     </div>
 
                     <div className='w-full mt-2 font-bold text-base'>{prop.FullAddress}, {prop.City}, {prop.StateOrProvince} {prop.PostalCode}</div>
-                    <div className='w-full mt-1 flex flex-wrap items-center font-normal'>
+                    <div className='w-full mt-1 flexflex-wrap grid grid-cols-2 gap-x-2 gap-y-2 items-center font-normal *:bg-gray-50 
+                    *:py-1 *:px-2 *:text-sm'>
                         {
                             prop.BedsTotal > 0 && (
-                                <div>{prop.BedsTotal} BED{prop.BedsTotal > 1 ? "S" : ""}</div>
+                                <div className='flex items-center'>
+                                    <MdOutlineBed size={15} className='text-red-600 mr-1' />
+                                    <span>{prop.BedsTotal} BED{prop.BedsTotal > 1 ? "S" : ""}</span>
+                                </div>
                             )
                         }
                         {
                             prop.BathsTotal > 0 && (
                                 <div className='flex items-center'>
-                                    <span className='text-gray-400 px-1'><GoDotFill size={12} /></span>
+                                    <LiaBathSolid size={15} className='text-sky-700 mr-1' />
                                     <span>{numeral(prop.BathsTotal).format("0,0")} BATH{prop.BathsTotal > 1 ? "S" : ""}</span>
                                 </div>
                             )
@@ -89,17 +105,17 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                         {
                             prop.TotalArea > 0 && (
                                 <div className='flex items-center'>
-                                    <span className='text-gray-400 px-1'><GoDotFill size={12} /></span>
+                                    <FaRulerCombined size={15} className='text-pink-600 mr-1' />
                                     <span>{numeral(prop.TotalArea).format("0,0")} SQFT</span>
                                 </div>
                             )
                         }
                         <div className='flex items-center'>
-                            <span className='text-gray-400 px-1'><GoDotFill size={12} /></span>
+                            <div className='min-w-[18px]'>{prop_icon}</div>
                             <span className='uppercase'>{prop.PropertyType}</span>
                         </div>
-                        <div className='flex items-center'><span className='text-gray-400 pr-1'>
-                            <GoDotFill size={12} /></span> <span>MLS<sup>&reg;</sup> #{prop.MLSNumber}</span>
+                        <div className='flex items-center col-span-full'>
+                            <FaPeopleRoof size={15} className='text-purple-700 mr-1' /> <span>MLS<sup>&reg;</sup> #{prop.MLSNumber}</span>
                         </div>
                     </div>
                 </div>

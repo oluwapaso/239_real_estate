@@ -109,11 +109,12 @@ const SearchPage = () => {
             Any: "Yes",
             House: "No",
             Condo: "No",
-            Townhouse: "No",
-            MultiFamily: "No",
-            Mobile: "No",
-            Farm: "No",
+            SingleFamily: "No",
+            CoOp: "No",
+            ResIncome: "No",
+            Dock: "No",
             Land: "No",
+            Commercial: "No",
         },
         map_bounds: { north: 26.760979157255296, south: 25.801786319915113, east: -81.17107039746094, west: -82.40840560253906 },
         zoom: 10,
@@ -497,11 +498,12 @@ const SearchPage = () => {
             payload.home_type = {
                 House: "No",
                 Condo: "No",
-                Townhouse: "No",
-                MultiFamily: "No",
-                Mobile: "No",
-                Farm: "No",
+                SingleFamily: "No",
+                CoOp: "No",
+                ResIncome: "No",
+                Dock: "No",
                 Land: "No",
+                Commercial: "No",
             }
             new_type = "No";
         }

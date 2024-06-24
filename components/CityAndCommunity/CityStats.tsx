@@ -5,6 +5,12 @@ import { APIResponseProps } from '../types';
 import { Helpers } from '@/_lib/helpers';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import numeral from 'numeral';
+import { BiMath } from 'react-icons/bi';
+import { HiArrowTrendingDown, HiOutlineBuildingOffice2, HiOutlineHomeModern } from 'react-icons/hi2';
+import { TbHomeDollar, TbHomePlus } from 'react-icons/tb';
+import { GiHarborDock, GiIsland } from 'react-icons/gi';
+import { BsGraphDownArrow, BsGraphUpArrow } from 'react-icons/bs';
+import { MdOutlineEqualizer } from 'react-icons/md';
 
 const helpers = new Helpers();
 function CityStats({ city_slug, community_slug }: { city_slug?: string, community_slug?: string }) {
@@ -46,57 +52,107 @@ function CityStats({ city_slug, community_slug }: { city_slug?: string, communit
         return (
             <div className='w-full mt-6'>
                 <div className='w-full font-bold text-2xl'>Property Stats</div>
-                <div className='w-full mt-1 grid grid-cols-3 gap-6 *:bg-gray-50 *:border *:border-gray-200 *:shadowlg *:p-6 *:flex *:flex-col 
-                    *:items-center *:justify-center *:cursor-pointer'>
+                <div className='w-full mt-1 grid grid-cols-3 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex
+                    *:items-center *:justify-between *:cursor-pointer *:rounded-md'>
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Total_Listings).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Total Listings</div>
+                        <div>
+                            <BiMath size={45} className=' text-red-600' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Total_Listings).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Total Listings</div>
+                        </div>
                     </div>
 
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Residentials).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Residential</div>
+                        <div>
+                            <HiOutlineHomeModern size={45} className=' text-green-600' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Residentials).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Residential</div>
+                        </div>
                     </div>
 
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Residential_Income).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Residential Income</div>
+                        <div>
+                            <TbHomePlus size={45} className=' text-orange-600' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Residential_Income).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Residential Income</div>
+                        </div>
                     </div>
 
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Commercial_Sale).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Commercial Sale</div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Commercial_Sale).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Commercial Sale</div>
+                        </div>
+                        <div>
+                            <HiOutlineBuildingOffice2 size={45} className=' text-pink-600' />
+                        </div>
                     </div>
 
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Lands).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Lands</div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Lands).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Lands</div>
+                        </div>
+                        <div>
+                            <GiIsland size={45} className=' text-sky-600' />
+                        </div>
                     </div>
 
                     <div className=''>
-                        <div className=' text-4xl'>{numeral(city_stats?.Docks).format("0,0")}</div>
-                        <div className=' font-bold text-lg'>Docks</div>
+                        <div className='flex flex-col'>
+                            <div className=' text-2xl'>{numeral(city_stats?.Docks).format("0,0")}</div>
+                            <div className=' font-normal text-lg'>Docks</div>
+                        </div>
+                        <div>
+                            <GiHarborDock size={45} className=' text-rose-600' />
+                        </div>
                     </div>
                 </div>
 
-                <div className='w-full grid grid-cols-2 mt-6 gap-6 *:bg-gray-50 *:border *:border-gray-200 *:shadowlg *:p-6 *:flex *:flex-col 
-                    *:items-center *:justify-center *:cursor-pointer'>
+                <div className='w-full grid grid-cols-2 mt-6 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex 
+                    *:items-center *:justify-between *:cursor-pointer *:rounded-md'>
                     <div>
-                        <span className='text-4xl'>{numeral(city_stats?.Highest_Price).format("$0,0")}</span>
-                        <strong className='font-bold text-lg'>Highest Price</strong>
+                        <div>
+                            <BsGraphUpArrow size={45} className=' text-green-600' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <span className='text-2xl'>{numeral(city_stats?.Highest_Price).format("$0,0")}</span>
+                            <strong className='font-normal text-lg'>Highest Price</strong>
+                        </div>
                     </div>
                     <div>
-                        <span className='text-4xl'>{numeral(city_stats?.AVG_Price).format("$0,0")}</span>
-                        <strong className='font-bold text-lg'>Avegrage Price</strong>
+                        <div>
+                            <MdOutlineEqualizer size={45} className=' text-blue-600' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <span className='text-2xl'>{numeral(city_stats?.AVG_Price).format("$0,0")}</span>
+                            <strong className='font-normal text-lg'>Avegrage Price</strong>
+                        </div>
                     </div>
                     <div>
-                        <span className='text-4xl'>{numeral(city_stats?.Lowest_Price).format("$0,0")}</span>
-                        <strong className='font-bold text-lg'>Lowest Price</strong>
+                        <div className='flex flex-col'>
+                            <span className='text-2xl'>{numeral(city_stats?.Lowest_Price).format("$0,0")}</span>
+                            <strong className='font-normal text-lg'>Lowest Price</strong>
+                        </div>
+                        <div>
+                            <BsGraphDownArrow size={45} className=' text-red-600' />
+                        </div>
                     </div>
 
                     <div>
-                        <span className='text-4xl'>{numeral(city_stats?.AVG_Price_Per_SqFt).format("$0,0")}</span>
-                        <strong className='font-bold text-lg'>Avegrage Price Per/SqFt</strong>
+                        <div className='flex flex-col'>
+                            <span className='text-2xl'>{numeral(city_stats?.AVG_Price_Per_SqFt).format("$0,0")}</span>
+                            <strong className='font-normal text-lg'>Avegrage Price Per/SqFt</strong>
+                        </div>
+                        <div>
+                            <TbHomeDollar size={45} className=' text-pink-600' />
+                        </div>
                     </div>
                 </div>
             </div>

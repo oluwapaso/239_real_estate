@@ -43,21 +43,21 @@ const FeaturedListings = () => {
             }
 
             if (fls.land_and_lot && fls.land_and_lot.length && fls.land_and_lot[0] == "Lot & Land") {
-                prop_type["Lot_And_Land"] = "Yes";
+                prop_type["Land"] = "Yes";
             } else {
-                prop_type["Lot_And_Land"] = "No";
+                prop_type["Land"] = "No";
             }
 
             if (fls.residential_income && fls.residential_income.length && fls.residential_income[0] == "Residential Income") {
-                prop_type["Residential_Income"] = "Yes";
+                prop_type["Residential"] = "Yes";
             } else {
-                prop_type["Residential_Income"] = "No";
+                prop_type["Residential"] = "No";
             }
 
             if (fls.boat_dock && fls.boat_dock.length && fls.boat_dock[0] == "Boat Dock") {
-                prop_type["Boat_Dock"] = "Yes";
+                prop_type["Dock"] = "Yes";
             } else {
-                prop_type["Boat_Dock"] = "No";
+                prop_type["Dock"] = "No";
             }
 
             const payload = {

@@ -3,9 +3,10 @@ import { BiBuildingHouse } from 'react-icons/bi'
 import { BsBuildings } from 'react-icons/bs'
 import { FaRegBuilding } from 'react-icons/fa'
 import { GiForestCamp, GiIsland } from 'react-icons/gi'
-import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
+import { HiHomeModern, HiOutlineBuildingOffice2 } from 'react-icons/hi2'
 import { IoHomeOutline } from 'react-icons/io5'
 import { MdHouseboat } from 'react-icons/md'
+import { PiBuildingApartmentBold } from 'react-icons/pi'
 
 const PropertyTypes = ({ payload, handlePropertyType }: { payload: any, handlePropertyType: (type: string) => void }) => {
     return (
@@ -38,18 +39,18 @@ const PropertyTypes = ({ payload, handlePropertyType }: { payload: any, handlePr
                 </div>
 
                 <div className={`p-4 border border-gray-500 flex justify-center items-center hover:bg-gray-800
-                                        hover:text-white rounded-md ${payload.home_type.Townhouse == "Yes" && "bg-gray-800 text-white"}`} onClick={() => handlePropertyType("Townhouse")}>
+                                        hover:text-white rounded-md ${payload.home_type.SingleFamily == "Yes" && "bg-gray-800 text-white"}`} onClick={() => handlePropertyType("SingleFamily")}>
                     <div className='w-full flex flex-col justify-center items-center'>
-                        <FaRegBuilding size={25} />
-                        <div className='mt-1 font-normal text-sm'>Townhouse</div>
+                        <HiHomeModern size={25} />
+                        <div className='mt-1 font-normal text-sm'>Single Family</div>
                     </div>
                 </div>
 
                 <div className={`p-4 border border-gray-500 flex justify-center items-center hover:bg-gray-800
-                                        hover:text-white rounded-md ${payload.home_type.MultiFamily == "Yes" && "bg-gray-800 text-white"}`} onClick={() => handlePropertyType("MultiFamily")}>
+                                        hover:text-white rounded-md ${payload.home_type.Commercial == "Yes" && "bg-gray-800 text-white"}`} onClick={() => handlePropertyType("Commercial")}>
                     <div className='w-full flex flex-col justify-center items-center'>
-                        <BsBuildings size={25} />
-                        <div className='mt-1 font-normal text-sm'>Multi Family</div>
+                        <PiBuildingApartmentBold size={25} />
+                        <div className='mt-1 font-normal text-sm'>Commercial</div>
                     </div>
                 </div>
 
