@@ -23,9 +23,8 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     /* Query Server */
     if ($login) {
 
-        //$classes = ["RES", "RIN", "LOT", "COM", "RNT", "DOCK"];
-        $classes = ["RNT"];
-        $limit = 3;
+        $classes = ["RES", "RIN", "LOT", "COM", "RNT", "DOCK"];
+        $limit = 150;
 
         foreach ($classes as $defaultClass) {
 
@@ -60,8 +59,8 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 echo "Using newest<br/>";
             }
 
-            //$status_ftch = 'A,S,AP,P,PC';
-            $status_ftch = 'A';
+            $status_ftch = 'A,S,AP,P,PC';
+            //$status_ftch = 'A';
 
             $results = $rets->Search(
                 "Property",

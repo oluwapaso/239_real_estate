@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL);
 $base_url = "http://localhost:3000";
+//$base_url = "https://239re.com";
 
 $endpoints = array(
     "$base_url/php-cron-jobs/fetch_listings.php", //Comment this for update_listings.php

@@ -53,7 +53,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $defaultClass = "DOCK";
         }
 
-        $sqlOffset = "SELECT COUNT(property_id) AS offset FROM properties WHERE PropertyClass='$defaultClass'";
+        $sqlOffset = "SELECT COUNT(property_id) AS `offset` FROM properties WHERE PropertyClass='$defaultClass'";
         $offRslt = mysqli_query($conn, $sqlOffset) or die(mysqli_error($conn));
         $off_row = mysqli_fetch_assoc($offRslt);
         // $offset = 0;
@@ -79,7 +79,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $defaultClass,
             '(Status=|' . $status_ftch . '), (MatrixModifiedDT=1900-01-01T00:00:00+)',
             [
-                'Limit' => 3,
+                'Limit' => 150,
                 'Offset' => $offset,
                 'QueryType' => 'DMQL2',
                 'Format' => 'COMPACT-DECODED'

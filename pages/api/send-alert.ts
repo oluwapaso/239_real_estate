@@ -6,7 +6,6 @@ import { MailService } from "@/_services/mail_service";
 import { GetSingleUserParams, SendMailParams } from "@/components/types";
 import moment from "moment";
 import { NextApiRequest, NextApiResponse } from "next";
-import nodemailer from 'nodemailer';
 import numeral from "numeral";
 
 export default async function handler(req: NextApiRequest, resp:NextApiResponse) {
@@ -99,13 +98,13 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
 
                                 rest += `${extra} <div style="width: 49%; margin-bottom: 30px; display: inline-block; float: left;">
                                     <div style="width: 100%;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.matrix_unique_id}/${prop_address}" style="width: 100%;">
+                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" style="width: 100%;">
                                         <img src="${(prop.Images && prop.Images[0]) ? prop.Images[0] : no_image}" style="width: 100%; height: 180px;" />
                                         </a>
                                     </div>
                                     
                                     <div style="width: 100%; margin-top: 5px;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.matrix_unique_id}/${prop_address}" 
+                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" 
                                         style="width: 100%; text-decoration: none; color: #222;">
                                         <div style="width: 100%; font-weight: bold;">${prop.FullAddress}, ${prop.City}</div>
                                         <div style="width: 100%; font-weight: bold; font-size: 25px; margin-top: 5px;">${numeral(prop.ListPrice).format("$0,0")}</div>
@@ -114,7 +113,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                                         </a>
 
                                         <div style="margin-top: 14px;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.matrix_unique_id}/${prop_address}" 
+                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" 
                                         style="padding: 12px 18px; text-align: center; background-color: #222; color: white; 
                                         width: 140px; border-radius: 4px; text-decoration: none;">More Details</a>
                                         </div>
@@ -167,7 +166,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                                     ${numeral(properties[0].BathsTotal).format("0,0")} BATHS, ${numeral(properties[0].TotalArea).format("0,0")} SQFT</div>
                                     
                                     <div style="margin-top: 14px;">
-                                    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${properties[0].ListingId}/${address_main}" 
+                                    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${properties[0].MLSNumber}/${address_main}" 
                                     style="padding: 12px 18px; text-align: center; margin-top: 10px; background-color: #222; color: white; 
                                     width: 140px; border-radius: 4px; text-decoration: none;">More Details</a>
                                     </div>
@@ -208,7 +207,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                             "user_id": user_info.user_id, 
                             "email": user_info.email, 
                             "message_body": msg_body, 
-                            "subject": `${properties[0].total_records} new listing${properties[0].total_record > 1 && "s" } in your search`
+                            "subject": `${properties[0].total_records} new listing${properties[0].total_records > 1 ? "s" : "" } in your search`
                         });
 
                     }
