@@ -790,7 +790,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             (email_frequency = 'Hourly' AND last_alert < NOW() - INTERVAL 1 HOUR) OR 
             (email_frequency = 'Daily' AND last_alert < NOW() - INTERVAL 1 DAY) OR 
             (email_frequency = 'Weekly' AND last_alert < NOW() - INTERVAL 1 WEEK) OR 
-            (email_frequency = 'Monthly' AND last_alert < NOW() - INTERVAL 1 MONTH) LIMIT 2`); //10
+            (email_frequency = 'Monthly' AND last_alert < NOW() - INTERVAL 1 MONTH) LIMIT 10`); //10
 
             if(rows.length){
                 const formattedRows = rows.map((row) => {
