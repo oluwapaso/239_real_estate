@@ -15,6 +15,7 @@ import { BiMenu, BiSearch } from 'react-icons/bi';
 import { FaTimes } from 'react-icons/fa';
 import { FetchCities } from '@/app/(main-website)/(main-layout)/GlobalRedux/cities/citySlice';
 import { useLastSeen } from '@/_hooks/useActivities';
+import CustomLinkMain from './CustomLinkMain';
 
 function NavBar({ page }: NavProps) {
 
@@ -114,20 +115,20 @@ function NavBar({ page }: NavProps) {
     return (
         <nav className={`nav w-full px-4 md:px-16 flex justify-between items-center transition duration-500 py-4 mx-auto ${nav_filter} ${nav_gradient}`}>
             <div className='logo-container'>
-                <Link href="/" shallow>
+                <CustomLinkMain href="/">
                     <Image src={logo_loc} alt='Logo image' width={120} height={48} className='w-[auto] h-[38px] xs:h-[48px]' />
-                </Link>
+                </CustomLinkMain>
             </div>
 
             <div className={`nav-menu-container hidden tab:flex justify-end items-center select-none flex-wrap ${nav_color}`}>
                 <div className='menu-container mr-5'>
                     <ul className={`flex flex-row justify-end items-center space-x-5 cursor-pointer *:py-3 *:font-normal`}>
                         <li>
-                            <Link href={`/search`} shallow>
+                            <CustomLinkMain href={`/search`}>
                                 <div className='flex flex-row items-center'>
                                     <BiSearch size={16} className='mr-1' /> <span className='uppercase text-sm mr-1'>MLS Search</span>
                                 </div>
-                            </Link>
+                            </CustomLinkMain>
                         </li>
                         <li className='group'>
                             <div className='flex flex-row items-center'>
@@ -139,9 +140,9 @@ function NavBar({ page }: NavProps) {
                                     {
                                         (city_lists.cities && city_lists.cities.length) && (
                                             city_lists.cities.map((city, index) => (
-                                                <Link key={index} href={`/${city.slug}`} className='nav-menu-item'>
+                                                <CustomLinkMain key={index} href={`/${city.slug}`} className='nav-menu-item'>
                                                     <div className='flex items-center px-4'>{city.friendly_name}</div>
-                                                </Link>
+                                                </CustomLinkMain>
                                             ))
                                         )
                                     }
@@ -286,12 +287,6 @@ function NavBar({ page }: NavProps) {
                         overflow-x-hidden overflow-y-auto font-normal *:bg-gray-800 *:rounded-md space-y-3' onClick={closeMenu}>
                             <Link href={`/search`}>
                                 <div>Main Search</div>
-                            </Link>
-                            <Link href={`/search-for-houses?page=1`}>
-                                <div>Search Houses</div>
-                            </Link>
-                            <Link href={`/search-for-condos?page=1`}>
-                                <div>Search Condos</div>
                             </Link>
                             <Link href={`/our-communities?page=1`} className='hidden'>
                                 <div>Top Cities</div>

@@ -293,6 +293,7 @@ export type compStateProps = {
     blog_header?: any
     error: string,
     menu_opened: boolean,
+    showPageLoader: boolean,
 }
 
 export type AddAgentParams = { 
@@ -657,7 +658,7 @@ export type AddTemplateParams = {
 }
 
 export type UpdateTemplateParams = AddTemplateParams & {
-    template_id: number
+    template_id: number 
 }
 
 export type TemplateLists = {

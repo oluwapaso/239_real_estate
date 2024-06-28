@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Providers } from "./(main-layout)/GlobalRedux/provider";
 import 'react-toastify/dist/ReactToastify.css';
+import PageLoaderMain from "@/components/PageLoaderMain";
 
 export const metadata: Metadata = {
   title: "239 Real Estate",
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className="font-poppins font-medium">
         <Providers>
           {children}
+          <PageLoaderMain />
         </Providers>
       </body>
     </html>

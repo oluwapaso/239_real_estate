@@ -33,6 +33,7 @@ import useCurrentBreakpoint from '@/_hooks/useMediaQuery'
 import { FaList, FaMap } from 'react-icons/fa6'
 import { useSession } from 'next-auth/react'
 import { useModal } from '@/app/contexts/ModalContext'
+import { hidePageLoader } from '../(main-layout)/GlobalRedux/app/appSlice'
 
 const helper = new Helpers();
 const SearchPage = () => {
@@ -1045,9 +1046,12 @@ const SearchPage = () => {
 
     //Close modal if it's opened, this usually happen after returning from property details page without signing in
     useEffect(() => {
+
         if (close_auth_modal) {
             close_auth_modal();
         }
+
+        //dispatch(hidePageLoader())
     }, [])
 
     return (

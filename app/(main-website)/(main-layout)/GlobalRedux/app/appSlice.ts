@@ -20,6 +20,7 @@ const compState: compStateProps = {
     about_us:"",
     error:"",
     menu_opened: false,
+    showPageLoader: false,
 }
 
 export const FetchCompInfo = createAsyncThunk("app/fetch_comp_info", async (_, {rejectWithValue}) => {
@@ -49,6 +50,12 @@ export const appSlice = createSlice({
                 menu_opened: action.payload
             }
         },
+        showPageLoader: (state) => {
+            state.showPageLoader = true
+        },
+        hidePageLoader: (state) => {
+            state.showPageLoader = false
+        }
     },
     extraReducers(builder) {
         builder.addCase(FetchCompInfo.rejected, (state)=>{
@@ -78,5 +85,5 @@ export const appSlice = createSlice({
     },
 })
 
-export const { menu_toggled } = appSlice.actions;
+export const { menu_toggled, showPageLoader, hidePageLoader } = appSlice.actions;
 export default appSlice.reducer
