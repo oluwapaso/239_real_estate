@@ -3,14 +3,22 @@
 import React, { useEffect } from 'react'
 import { useSession } from "next-auth/react"
 import LoginComponent from '@/components/LoginComponent';
+import { hidePageLoader } from '../../(main-layout)/GlobalRedux/app/appSlice'
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
 
   const { data: session } = useSession();
+  const dispatch = useDispatch();
 
   if (session?.user) {
     window.location.href = "/";
   } else {
+
+    //Close modal if it's opened, this usually happen after returning from property details page without signing in
+    useEffect(() => {
+      dispatch(hidePageLoader())
+    }, [])
 
     return (
       <section className='w-full bg-primary h-svh py-20 flex justify-center items-center font-poppins'>
