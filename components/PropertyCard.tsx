@@ -11,6 +11,7 @@ import { MdOutlineBed } from 'react-icons/md'
 import { LiaBathSolid } from 'react-icons/lia'
 import { HiOutlineBuildingOffice2, HiOutlineHomeModern } from 'react-icons/hi2'
 import { GiIsland } from 'react-icons/gi'
+import CustomLinkMain from './CustomLinkMain'
 
 const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
 
@@ -58,7 +59,7 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                 </div>
             </div>
 
-            <Link href={`/listings/${prop.MLSNumber}/${link_address}`}>
+            <CustomLinkMain href={`/listings/${prop.MLSNumber}/${link_address}`}>
                 <div className='w-full pt-2 flex flex-col px-3 py-2 bg-white'>
                     <div className='w-full flex items-center'>
                         <h2 className='font-normal text-2xl group-hover:underline underline-offset-4 transition-all duration-500'>
@@ -119,7 +120,7 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </CustomLinkMain>
         </div>
     )
 

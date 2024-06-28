@@ -1,5 +1,6 @@
 "use client"
 
+import CustomLinkMain from '@/components/CustomLinkMain'
 import SimpleHeader from '@/components/SimpleHeader'
 import { APIResponseProps, form_dataProps } from '@/components/types'
 import { useSession } from 'next-auth/react'
@@ -98,7 +99,7 @@ const ContactUs = () => {
             <section className='w-full bg-white py-10 md:py-20'>
                 <div className='container mx-auto max-w-[850px] px-3 xl:px-0 text-left'>
                     <div className='w-full font-normal'>
-                        <Link href="/">Home</Link> / <Link href="/contact-us">Contact Us</Link>
+                        <CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href="/contact-us">Contact Us</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-3xl mt-2'>Ready to Start Your Real Estate Journey? Contact Us</h3>

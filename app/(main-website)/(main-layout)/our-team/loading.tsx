@@ -1,3 +1,4 @@
+import CustomLinkMain from '@/components/CustomLinkMain'
 import SimpleHeader from '@/components/SimpleHeader'
 import Link from 'next/link'
 import React from 'react'
@@ -9,7 +10,7 @@ const Loading = () => {
             <section className='w-full bg-white py-20'>
                 <div className='container mx-auto max-w-[850px] text-left'>
                     <div className='w-full font-normal'>
-                        <Link href="/">Home</Link> / <Link href="/our-team?page=1">Meet The Team</Link>
+                        <CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href="/our-team?page=1">Meet The Team</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-5xl mt-2'>Meet The Team</h3>

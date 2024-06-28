@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Helpers } from '@/_lib/helpers'
+import CustomLinkMain from '../CustomLinkMain';
 
 const helper = new Helpers();
 const CityCard = ({ city }: { city: any }) => {
@@ -15,8 +16,8 @@ const CityCard = ({ city }: { city: any }) => {
                     <div className='w-full font-medium text-lg'>{helper.ucwords(city.friendly_name)}</div>
                     <div className='w-full font-normal text-base mt-1'>{city.excerpt}</div>
                     <div className='w-full flex justify-end justify-self-end mt-auto'>
-                        <Link href={`/${city.slug}`} className='bg-primary text-white py-2 px-4 hover:shadow-lg cursor-pointer rounded
-                    font-normal text-sm'>Read more...</Link>
+                        <CustomLinkMain href={`/${city.slug}`} className='bg-primary text-white py-2 px-4 hover:shadow-lg cursor-pointer rounded
+                    font-normal text-sm'>Read more...</CustomLinkMain>
                     </div>
                 </div>
             </div>

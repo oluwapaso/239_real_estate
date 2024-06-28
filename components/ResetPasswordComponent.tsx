@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { toast } from 'react-toastify'
 import { APIResponseProps } from './types';
+import CustomLinkMain from './CustomLinkMain';
 
 const helpers = new Helpers();
 
@@ -94,7 +95,7 @@ const ResetPasswordComponent = ({ page, handleLoginModal, handleForgotPwrdModal 
 
                 <div className='w-full mt-4 flex items-center justify-between'>
                     {
-                        page == "Reset Password" ? <Link href='/login' className='text-sky-600'>Remember your password?</Link>
+                        page == "Reset Password" ? <CustomLinkMain href='/login' className='text-sky-600'>Remember your password?</CustomLinkMain>
                             : <div className='text-sky-600 cursor-pointer' onClick={handleLoginModal}>Remember your password?</div>
                     }
                 </div>

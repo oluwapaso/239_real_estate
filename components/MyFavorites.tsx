@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import React from 'react'
 import PropertyLists from './PropertyLists';
 import Link from 'next/link';
+import CustomLinkMain from './CustomLinkMain';
 
 const MyFavorites = () => {
 
@@ -19,8 +20,8 @@ const MyFavorites = () => {
             <div className='w-full mb-6'>
                 <div className='w-[200px] p-1 border border-primary grid grid-cols-2 *:py-2 *:px-5 *:flex *:items-center *:justify-center
                 *:cursor-pointer'>
-                    <Link href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</Link>
-                    <Link href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</Link>
+                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</CustomLinkMain>
+                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</CustomLinkMain>
                 </div>
             </div>
             <PropertyLists list_type={list_type} pagination_path={pagination_path} />

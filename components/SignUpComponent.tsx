@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { APIResponseProps } from './types'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import CustomLinkMain from './CustomLinkMain'
 
 const helpers = new Helpers();
 const SignUpComponent = ({ page, redirect, handleLoginModal }: { page: string, redirect?: string, handleLoginModal?: () => void }) => {
@@ -162,7 +163,7 @@ const SignUpComponent = ({ page, redirect, handleLoginModal }: { page: string, r
 
                 <div className='w-full mt-4 flex items-center justify-between'>
                     {
-                        page == "Sign Up" ? <Link href='/login' className='text-sky-600'>Already have an account?</Link>
+                        page == "Sign Up" ? <CustomLinkMain href='/login' className='text-sky-600'>Already have an account?</CustomLinkMain>
                             : <div className='text-sky-600 cursor-pointer' onClick={handleLoginModal}>Already have an account?</div>
                     }
                 </div>

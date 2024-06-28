@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import { RootState } from '@/app/(main-website)/(main-layout)/GlobalRedux/store'
 import { useSelector } from 'react-redux'
 import CityCard from './CityCard'
+import CustomLinkMain from '../CustomLinkMain'
 
 const Neighbourhood = () => {
 
@@ -42,11 +43,11 @@ const Neighbourhood = () => {
                             <div className='w-[100px] h-[6px] bg-primary'></div>
                         </div>
                     </h2>
-                    <Link href={`/our-communities?page=1`} className='flex-- items-center justify-between border-2 border-white 
+                    <CustomLinkMain href={`/our-communities?page=1`} className='flex-- items-center justify-between border-2 border-white 
                             px-2 md:px-4 py-3 font-light w-[130px] md:w-[170px] hover:bg-white hover:text-primary md:hover:w-[185px] 
                             transition-all duration-500 hidden'>
                         <span className='tracking-widest uppercase text-sm md:text-base'>View All</span> <FaArrowRightLong className='ml-4' />
-                    </Link>
+                    </CustomLinkMain>
                 </div>
 
                 {/* Neibgourhood Cards */}

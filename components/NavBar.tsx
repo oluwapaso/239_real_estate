@@ -156,22 +156,22 @@ function NavBar({ page }: NavProps) {
                             </div>
                             <div className='absolute hidden w-[350px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-[30px]'>
                                 <ul className='nav-menu'>
-                                    <Link href="/search" className='nav-menu-item'>
+                                    <CustomLinkMain href="/search" className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Search Listings</div>
-                                    </Link>
-                                    <Link href="/buying" className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href="/buying" className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Ready To Buy?</div>
-                                    </Link>
-                                    <Link href="/mortgage-calculator" className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href="/mortgage-calculator" className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Mortgage Calculator</div>
-                                    </Link>
+                                    </CustomLinkMain>
                                     {
                                         (menus_list && menus_list.menus.length) && (
                                             menus_list.menus.map((menu, index) => (
                                                 menu.show_on_menus.buyer_menu == "Yes" ? (
-                                                    <Link href={`/read-post/${menu.slug}`} className='nav-menu-item'>
+                                                    <CustomLinkMain href={`/read-post/${menu.slug}`} className='nav-menu-item'>
                                                         <div className='flex items-center px-4'>{menu.post_title}</div>
-                                                    </Link>
+                                                    </CustomLinkMain>
                                                 ) : ""
                                             ))
                                         )
@@ -193,9 +193,9 @@ function NavBar({ page }: NavProps) {
 
                                                 return (
                                                     menu.show_on_menus.seller_menu == "Yes" ? (
-                                                        <Link href={`/read-post/${menu.slug}`} className='nav-menu-item'>
+                                                        <CustomLinkMain href={`/read-post/${menu.slug}`} className='nav-menu-item'>
                                                             <div className='flex items-center px-4'>{menu.post_title}</div>
-                                                        </Link>
+                                                        </CustomLinkMain>
                                                     ) : ""
                                                 )
                                             })
@@ -211,27 +211,27 @@ function NavBar({ page }: NavProps) {
                             </div>
                             <div className='absolute hidden w-[270px] max-w-[100%] z-[200] bg-transparent group-hover:block pt-[30px]'>
                                 <ul className='nav-menu'>
-                                    <Link href='/about-us' className='nav-menu-item'>
+                                    <CustomLinkMain href='/about-us' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>About {comp_info.company_name}</div>
-                                    </Link>
-                                    <Link href='/our-team?page=1' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/our-team?page=1' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Meet The Team</div>
-                                    </Link>
-                                    <Link href='/our-services?page=1' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/our-services?page=1' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Our Services</div>
-                                    </Link>
-                                    <Link href='/homes-sold-by-us?page=1' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/homes-sold-by-us?page=1' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Homes We've Sold</div>
-                                    </Link>
-                                    <Link href='/contact-us' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/contact-us' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Contact Us</div>
-                                    </Link>
-                                    <Link href='/blog-posts?page=1' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/blog-posts?page=1' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Blog</div>
-                                    </Link>
-                                    <Link href='/terms-of-service' className='nav-menu-item'>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href='/terms-of-service' className='nav-menu-item'>
                                         <div className='flex items-center px-4'>Terms of Use</div>
-                                    </Link>
+                                    </CustomLinkMain>
                                 </ul>
                             </div>
                         </li>
@@ -248,18 +248,18 @@ function NavBar({ page }: NavProps) {
 
                         <div className='absolute hidden w-[220px] z-[200] bg-transparent group-hover:block pt-[24px] right-0'>
                             <ul className='nav-menu'>
-                                <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
+                                <CustomLinkMain href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
                                     <div className=' flex items-center px-4'>My Dashboard</div>
-                                </Link>
-                                <Link href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
+                                </CustomLinkMain>
+                                <CustomLinkMain href='/my-dashboard?tab=Favorites&status=Active&page=1' className='nav-menu-item'>
                                     <div className=' flex items-center px-4'>Favorites {`(${logged_user?.favorites ? logged_user?.favorites.length : "0"})`}</div>
-                                </Link>
-                                <Link href='/my-dashboard?tab=Searches&page=1' className='nav-menu-item'>
+                                </CustomLinkMain>
+                                <CustomLinkMain href='/my-dashboard?tab=Searches&page=1' className='nav-menu-item'>
                                     <div className=' flex items-center px-4'>Saved Searches</div>
-                                </Link>
-                                <Link href='/my-dashboard?tab=Preferences' className='nav-menu-item'>
+                                </CustomLinkMain>
+                                <CustomLinkMain href='/my-dashboard?tab=Preferences' className='nav-menu-item'>
                                     <div className=' flex items-center px-4'>Preferences</div>
-                                </Link>
+                                </CustomLinkMain>
                                 <li className='nav-menu-item' onClick={() => signOut()}>
                                     <div className='flex items-center px-4'>Sign Out</div>
                                 </li>
@@ -273,7 +273,7 @@ function NavBar({ page }: NavProps) {
                 }
 
                 <div className='phone-container cursor-pointer hidden xl:block'>
-                    <Link href={`tel:${comp_info.phone_number};`} shallow className='text-base'>{comp_info.phone_number}</Link>
+                    <CustomLinkMain href={`tel:${comp_info.phone_number};`} shallow className='text-base'>{comp_info.phone_number}</CustomLinkMain>
                 </div>
             </div>
 
@@ -285,34 +285,34 @@ function NavBar({ page }: NavProps) {
                         </div>
                         <div className='w-full flex flex-col p-3  *:px-4 *:py-4 h-[calc(100%-64px)] 
                         overflow-x-hidden overflow-y-auto font-normal *:bg-gray-800 *:rounded-md space-y-3' onClick={closeMenu}>
-                            <Link href={`/search`}>
+                            <CustomLinkMain href={`/search`}>
                                 <div>Main Search</div>
-                            </Link>
-                            <Link href={`/our-communities?page=1`} className='hidden'>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/our-communities?page=1`} className='hidden'>
                                 <div>Top Cities</div>
-                            </Link>
+                            </CustomLinkMain>
                             {
                                 (city_lists.cities && city_lists.cities.length) && (
                                     city_lists.cities.map((city, index) => (
-                                        <Link key={index} href={`/${city.slug}`}>
+                                        <CustomLinkMain key={index} href={`/${city.slug}`}>
                                             <div>{city.friendly_name}</div>
-                                        </Link>
+                                        </CustomLinkMain>
                                     ))
                                 )
                             }
-                            <Link href={`/buying`}>
+                            <CustomLinkMain href={`/buying`}>
                                 <div>Ready To Buy?</div>
-                            </Link>
-                            <Link href={`/mortgage-calculator`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/mortgage-calculator`}>
                                 <div>Mortgage Calculator</div>
-                            </Link>
+                            </CustomLinkMain>
                             {
                                 (menus_list && menus_list.menus.length) && (
                                     menus_list.menus.map((menu, index) => (
                                         menu.show_on_menus.buyer_menu == "Yes" ? (
-                                            <Link key={index} href={`/read-post/${menu.slug}`}>
+                                            <CustomLinkMain key={index} href={`/read-post/${menu.slug}`}>
                                                 <div>{menu.post_title}</div>
-                                            </Link>
+                                            </CustomLinkMain>
                                         ) : ""
                                     ))
                                 )
@@ -321,49 +321,49 @@ function NavBar({ page }: NavProps) {
                                 (menus_list && menus_list.menus.length) && (
                                     menus_list.menus.map((menu, index) => (
                                         menu.show_on_menus.seller_menu == "Yes" ? (
-                                            <Link key={index} href={`/read-post/${menu.slug}`}>
+                                            <CustomLinkMain key={index} href={`/read-post/${menu.slug}`}>
                                                 <div>{menu.post_title}</div>
-                                            </Link>
+                                            </CustomLinkMain>
                                         ) : ""
                                     ))
                                 )
                             }
 
-                            <Link href='/about-us'>
+                            <CustomLinkMain href='/about-us'>
                                 <div>About {comp_info.company_name}</div>
-                            </Link>
-                            <Link href={`/our-team?page=1`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/our-team?page=1`}>
                                 <div>Meet The Team</div>
-                            </Link>
-                            <Link href={`/our-services?page=1`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/our-services?page=1`}>
                                 <div>Our Services</div>
-                            </Link>
-                            <Link href={`/homes-sold-by-us?page=1`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/homes-sold-by-us?page=1`}>
                                 <div>Homes We've Sold</div>
-                            </Link>
+                            </CustomLinkMain>
 
                             {
                                 session?.user && <>
-                                    <Link href={`/my-dashboard?tab=Favorites&status=Active&page=1`}>
+                                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Active&page=1`}>
                                         <div>Favorites {`(${logged_user?.favorites ? logged_user?.favorites.length : "0"})`}</div>
-                                    </Link>
-                                    <Link href={`/my-dashboard?tab=Searches&page=1`}>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href={`/my-dashboard?tab=Searches&page=1`}>
                                         <div>Saved Searches</div>
-                                    </Link>
-                                    <Link href={`/my-dashboard?tab=Preferences`}>
+                                    </CustomLinkMain>
+                                    <CustomLinkMain href={`/my-dashboard?tab=Preferences`}>
                                         <div>Preferences</div>
-                                    </Link>
+                                    </CustomLinkMain>
                                 </>
                             }
-                            <Link href={`/contact-us`}>
+                            <CustomLinkMain href={`/contact-us`}>
                                 <div>Contact Us</div>
-                            </Link>
-                            <Link href={`/blog-posts?page=1`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/blog-posts?page=1`}>
                                 <div>Blog</div>
-                            </Link>
-                            <Link href={`/terms-of-service`}>
+                            </CustomLinkMain>
+                            <CustomLinkMain href={`/terms-of-service`}>
                                 <div>Terms of Use</div>
-                            </Link>
+                            </CustomLinkMain>
 
                             {
                                 session?.user ? <div onClick={() => signOut()}>Sign Out</div> : <div onClick={handleLoginModal}>Sign In</div>

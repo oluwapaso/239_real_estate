@@ -1,6 +1,7 @@
 "use client"
 
 import { Helpers } from '@/_lib/helpers'
+import CustomLinkMain from '@/components/CustomLinkMain'
 import HeroHeader from '@/components/HeroHeader'
 import { APIResponseProps, ServiceDetails } from '@/components/types'
 import Link from 'next/link'
@@ -43,8 +44,8 @@ const Service_Details = () => {
     }, [slug]);
 
 
-    const crumb = <><Link href="/"> Home</Link> <span>/</span> <Link href="/our-services?page=1">Our Services</Link>
-        <span>/</span> <Link href={`/services/${slug}`}>{service_info?.friendly_name}</Link></>
+    const crumb = <><CustomLinkMain href="/"> Home</CustomLinkMain> <span>/</span> <CustomLinkMain href="/our-services?page=1">Our Services</CustomLinkMain>
+        <span>/</span> <CustomLinkMain href={`/services/${slug}`}>{service_info?.friendly_name}</CustomLinkMain></>
 
 
     return (

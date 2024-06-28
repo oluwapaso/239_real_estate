@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../GlobalRedux/store'
+import CustomLinkMain from '@/components/CustomLinkMain'
 
 const MortgageCalculator = () => {
 
@@ -181,7 +182,7 @@ const MortgageCalculator = () => {
 
     }
 
-    const crumb = <><Link href="/"> Home</Link> <span>/</span> <Link href="/mortgage-calculator">Mortgage Calculator</Link></>
+    const crumb = <><CustomLinkMain href="/"> Home</CustomLinkMain> <span>/</span> <CustomLinkMain href="/mortgage-calculator">Mortgage Calculator</CustomLinkMain></>
 
     return (
         <>

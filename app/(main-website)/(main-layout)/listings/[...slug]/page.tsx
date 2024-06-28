@@ -44,6 +44,7 @@ import CircularProgressBar from '@/components/Circular_Progress'
 import useWalkScore from '@/_hooks/useWalkscore'
 import { useSession } from 'next-auth/react'
 import { useModal } from '@/app/contexts/ModalContext'
+import CustomLinkMain from '@/components/CustomLinkMain'
 
 const helper = new Helpers();
 const PropertyDetails = () => {
@@ -528,10 +529,10 @@ const PropertyDetails = () => {
         if (isInfoLoaded) {
 
             let gallery = <></>
-            let virtual_tour = <Link href={prop.VirtualTourURL ? prop.VirtualTourURL : prop.VirtualTourURL2} target='_blank' className='absolute right-2 top-2 
+            let virtual_tour = <CustomLinkMain href={prop.VirtualTourURL ? prop.VirtualTourURL : prop.VirtualTourURL2} target='_blank' className='absolute right-2 top-2 
             bg-white py-2 px-6 flex justify-center items-center rounded-md cursor-pointer hover:drop-shadow-lg'>
                 <PiVirtualRealityLight size={22} className='mr-1' /> <span>Virtual Tour</span>
-            </Link>
+            </CustomLinkMain>
 
             let new_listing = <div className='w-[55px] absolute top-2 left-3 p-2 flex justify-end items-center'>
                 <div className='px-3 py-1 rounded-sm text-white bg-green-600 text-xs font-normal tracking-wider'>NEW</div>

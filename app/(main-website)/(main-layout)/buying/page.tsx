@@ -1,5 +1,6 @@
 "use client"
 
+import CustomLinkMain from '@/components/CustomLinkMain'
 import SimpleHeader from '@/components/SimpleHeader'
 import { APIResponseProps, buying_dataProps } from '@/components/types'
 import { useSession } from 'next-auth/react'
@@ -110,7 +111,7 @@ const Buying = () => {
             <section className='w-full bg-white py-10 md:py-20'>
                 <div className='container mx-auto max-w-[850px] px-3 xl:px-0 text-left'>
                     <div className='w-full font-normal'>
-                        <Link href="/">Home</Link> / <Link href="/buying">Ready To Buy?</Link>
+                        <CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href="/buying">Ready To Buy?</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-3xl md:text-4xl lg:text-5xl mt-2'>GETTING READY TO BUY?</h3>

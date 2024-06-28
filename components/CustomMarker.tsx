@@ -13,6 +13,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { APIResponseProps } from './types'
 import PropFavs from './PropFavs'
+import CustomLinkMain from './CustomLinkMain'
 
 const helper = new Helpers();
 const CustomMarker = ({ prop, zoom_level }: { prop: any, zoom_level: number }) => {
@@ -105,7 +106,7 @@ const CustomMarker = ({ prop, zoom_level }: { prop: any, zoom_level: number }) =
                                                                 const address = c_prop.FullAddress.replace(/[^a-zA-Z0-9]+/g, "-") + "-" + c_prop.StateOrProvince + "-" + c_prop.PostalCode;
 
                                                                 return (
-                                                                    <Link key={index} href={`/listings/${c_prop.MLSNumber}/${address}`}>
+                                                                    <CustomLinkMain key={index} href={`/listings/${c_prop.MLSNumber}/${address}`}>
                                                                         <div className='w-full grid grid-cols-6 h-[90px] !font-poppins cursor-pointer'>
                                                                             <div className='col-span-2 h-full bg-cover object-contain' style={{ backgroundImage: `url(${bg_img})`, backgroundPosition: "center", }}>
                                                                             </div>
@@ -129,7 +130,7 @@ const CustomMarker = ({ prop, zoom_level }: { prop: any, zoom_level: number }) =
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </Link>
+                                                                    </CustomLinkMain>
                                                                 )
                                                             })
                                                         }

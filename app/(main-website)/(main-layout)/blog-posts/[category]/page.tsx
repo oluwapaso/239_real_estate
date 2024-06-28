@@ -13,6 +13,7 @@ import BlogPostCard from '@/components/BlogPostCard'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { RootState } from '../../GlobalRedux/store'
 import { useSelector } from 'react-redux'
+import CustomLinkMain from '@/components/CustomLinkMain'
 
 const helpers = new Helpers();
 const BlogPosts = () => {
@@ -109,7 +110,7 @@ const BlogPosts = () => {
         }
     }
 
-    const crumb = <><Link href="/"> Home</Link> <span>/</span> <Link href="/blog-posts?page=1">Real Estate News</Link></>
+    const crumb = <><CustomLinkMain href="/"> Home</CustomLinkMain> <span>/</span> <CustomLinkMain href="/blog-posts?page=1">Real Estate News</CustomLinkMain></>
 
     return (
         <>

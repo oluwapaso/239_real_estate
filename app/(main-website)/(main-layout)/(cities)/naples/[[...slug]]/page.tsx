@@ -3,6 +3,7 @@
 import CityComponent from '@/components/CityAndCommunity/CityComponent'
 import CommunitiesComponent from '@/components/CityAndCommunity/CommunitiesComponent'
 import CommunityComponent from '@/components/CityAndCommunity/CommunityComponent'
+import CustomLinkMain from '@/components/CustomLinkMain'
 import SimpleHeader from '@/components/SimpleHeader'
 import Link from 'next/link'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
@@ -19,7 +20,7 @@ function NaplesCatchAll() {
 
     const slugs = params?.slug;
     let first_param = "";
-    let bredcrumb = <Link href="/naples" className=''>Naples</Link>;
+    let bredcrumb = <CustomLinkMain href="/naples" className=''>Naples</CustomLinkMain>;
     let component: React.JSX.Element = <></>;
     if (!page) {
         page = "1";

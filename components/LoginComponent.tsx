@@ -8,6 +8,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { FaFacebook, FaGoogle } from 'react-icons/fa6'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import CustomLinkMain from './CustomLinkMain'
 
 const LoginComponent = ({ page, redirect, handleForgotPwrdModal, handleSignupModal }: {
     page: string, redirect?: string, handleForgotPwrdModal?: () => void, handleSignupModal?: () => void
@@ -110,8 +111,8 @@ const LoginComponent = ({ page, redirect, handleForgotPwrdModal, handleSignupMod
 
                 <div className='w-full mt-4 flex items-center justify-between'>
                     {
-                        page == "Login" ? <><Link href='/sign-up' className='text-sky-600'>Need a new account?</Link>
-                            <Link href='/forgot-pasword' className='text-sky-600'>Forgot password?</Link></>
+                        page == "Login" ? <><CustomLinkMain href='/sign-up' className='text-sky-600'>Need a new account?</CustomLinkMain>
+                            <CustomLinkMain href='/forgot-pasword' className='text-sky-600'>Forgot password?</CustomLinkMain></>
                             : <><div className='text-sky-600 cursor-pointer' onClick={handleSignupModal}>Need a new account?</div>
                                 <div className='text-sky-600 cursor-pointer' onClick={handleForgotPwrdModal}>Forgot password?</div></>
                     }

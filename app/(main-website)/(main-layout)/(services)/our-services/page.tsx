@@ -1,6 +1,7 @@
 "use client"
 
 import { Helpers } from '@/_lib/helpers'
+import CustomLinkMain from '@/components/CustomLinkMain'
 import ServiceCard from '@/components/Home/ServiceCard'
 import SimpleHeader from '@/components/SimpleHeader'
 import Pagination from '@/components/pagination'
@@ -78,7 +79,7 @@ const OurServices = () => {
             <section className='w-full bg-white py-10 md:py-20'>
                 <div className='container mx-auto max-w-[1100px] px-3 xl:px-0 text-left'>
                     <div className='w-full font-normal'>
-                        <Link href="/">Home</Link> / <Link href="/our-services?page=1">Our Services</Link>
+                        <CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href="/our-services?page=1">Our Services</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-2xl md:text-3xl lg:text-4xl mt-2'>Our Services</h3>

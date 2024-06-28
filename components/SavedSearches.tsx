@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import moment from 'moment';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import DeleteSearch from './DeleteSearch';
+import CustomLinkMain from './CustomLinkMain';
 
 const SavedSearches = () => {
 
@@ -70,8 +71,8 @@ const SavedSearches = () => {
             <div className='w-full mb-6 hidden'>
                 <div className='w-[200px] p-1 border border-primary grid grid-cols-2 *:py-2 *:px-5 *:flex *:items-center *:justify-center
                 *:cursor-pointer'>
-                    <Link href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</Link>
-                    <Link href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</Link>
+                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</CustomLinkMain>
+                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</CustomLinkMain>
                 </div>
             </div>
 
@@ -91,7 +92,7 @@ const SavedSearches = () => {
 
                             return <div key={srch.search_id} id={`search_id_${srch.search_id}`} className='w-full py-4 px-4 mt-3 mb-4 border border-gray-200 bg-white'>
                                 <div className='w-full flex flex-col'>
-                                    <Link href={link} className='w-full text-lg sm:text-xl md:text-2xl hover:underline'>{srch.search_title}</Link>
+                                    <CustomLinkMain href={link} className='w-full text-lg sm:text-xl md:text-2xl hover:underline'>{srch.search_title}</CustomLinkMain>
                                     <div className='w-full flex mt-1 text-[15px]'>
                                         <div className='mr-2 font-medium'>SEARCH SAVED:</div> <div className='uppercase font-normal'>
                                             {moment(srch.date_saved).format("dddd, MMMM Do, YYYY [AT] h:mma")}
@@ -113,10 +114,10 @@ const SavedSearches = () => {
                                     }
 
                                     <div className='w-full mt-5 grid grid-cols-2 text-center xs:flex *:cursor-pointer'>
-                                        <Link href={link} className='py-3 px-3 xs:px-10 bg-primary 
+                                        <CustomLinkMain href={link} className='py-3 px-3 xs:px-10 bg-primary 
                                         text-white font-light text-base hover:drop-shadow-xl text-center'>
                                             Run Search
-                                        </Link>
+                                        </CustomLinkMain>
 
                                         <DeleteSearch search_id={srch.search_id} user_id={user.user_id} />
                                     </div>

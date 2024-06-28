@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Link from 'next/link';
 import useCurrentBreakpoint from '@/_hooks/useMediaQuery';
+import CustomLinkMain from './CustomLinkMain';
 
 
 const PropCarousel = ({ images, defaultpic, listing_id, address, page }:
@@ -188,22 +189,22 @@ const PropCarousel = ({ images, defaultpic, listing_id, address, page }:
     if (images && images.length) {
 
         slides = images.map((image, index) => (
-            <Link key={index} href={`/listings/${listing_id}/${address}`} className='relative !w-[100.1%]'>
+            <CustomLinkMain key={index} href={`/listings/${listing_id}/${address}`} className='relative !w-[100.1%]'>
                 <img src={`${(image && image != "") ? image : "/no-blog-image-added.png"}`} alt={`Alt here`}
                     onError={(e: any) => { e.target.onerror = null; e.target.src = `/no-blog-image-added.png`; }}
                     className={`w-full ${card_height} object-cover z-10 relative`}
                 />
                 <img src="https://i.imgur.com/xyA2TRg.gif" className=" absolute top-0 bottom-0 right-0 left-0 m-auto h-8 w-8 z-[5]" />
-            </Link>
+            </CustomLinkMain>
         ));
     } else {
         //"/loading-photos-from-mls-1.png"
-        slides.push(<Link href={`/listings/${listing_id}/${address}`} className='relative !w-[100.1%]'>
+        slides.push(<CustomLinkMain href={`/listings/${listing_id}/${address}`} className='relative !w-[100.1%]'>
             <img src={`${process.env.NEXT_PUBLIC_PROP_IMAGE_URL}/${defaultpic}`} alt={`Alt here`} onError={(e: any) => {
                 e.target.onerror = null;
                 e.target.src = `/loading-photos-from-mls-1.png`;
             }} className={`w-full ${card_height} object-cover z-10 relative`} />
-        </Link>)
+        </CustomLinkMain>)
     }
     //MANAWA
     //`/api/fetch-proxy-image?image_url=${image.MediaURL}`

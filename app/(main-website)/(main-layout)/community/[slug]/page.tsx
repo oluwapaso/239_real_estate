@@ -12,6 +12,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import CommunitySearch from '@/components/Home/CommunitySearch'
 import numeral from 'numeral'
+import CustomLinkMain from '@/components/CustomLinkMain'
 
 const helpers = new Helpers();
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -82,8 +83,8 @@ const CommunityDetails = () => {
 
     }, [searchParams, community_info?.mls_name]);
 
-    const crumb = <><Link href="/"> Home</Link> <span>/</span> <Link href="/our-communities?page=1">Communities</Link>
-        <span>/</span> <Link href={`/community/${slug}`}>{community_info?.friendly_name}</Link></>
+    const crumb = <><CustomLinkMain href="/"> Home</CustomLinkMain> <span>/</span> <CustomLinkMain href="/our-communities?page=1">Communities</CustomLinkMain>
+        <span>/</span> <CustomLinkMain href={`/community/${slug}`}>{community_info?.friendly_name}</CustomLinkMain></>
 
     let data = [
         {
@@ -258,10 +259,10 @@ const CommunityDetails = () => {
                             </div>
 
                             <div className='mt-6'>
-                                <Link href="/search">
+                                <CustomLinkMain href="/search">
                                     <div className='px-8 py-3 bg-white text-primary uppercase max-w-[200px] flex justify-center
                                     border border-primary hover:bg-gray-100 hover:shadow-xl'>Start Search</div>
-                                </Link>
+                                </CustomLinkMain>
                             </div>
                         </div>
                     </div>

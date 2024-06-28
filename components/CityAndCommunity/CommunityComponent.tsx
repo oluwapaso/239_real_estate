@@ -11,6 +11,7 @@ import Filters from './Filters';
 import Listings from './Listings';
 import { useSearchParams } from 'next/navigation';
 import { useModal } from '@/app/contexts/ModalContext';
+import CustomLinkMain from '../CustomLinkMain';
 
 const helpers = new Helpers();
 function CommunityComponent(params: any) {
@@ -58,8 +59,8 @@ function CommunityComponent(params: any) {
         return <div className='w-full bg-red-300 h-20 flex items-center justify-center'>Invalid community info provided.</div>
     } else if (community_fetched && community_found) {
 
-        const crumb = <><Link href="/">Home</Link> / <Link href={`/${city_slug}`} className=''>{city_name}</Link> /&nbsp;
-            <Link href={`/${city_slug}/communities`} className=''>Communities</Link> / <Link href={`/${city_slug}/${community_slug}`} className=''>{comm_data.friendly_name}</Link></>
+        const crumb = <><CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href={`/${city_slug}`} className=''>{city_name}</CustomLinkMain> /&nbsp;
+            <CustomLinkMain href={`/${city_slug}/communities`} className=''>Communities</CustomLinkMain> / <CustomLinkMain href={`/${city_slug}/${community_slug}`} className=''>{comm_data.friendly_name}</CustomLinkMain></>
 
         return (
 

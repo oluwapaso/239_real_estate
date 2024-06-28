@@ -4,6 +4,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { Helpers } from '@/_lib/helpers';
 import ServiceCard from './ServiceCard';
 import Link from 'next/link';
+import CustomLinkMain from '../CustomLinkMain';
 
 const helpers = new Helpers();
 const OurServices = () => {
@@ -57,10 +58,10 @@ const OurServices = () => {
                                                 return <ServiceCard key={index} item={srvc} />
                                             })}
 
-                                            <Link href={`/our-services?page=1`} className='w-full mt-5 flex items-center justify-center col-span-full'>
+                                            <CustomLinkMain href={`/our-services?page=1`} className='w-full mt-5 flex items-center justify-center col-span-full'>
                                                 <div className=' bg-primary text-white py-3 px-8 hover:shadow-lg cursor-pointer 
                                                 rounded font-normal'>Sell All Services</div>
-                                            </Link>
+                                            </CustomLinkMain>
                                         </>
                                     ) : (<div className='w-full flex justify-center items-center min-h-60 col-span-full'>
                                         No results found.

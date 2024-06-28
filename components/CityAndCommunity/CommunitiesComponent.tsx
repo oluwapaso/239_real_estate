@@ -7,6 +7,7 @@ import { Helpers } from '@/_lib/helpers';
 import Link from 'next/link';
 import Pagination from '../pagination';
 import { useModal } from '@/app/contexts/ModalContext';
+import CustomLinkMain from '../CustomLinkMain';
 
 const helpers = new Helpers();
 function CommunitiesComponent(params: any) {
@@ -120,9 +121,9 @@ function CommunitiesComponent(params: any) {
                 <div className='container mx-auto max-w-[1200px] px-3 xl:px-0 text-left'>
 
                     <div className='w-full font-normal'>
-                        <Link href="/">Home</Link><span> / </span>
-                        <Link href={`/${city_slug}`}>{city_name}</Link><span> / </span>
-                        <Link href={`/${city_slug}/communities`}>Communities</Link>
+                        <CustomLinkMain href="/">Home</CustomLinkMain><span> / </span>
+                        <CustomLinkMain href={`/${city_slug}`}>{city_name}</CustomLinkMain><span> / </span>
+                        <CustomLinkMain href={`/${city_slug}/communities`}>Communities</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-2xl sm:text-3xl md:text-4xl capitalize'>{city_name} Communities</h3>

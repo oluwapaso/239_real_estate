@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import CustomLinkMain from '../CustomLinkMain'
 
 const ServiceCard = ({ item }: { item: any }) => {
     return (
@@ -12,8 +13,8 @@ const ServiceCard = ({ item }: { item: any }) => {
                 <div className='w-full font-medium text-lg'>{item.friendly_name}</div>
                 <div className='w-full font-normal text-base mt-1'>{item.excerpt}</div>
                 <div className='w-full flex mt-2 justify-end'>
-                    <Link href={`/services/${item.slug}`} className='bg-primary text-white py-2 px-4 hover:shadow-lg cursor-pointer rounded
-                    font-normal text-sm'>Read more...</Link>
+                    <CustomLinkMain href={`/services/${item.slug}`} className='bg-primary text-white py-2 px-4 hover:shadow-lg cursor-pointer rounded
+                    font-normal text-sm'>Read more...</CustomLinkMain>
                 </div>
             </div>
         </div>

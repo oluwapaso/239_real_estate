@@ -11,6 +11,7 @@ import Filters from './Filters';
 import Listings from './Listings';
 import { useSearchParams } from 'next/navigation';
 import { useModal } from '@/app/contexts/ModalContext';
+import CustomLinkMain from '../CustomLinkMain';
 
 const helpers = new Helpers();
 function CityComponent(params: any) {
@@ -58,7 +59,7 @@ function CityComponent(params: any) {
         return <div className='w-full bg-red-300 h-20 flex items-center justify-center'>Invalid city info provided.</div>
     } else if (city_fetched && city_found) {
 
-        const crumb = <><Link href="/">Home</Link> / <Link href={path} className=''>{city_name}</Link></>
+        const crumb = <><CustomLinkMain href="/">Home</CustomLinkMain> / <CustomLinkMain href={path} className=''>{city_name}</CustomLinkMain></>
 
         return (
 
@@ -90,10 +91,10 @@ function CityComponent(params: any) {
                             </div>
 
                             <div className='mt-6'>
-                                <Link href={`/${city_slug}/communities`}>
+                                <CustomLinkMain href={`/${city_slug}/communities`}>
                                     <div className='px-4 py-3 bg-white text-primary uppercase max-w-[220px] flex justify-center
                                     border border-primary hover:bg-gray-100 hover:shadow-xl'>Start Exploring</div>
-                                </Link>
+                                </CustomLinkMain>
                             </div>
                         </div>
                     </div>

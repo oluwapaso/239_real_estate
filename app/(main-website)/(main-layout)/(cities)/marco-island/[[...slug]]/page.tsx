@@ -4,6 +4,7 @@ import { Helpers } from '@/_lib/helpers'
 import CityComponent from '@/components/CityAndCommunity/CityComponent'
 import CommunitiesComponent from '@/components/CityAndCommunity/CommunitiesComponent'
 import CommunityComponent from '@/components/CityAndCommunity/CommunityComponent'
+import CustomLinkMain from '@/components/CustomLinkMain'
 import SimpleHeader from '@/components/SimpleHeader'
 import Link from 'next/link'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
@@ -22,7 +23,7 @@ function MarcoIslandCatchAll() {
 
     const slugs = params?.slug;
     let first_param = "";
-    let bredcrumb = <Link href="/mMarco-island" className=''>Marco Island</Link>;
+    let bredcrumb = <CustomLinkMain href="/Marco-island" className=''>Marco Island</CustomLinkMain>;
     let component: React.JSX.Element = <></>;
     if (!page) {
         page = "1";

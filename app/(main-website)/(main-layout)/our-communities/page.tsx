@@ -10,6 +10,7 @@ import BlogPostCard from '@/components/BlogPostCard'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import SimpleHeader from '@/components/SimpleHeader'
 import CommunityCard from '@/components/Home/CommunityCard'
+import CustomLinkMain from '@/components/CustomLinkMain'
 
 const helpers = new Helpers();
 const BlogPosts = () => {
@@ -113,7 +114,7 @@ const BlogPosts = () => {
                 <div className='container mx-auto max-w-[1200px] px-3 xl:px-0 text-left'>
 
                     <div className='w-full font-normal'>
-                        <Link href="/"> Home</Link> <span>/</span> <Link href="/our-communities?page=1">Our Communities</Link>
+                        <CustomLinkMain href="/"> Home</CustomLinkMain> <span>/</span> <CustomLinkMain href="/our-communities?page=1">Our Communities</CustomLinkMain>
                     </div>
 
                     <h3 className='w-full font-play-fair-display text-2xl sm:text-3xl md:text-4xl'>Some Of Our Favorite Communities</h3>
