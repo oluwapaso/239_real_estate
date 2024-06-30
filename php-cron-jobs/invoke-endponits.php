@@ -5,14 +5,14 @@ $base_url = "http://localhost:3000";
 $api_base_url = "https://www.239re.com";
 
 $endpoints = array(
-    "$base_url/php-cron-jobs/fetch_listings.php", //Comment this for update_listings.php
-    //"$base_url/php-cron-jobs/update_listings.php",//Comment this for fetch_listings.php
-    "$base_url/php-cron-jobs/load_pictures_1.php",
-    "$base_url/php-cron-jobs/load_pictures_2.php",
-    "$base_url/php-cron-jobs/load_pictures_3.php",
-    "$base_url/php-cron-jobs/load_pictures_4.php",
-    "$api_base_url/api/send-alert",
-    "$api_base_url/api/send-queue-emails",
+    // "$base_url/php-cron-jobs/fetch_listings.php", //Comment this for update_listings.php
+    // //"$base_url/php-cron-jobs/update_listings.php",//Comment this for fetch_listings.php
+    // "$base_url/php-cron-jobs/load_pictures_1.php",
+    // "$base_url/php-cron-jobs/load_pictures_2.php",
+    // "$base_url/php-cron-jobs/load_pictures_3.php",
+    // "$base_url/php-cron-jobs/load_pictures_4.php",
+    // "$api_base_url/api/send-alert",
+    // "$api_base_url/api/send-queue-emails",
 );
 
 $mh = curl_multi_init();

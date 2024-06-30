@@ -1056,29 +1056,29 @@ export class Helpers {
         }
 
         if(req_body.sort_by=="SQFT-ASC"){
-            order_by = "TotalArea ASC";   
+            order_by = "CAST(TotalArea AS SIGNED) ASC";   
         }else if(req_body.sort_by=="SQFT-DESC"){
-            order_by="TotalArea DESC";   
+            order_by="CAST(TotalArea AS SIGNED) DESC";   
         }else if(req_body.sort_by=="Baths-ASC"){
-            order_by="BathsTotal ASC";    
+            order_by="CAST(BathsTotal AS SIGNED) ASC";    
         }else if(req_body.sort_by=="Baths-DESC"){
-            order_by="BathsTotal DESC";    
+            order_by="CAST(BathsTotal AS SIGNED) DESC";    
         }else if(req_body.sort_by=="Beds-ASC"){
-            order_by="BedsTotal ASC";    
+            order_by="CAST(BedsTotal AS SIGNED) ASC";    
         }else if(req_body.sort_by=="Beds-DESC"){
-            order_by="BedsTotal DESC";    
+            order_by="CAST(BedsTotal AS SIGNED) DESC";    
         }else if(req_body.sort_by=="Parking-ASC"){
-            order_by="GarageSpaces ASC";    
+            order_by="CAST(GarageSpaces AS SIGNED) ASC";    
         }else if(req_body.sort_by=="Parking-DESC"){
-            order_by="GarageSpaces DESC";    
+            order_by="CAST(GarageSpaces AS SIGNED) DESC";    
         }else if(req_body.sort_by=="Price-ASC"){
-            order_by="ListPrice ASC";   
+            order_by="CAST(ListPrice AS SIGNED) ASC";   
         }else if(req_body.sort_by=="Price-DESC"){
-            order_by="ListPrice DESC";   
+            order_by="CAST(ListPrice AS SIGNED) DESC";   
         }else if(req_body.sort_by=="Built-ASC"){
-            order_by="YearBuilt ASC";   
+            order_by="CAST(YearBuilt AS SIGNED) ASC";   
         }else if(req_body.sort_by=="Built-DESC"){
-            order_by="YearBuilt DESC";   
+            order_by="CAST(YearBuilt AS SIGNED) DESC";   
         }else if(req_body.sort_by=="Date-ASC"){
             order_by="MatrixModifiedDT ASC";   
         }else if(req_body.sort_by=="Date-DESC"){

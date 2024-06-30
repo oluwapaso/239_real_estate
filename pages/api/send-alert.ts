@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
 
                 const req: Partial<NextApiRequest> = {
                     body: {
-                        search_by: "List",
+                        search_by: "Alerts",
                         location: alert.location,
                         sales_type: alert.sales_type || "For Sale",
                         min_price: alert.min_price || "0",
@@ -61,6 +61,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         parking_spots: alert.parking_spots || "0",
                         home_type: alert.home_type,
                         sort_by: alert.sort_by,
+                        last_alert: alert.last_alert,
                         page: 1,
                         limit: 11
                     }

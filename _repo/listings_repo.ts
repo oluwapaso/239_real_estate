@@ -166,6 +166,13 @@ export class MysqlListingsRepo implements ListingsRepo {
                 Status='Closed' AND ListOfficeMlsId=?) AS total_records FROM properties WHERE Status='Closed' AND ListOfficeMlsId=? 
                 LIMIT ${start_from}, ${limit}`, [comp_info.data.mls_office_key, comp_info.data.mls_office_key]);
 
+            } else if(search_by == "Alerts"){
+
+                const last_alert = params.last_alert;
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
+                Status='Active' AND MatrixModifiedDT > '${last_alert}' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
+                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
