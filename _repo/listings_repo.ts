@@ -169,7 +169,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
-                //fields = fields.replace("Images,", "");
+                fields = fields.replace("Images,", ""); //This should speed up things, also each listings have default pix map could use
 
                 const north = params.map_bounds.north;
                 const south = params.map_bounds.south;
