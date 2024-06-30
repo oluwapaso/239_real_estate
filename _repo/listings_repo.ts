@@ -205,7 +205,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 
                 if(params.mobile_view == "Map"){
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
-                    ORDER BY ${order_by} LIMIT 200`);
+                    ORDER BY ${order_by} LIMIT 500`);
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
