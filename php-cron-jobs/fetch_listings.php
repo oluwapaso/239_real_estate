@@ -42,15 +42,23 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         $defaultClass = "RES";
         if ($RES == "Done") {
-            $defaultClass = "RIN";
-        } elseif ($RIN == "Done") { // Check if $RIN is "Done"
-            $defaultClass = "LOT";
-        } elseif ($LOT == "Done") { // Check if $LOT is "Done"
-            $defaultClass = "RNT";
-        } elseif ($RNT == "Done") { // Check if $LOT is "Done"
-            $defaultClass = "COM";
-        } elseif ($COM == "Done") { // Check if $COM is "Done"
-            $defaultClass = "DOCK";
+            if ($RIN == "Done") {
+                if ($LOT == "Done") {
+                    if ($RNT == "Done") {
+                        if ($COM == "Done") {
+                            $defaultClass = "DOCK";
+                        } else {
+                            $defaultClass = "COM";
+                        }
+                    } else {
+                        $defaultClass = "RNT";
+                    }
+                } else {
+                    $defaultClass = "LOT";
+                }
+            } else {
+                $defaultClass = "RIN";
+            }
         }
 
         $sqlOffset = "SELECT COUNT(property_id) AS `offset` FROM properties WHERE PropertyClass='$defaultClass'";
@@ -110,7 +118,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $upRslt = mysqli_query($conn, $updateSyncs) or die(mysqli_error($conn));
             $isUpdeted = mysqli_affected_rows($conn);
 
-            if ($isUpdeted) {
+            if ($isUpdeted >= 0) {
                 echo $defaultClass . " is done";
             } else {
                 echo "Error setting $defaultClass to Done";
