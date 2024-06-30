@@ -92,7 +92,7 @@ export class MYSQLMailRepo implements MailRepo {
         try{
         
             connection = await pool.getConnection();
-            const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM queue_messages WHERE status='Pending' ORDER BY date_queued ASC LIMIT 2`);
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM queue_messages WHERE status='Pending' ORDER BY date_queued ASC LIMIT 10`);
 
             if(rows.length){
                 const formattedRows = rows.map((row) => {

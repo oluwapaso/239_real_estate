@@ -20,8 +20,8 @@ const MyFavorites = () => {
             <div className='w-full mb-6'>
                 <div className='w-[200px] p-1 border border-primary grid grid-cols-2 *:py-2 *:px-5 *:flex *:items-center *:justify-center
                 *:cursor-pointer'>
-                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</CustomLinkMain>
-                    <CustomLinkMain href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</CustomLinkMain>
+                    <Link href={`/my-dashboard?tab=Favorites&status=Active&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Active" ? 'text-white bg-primary' : null}`}>Active</Link>
+                    <Link href={`/my-dashboard?tab=Favorites&status=Sold&page=1`} className={`hover:bg-primary/80 hover:text-white ${status == "Sold" ? 'text-white bg-primary' : null}`}>Sold</Link>
                 </div>
             </div>
             <PropertyLists list_type={list_type} pagination_path={pagination_path} />

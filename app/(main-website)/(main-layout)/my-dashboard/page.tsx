@@ -8,10 +8,13 @@ import { signOut, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { hidePageLoader, showPageLoader } from '../GlobalRedux/app/appSlice'
+import { useDispatch } from 'react-redux'
 
 const MyDashboard = () => {
 
     const { data: session, status } = useSession();
+    const dispatch = useDispatch();
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -33,12 +36,26 @@ const MyDashboard = () => {
 
     const GotoTab = (goto: string) => {
 
+        let show_loader = false;
         if (goto == "My Listings") {
+            if (tab != "Favorites") {
+                show_loader = true;
+            }
             router.push("/my-dashboard?tab=Favorites&status=Active&page=1");
         } else if (goto == "My Searches") {
+            if (tab != "Searches") {
+                show_loader = true;
+            }
             router.push("/my-dashboard?tab=Searches&page=1");
         } else if (goto == "My Preferences") {
+            if (tab != "Preferences") {
+                show_loader = true;
+            }
             router.push("/my-dashboard?tab=Preferences");
+        }
+
+        if (show_loader) {
+            dispatch(showPageLoader());
         }
 
     }
@@ -60,6 +77,10 @@ const MyDashboard = () => {
         }
 
     }, [session, status, tab]);
+
+    useEffect(() => {
+        dispatch(hidePageLoader())
+    })
 
     return (
         <div className={` ${status == "authenticated" ? "block" : "hidden"}`}>
