@@ -1493,13 +1493,12 @@ const SearchPage = () => {
                             </div>
 
                             <div className='p-8 px-3 md:px-8 bg-primary'>
-                                <div className='w-full'>win_width={win_width}</div>
                                 <Footer page='Search' />
                             </div>
                         </div>
 
                         <div className='w-full absolute bottom-3 flex justify-center *:flex *:px-4 *:py-3 *:bg-gray-100 text-sm 
-                        z-[100] *:drop-shadow-md *:items-center pointer-events-none tab:_hidden'>
+                        z-[100] *:drop-shadow-md *:items-center pointer-events-none tab:hidden'>
                             <button className={`${mobileView == "Map" && "!bg-primary text-white"} rounded-l-md pointer-events-auto`}
                                 onClick={() => { updateView("Map"); setInitialLoad(true); }}><FaMap size={14} /> <span className='ml-1'>Map</span></button>
                             <button className={`${mobileView == "List" && "!bg-primary text-white"} rounded-r-md pointer-events-auto`}
