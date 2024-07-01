@@ -1,12 +1,10 @@
 import { Helpers } from "@/_lib/helpers";
 import { MYSQLCompanyRepo } from "@/_repo/company_repo";
-import { APIResponseProps, LoadSingleAutoResponderParams, SendMailParams, SentMailParams } from "@/components/types";
+import { APIResponseProps, LoadSingleAutoResponderParams, SendMailParams } from "@/components/types";
 import { sendEmail } from "@/_lib/sendgridMailer";
 import nodemailer from 'nodemailer';
-import { MYSQLMailRepo } from "@/_repo/mail_repo";
-import { MYSQLUserRepo } from "@/_repo/user_repo";
-import { MYSQLAutoResponderRepo } from "@/_repo/auto_responder";
-import Email from "next-auth/providers/email";
+import { MYSQLMailRepo } from "@/_repo/mail_repo"; 
+import { MYSQLAutoResponderRepo } from "@/_repo/auto_responder"; 
 import { MYSQLTemplateRepo } from "@/_repo/templates_repo";
 
 export class MailService {
