@@ -69,7 +69,7 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                         {
                             (prop.LastChangeType == "Price Decrease" && moment(prop.LastChangeTimestamp).isBefore(moment().subtract(10, 'days'))) && (
                                 <div className='px-2 py-1 ml-2 rounded-sm text-white bg-red-600 text-xs font-normal tracking-wider flex items-center'>
-                                    <FaArrowUpLong size={12} /> <span className='ml-1'>{numeral(prop.ListPrice - prop.OriginalListPrice).format('$0,0')}</span>
+                                    <FaArrowDownLong size={12} /> <span className='ml-1'>{numeral(prop.ListPrice - prop.OriginalListPrice).format('$0,0')}</span>
                                 </div>
                             )
                         }
@@ -77,7 +77,7 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
                         {
                             (prop.LastChangeType == "Price Increase" && moment(prop.LastChangeTimestamp).isBefore(moment().subtract(10, 'days'))) && (
                                 <div className='px-2 py-1 ml-2 rounded-sm text-white bg-green-600 text-xs font-normal tracking-wider flex items-center'>
-                                    <FaArrowDownLong size={12} /> <span className='ml-1'>{numeral(prop.OriginalListPrice - prop.ListPrice).format('$0,0')}</span>
+                                    <FaArrowUpLong size={12} /> <span className='ml-1'>{numeral(prop.OriginalListPrice - prop.ListPrice).format('$0,0')}</span>
                                 </div>
                             )
                         }
