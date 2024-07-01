@@ -172,10 +172,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 last_alert = moment(last_alert);
                 const lastAlert = last_alert.subtract(5, 'hours').format('YYYY-MM-DD HH:mm:ss');
 
-                console.log(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} 
-                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                console.log(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
                 Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
