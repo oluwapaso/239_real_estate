@@ -6,8 +6,12 @@ const testi_service = new TestimonialService();
 
 export default async function handler(req: NextApiRequest, resp: NextApiResponse<any>){
 
+    resp.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins, you can restrict this to specific origins
+    resp.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
     if(req.method == "OPTIONS"){
-        resp.status(200)
+        resp.status(200).end();
     } else if(req.method == "POST"){
         
         const req_body = req.body
