@@ -170,7 +170,8 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                 const last_alert = params.last_alert;
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT > '${last_alert}' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
+                Status='Active' AND MatrixModifiedDT > '${last_alert}' ${search_filter}) AS total_records FROM properties WHERE 
+                Status='Active' AND MatrixModifiedDT > '${last_alert} ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
             } else if(search_by == "Map"){
