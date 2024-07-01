@@ -174,9 +174,9 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                 console.log(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
                 Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT >= '${lastAlert} ${search_filter} 
+                Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
-                
+
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
                 Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
                 Status='Active' AND MatrixModifiedDT >= '${lastAlert} ${search_filter} 
