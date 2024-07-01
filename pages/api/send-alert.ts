@@ -74,13 +74,14 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                 } 
 
                 const user_info = await user_repo.GetSingleUser({params}) as any;
+                console.log("user_info", user_info)
                 if(user_info && typeof user_info != "string" && user_info.sub_to_updates == "true"){
                     
                     let [search_filter, order_by] = helpers.BuildSearchFilter(req as NextApiRequest);
                     order_by = `LastChangeTimestamp DESC, ${order_by}`;
                     const prop_prms = listings_repo.LoadListings(req as NextApiRequest, search_filter, order_by);
                     const properties = await prop_prms;
-                    
+                    console.log("properties", properties)
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
 
                     if(properties && properties.length){
