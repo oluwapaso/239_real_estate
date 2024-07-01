@@ -168,10 +168,13 @@ export class MysqlListingsRepo implements ListingsRepo {
 
             } else if(search_by == "Alerts"){
 
-                const last_alert = params.last_alert;
+                let last_alert = params.last_alert;
+                last_alert = moment(last_alert);
+                const lastAlert = last_alert.subtract(4, 'hours');
+
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT > '${last_alert}' ${search_filter}) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT > '${last_alert} ${search_filter} 
+                Status='Active' AND MatrixModifiedDT > '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
+                Status='Active' AND MatrixModifiedDT > '${lastAlert} ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
             } else if(search_by == "Map"){
