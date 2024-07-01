@@ -7,6 +7,8 @@ import FIltersComponent from './FIltersComponent'
 import SearchButton from './SearchButton'
 import { useRouter } from 'next/navigation'
 import { FilterValueTypes } from '../types'
+import { useDispatch } from 'react-redux'
+import { showPageLoader } from '@/app/(main-website)/(main-layout)/GlobalRedux/app/appSlice'
 
 const BuySearchTab = () => {
 
@@ -23,13 +25,15 @@ const BuySearchTab = () => {
     const [location, setLocation] = useState("");
     const [filter_values, setFilterValues] = useState(filterValue);
 
-    const router = useRouter()
+    const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleSearch = () => {
         let sales_type = "For Sale";
         if (selectedStatus == "Sold") {
             sales_type = "Sold";
         }
+        dispatch(showPageLoader());
         const map_bounds = `{"north":26.760979157255296,"south":25.801786319915113,"east":-81.17107039746094,"west":-82.40840560253906}`
         router.push(`/search?location=${location}&sales_type=${sales_type}&min_bed=${filter_values.min_beds}&max_bed=${filter_values.max_beds}&min_bath=${filter_values.min_baths}&max_bath=${filter_values.max_baths}&min_price=${filter_values.min_price}&max_price=${filter_values.max_price}&map_bounds=${map_bounds}&zoom=7`)
     }
