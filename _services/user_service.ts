@@ -278,6 +278,59 @@ export class UserService {
 
     }
 
+    public async AddNewUser(req: NextApiRequest):Promise<APIResponseProps>{
+
+        const first_name = req.body.firstname;
+        const last_name = req.body.lastname;
+        const email = req.body.email;
+
+        const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+
+        if(!email){
+            default_resp.message = "Provide a valid email address."
+            return default_resp as APIResponseProps
+        }
+
+        if(!first_name || !last_name){
+            default_resp.message = "Provide a valid firstname and lastname."
+            return default_resp as APIResponseProps
+        }
+
+        const params: GetSingleUserParams = {
+            search_by: "Email",
+            fields: "user_id",
+            email: email,
+        } 
+
+        const user_info = await this.user_repo.GetSingleUser({params});
+        if(user_info && typeof user_info != "string"){
+            return {"message": "Email is associated with another account, please try another one.", "success": false}
+        }else if (typeof user_info === "string"){
+            return {"message": user_info, "success": false}
+        }else{
+            
+            const isAdded = await this.user_repo.AddNewAccount(req);
+
+            if(isAdded){
+
+                default_resp.success = true;
+                default_resp.message = "New account successfully created";
+
+            }else{
+                default_resp.message = "Unable to add new account."
+            }
+
+            return default_resp;
+
+        }
+
+
+    }
+
     public async UpdateUserInfo(req: NextApiRequest):Promise<APIResponseProps>{
 
         const email = req.body.email;

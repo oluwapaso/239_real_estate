@@ -376,6 +376,51 @@ export class MYSQLUserRepo implements UserRepo {
 
     }
 
+    public async AddNewAccount(req: NextApiRequest): Promise<[boolean, number]>{
+
+        const req_body = req.body;
+        let connection: PoolConnection | null = null;
+        
+        /***
+         * 
+         * const [up_result] = await connection.query<ResultSetHeader>(`UPDATE users SET email=?, secondary_email=?, firstname=?, lastname=?, 
+            phone_1=?, phone_2=?, work_phone=?, fax=?, street_address=?, city=?, state=?, zip=?, country=?, sub_to_updates=?, 
+            sub_to_mailing_lists=? WHERE user_id=? `, [req_body.email, req_body.secondary_email, req_body.firstname, req_body.lastname,
+                req_body.phone_1, req_body.phone_2, req_body.work_phone, req_body.fax, req_body.street_address, req_body.city, req_body.state,
+                req_body.zip, req_body.country, req_body.sub_to_updates, req_body.sub_to_mailing_lists, req_body.user_id
+            ]);
+
+            
+         */
+
+        try{
+            
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`INSERT INTO users(email, secondary_email, firstname, lastname, phone_1, 
+            phone_2, work_phone, fax, street_address, city, state, zip, background, birthday, facebook, tictoc, twitter, whatsapp, linkedin, 
+            lead_stage, price_range, spouse_name) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `, [req_body.email, req_body.secondary_email, 
+            req_body.firstname, req_body.lastname, req_body.phone_1, req_body.phone_2, req_body.work_phone, req_body.fax, 
+            req_body.street_address, req_body.city, req_body.state, req_body.zip, req_body.background, req_body.birthday, req_body.facebook, 
+            req_body.tictoc, req_body.twitter, req_body.whatsapp, req_body.linkedin, req_body.lead_stage, req_body.price_range, 
+            req_body.spouse_name]);
+            if(result.affectedRows){
+                return [true, result.insertId]
+            }else{
+                return [false, 0] 
+            }
+
+        }catch(e: any){
+            console.log(e.sqlMessage)
+            return [false, 0]
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
     public async UpdateAccountDetails(req: NextApiRequest): Promise<boolean> {
 
         const req_body = req.body;

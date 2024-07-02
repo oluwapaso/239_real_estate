@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
         const alerts = await alerts_prms;
         const mail_to: any[] = [];
 
+        console.log("alerts.length", alerts.length)
         if(alerts && alerts.length){
 
             const search_ids: any[] = [];
@@ -83,7 +84,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const properties = await prop_prms;
                     
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
-
+                    console.log("properties.length", properties.length)
                     if(properties && properties.length){
 
                         let rest = "";
