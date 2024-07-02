@@ -70,7 +70,7 @@ function UserInfo({ info }: { info: User }) {
                 </div>
                 <div className=''>
                     <div className='font-semibold mr-2'>Profession</div>
-                    <div className='font-normal'>Doctor</div>
+                    <div className='font-normal'>{info.profession}</div>
                 </div>
             </div>
 

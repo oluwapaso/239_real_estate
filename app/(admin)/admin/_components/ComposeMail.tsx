@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { toast } from 'react-toastify';
+import EmailTempLists from './EmailTempLists';
 const Ck_Editor_Component = dynamic(() => import("./Ckeditor"), { ssr: false });
 
 const helpers = new Helpers();
@@ -134,7 +135,14 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
             <div className='w-full border border-gray-100 border-r-0 border-l-0'>
                 <Ck_Editor_Component data={mail_body} onDataChange={handleDataChange} height="240px" />
             </div>
-            <div className='w-full py-5 px-4 flex justify-end items-center'>
+            <div className='w-full py-5 px-4 flex justify-between items-center'>
+                <div className='group relative border border-red-500 w-36 h-11'>
+                    <div className='border border-primary rounded cursor-pointer px-3 py-2 text-primary hover:shadow-md'>Select Template</div>
+                    <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl'>
+                        <EmailTempLists />
+                    </div>
+                </div>
+
                 {!is_sending_msg && <div className='px-6 py-2 rounded flex items-center justify-center bg-sky-700 text-white 
                 cursor-pointer' onClick={sendEmail}>
                     Send Email

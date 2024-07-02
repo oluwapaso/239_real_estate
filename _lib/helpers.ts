@@ -587,8 +587,8 @@ export class Helpers {
         paginated: boolean;
         search_type: string;
         template_type: string;
-        page: number;
-        limit: number;
+        page?: number;
+        limit?: number;
     }) => {
 
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';

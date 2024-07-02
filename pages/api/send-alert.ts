@@ -208,6 +208,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         
                         mail_to.push({
                             "user_id": user_info.user_id, 
+                            "alert_id": alert.search_id,
+                            "frequency": alert.email_frequency,
                             "email": user_info.email, 
                             "message_body": msg_body, 
                             "subject": `${properties[0].total_records} new listing${properties[0].total_records > 1 ? "s" : "" } in your search`
@@ -221,8 +223,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
             }));
 
             let searchIDs = search_ids.join("', '");
-            searchIDs = `'${searchIDs}'`;
-            console.log("mail_to.length", mail_to.length)
+            searchIDs = `'${searchIDs}'`; 
             if(mail_to && mail_to.length > 0){
 
                 mail_to.forEach(async (mail)=> {
@@ -236,7 +237,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         body: mail.message_body,
                         message_type: "Property Alert"
                     } 
-                    console.log("Sending to",  mail.user_id, from_email, mail.email, mail.subject)
+                    console.log("Sending to:", "alert_id", mail.alert_id, "frequency:", mail.frequency, "user_id:", mail.user_id, from_email, mail.email, mail.subject)
                     const send_mail = await mail_service.SendMail(params);
                     console.log("send_mail", send_mail)
                 });

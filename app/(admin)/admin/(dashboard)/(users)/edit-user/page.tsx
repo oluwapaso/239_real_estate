@@ -246,6 +246,12 @@ const EditUserInfo = () => {
                                             <ErrorMessage name="lead_stage" component="div" />
                                         </div>
 
+                                        <div className='col-span-1'>
+                                            <label htmlFor="profession" className='form-label'>Profession</label>
+                                            <Field type="text" name="profession" className='form-field' placeholder="Profession" />
+                                            <ErrorMessage name="profession" component="div" />
+                                        </div>
+
                                         <div className='col-span-1 sm:col-span-2'>
                                             <label htmlFor="background" className='form-label'>Background</label>
                                             <Field as="textarea" name="background" className='form-field h-[200px] resize-none' placeholder="Background" />

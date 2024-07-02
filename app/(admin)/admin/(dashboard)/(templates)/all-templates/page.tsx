@@ -40,7 +40,7 @@ const AllTemplates = () => {
 
     useEffect(() => {
 
-        const fetchUsers = async () => {
+        const fetchTemplates = async () => {
 
             try {
 
@@ -64,7 +64,7 @@ const AllTemplates = () => {
         }
 
         dispatch(showPageLoader());
-        fetchUsers();
+        fetchTemplates();
 
     }, [type, curr_page]);
 

@@ -141,6 +141,7 @@ export type User = {
     country: string
     price_range: string
     spouse_name: string
+    profession: string
     birthday: string
     source: string
     date_added: string

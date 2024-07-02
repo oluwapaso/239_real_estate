@@ -16,6 +16,7 @@ export class MailService {
 
     public async SendMail(params: SendMailParams): Promise<APIResponseProps> {
 
+        console.log("made it here SendMail()")
         const default_resp = {
             message: "",
             data: {},
@@ -79,7 +80,7 @@ export class MailService {
             const comp_info = await com_repo.GetCompayInfo();
             const api_info_prms = com_repo.GetApiInfo();
             const api_info = await api_info_prms
-
+            console.log("made it here in mailer == Sendgrid")
             try{
             
                 const response = await sendEmail(from_email, to_email, subject, body, api_info.data.sendgrid_key); 

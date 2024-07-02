@@ -145,23 +145,23 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         try{
             
             connection = await pool.getConnection();
+            let type_filter = "";
+            if(template_type != "any"){
+                type_filter = ` WHERE template_type='${template_type}' `;
+            }
+
             if(paginated){
             
                 const page = params.page;
                 const limit = params.limit;
                 const start_from = (page - 1) * limit;
 
-                let type_filter = "";
-                if(template_type != "any"){
-                    type_filter = ` WHERE template_type='${template_type}' `;
-                }
-
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT *, (SELECT COUNT(*) AS total_records FROM templates ${type_filter}) 
                 AS total_records FROM templates ${type_filter} ORDER BY template_name ASC LIMIT ${start_from}, ${limit}`);
                 
             }else{
 
-                [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates ORDER BY template_name ASC `);
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates ${type_filter} ORDER BY template_name ASC `);
 
             }
     

@@ -24,7 +24,31 @@ const EditUserInfo = () => {
     const search_params = useSearchParams();
     const user_id = search_params?.get("user_id");
     const dispatch = useDispatch();
-    const [initialValues, setInitialValues] = useState({});
+    const [initialValues, setInitialValues] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        secondary_email: "",
+        phone_1: "",
+        phone_2: "",
+        work_phone: "",
+        fax: "",
+        street_address: "",
+        city: "",
+        state: "",
+        zip: "",
+        price_range: "",
+        spouse_name: "",
+        profession: "",
+        birthday: "",
+        facebook: "",
+        linkedin: "",
+        twitter: "",
+        tictoc: "",
+        whatsapp: "",
+        lead_stage: "",
+        background: "",
+    });
     const [lead_stages, setLeadStage] = useState<any[]>([]);
 
     useEffect(() => {
@@ -44,7 +68,7 @@ const EditUserInfo = () => {
 
     }, []);
 
-    const handleSubmit = async (value: any, onSubmit: any) => {
+    const handleSubmit = async (value: any, actions: any) => {
 
         if (!value.firstname || !value.lastname || !value.email) {
             toast.dismiss();
@@ -57,7 +81,6 @@ const EditUserInfo = () => {
 
         dispatch(showPageLoader());
 
-        console.log("value:", value)
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
         await fetch(`${apiBaseUrl}/api/(users)/add-new-user`, {
             method: "POST",
@@ -70,17 +93,18 @@ const EditUserInfo = () => {
             return resp.json();
         }).then(data => {
 
-            toast.dismiss();
+            //toast.dismiss();
             if (data.success) {
 
-                onSubmit.reset();
-                toast.success(data.message, {
+                toast.success(`${data.message}`, {
                     position: "top-center",
                     theme: "colored"
                 })
 
+                actions.resetForm();
+
             } else {
-                toast.error(data.message, {
+                toast.error(`${data.message}`, {
                     position: "top-center",
                     theme: "colored"
                 })
@@ -123,7 +147,7 @@ const EditUserInfo = () => {
                                         </div>
 
                                         <div className='col-span-1 sm:col-span-2'>
-                                            <label htmlFor="firstname" className='form-label flex items-center'>
+                                            <label htmlFor="email" className='form-label flex items-center'>
                                                 <span className='mr-1'>Primary Email</span> <FaAsterisk size={11} className='text-red-500' />
                                             </label>
                                             <Field type="email" name="email" className='form-field' placeholder="Primary Email" />
@@ -247,6 +271,12 @@ const EditUserInfo = () => {
                                                 }
                                             </Field>
                                             <ErrorMessage name="lead_stage" component="div" />
+                                        </div>
+
+                                        <div className='col-span-1'>
+                                            <label htmlFor="profession" className='form-label'>Profession</label>
+                                            <Field type="text" name="profession" className='form-field' placeholder="Profession" />
+                                            <ErrorMessage name="profession" component="div" />
                                         </div>
 
                                         <div className='col-span-1 sm:col-span-2'>
