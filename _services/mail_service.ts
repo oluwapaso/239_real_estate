@@ -93,7 +93,8 @@ export class MailService {
                         this.mail_repo.AddSentMail(params);
                     }
                 }else{
-                    throw new Error(response);
+                    default_resp.message = "Error sending email:: "+response;
+                    //throw new Error(response);
                 }
             
             }catch(e:any){
