@@ -40,7 +40,7 @@ const EmailTempLists = () => {
     }, [])
 
     return (
-        <div className='w-full min-w-[300px]'>
+        <div className='w-full min-w-[300px] divide-y divide-gray-100 border border-gray-100 overflow-y-auto max-h-[250px]'>
             {/* Loader */}
             {!temp_fetched && <div className=' col-span-full h-[120px] bg-white flex items-center justify-center'>
                 <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
@@ -52,7 +52,9 @@ const EmailTempLists = () => {
                     (templates.length && templates.length > 0)
                         ? (templates.map((temp) => {
                             return (
-                                <div key={temp.template_id}>Template #{temp.template_id}</div>
+                                <div key={temp.template_id} className='cursor-pointer px-4 py-3 hover:bg-gray-100'>
+                                    {temp.template_name}
+                                </div>
                             )
                         }))
                         : <div className=' col-span-full h-[250px] bg-white flex items-center justify-center'>

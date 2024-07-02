@@ -136,9 +136,9 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
                 <Ck_Editor_Component data={mail_body} onDataChange={handleDataChange} height="240px" />
             </div>
             <div className='w-full py-5 px-4 flex justify-between items-center'>
-                <div className='group relative border border-red-500 w-36 h-11'>
+                <div className='group relative border border-red-500 w-36 h-12'>
                     <div className='border border-primary rounded cursor-pointer px-3 py-2 text-primary hover:shadow-md'>Select Template</div>
-                    <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl'>
+                    <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl z-20'>
                         <EmailTempLists />
                     </div>
                 </div>
