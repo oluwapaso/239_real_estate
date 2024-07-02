@@ -18,6 +18,8 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
     const [subject, setSubject] = useState("");
     const [mail_body, setMailBody] = useState("");
     const [is_sending_msg, setIsSendingMsg] = useState(false);
+    const [email_temp_subject, setEmailTempSubject] = useState("");
+    const [email_temp_body, setEmailTempBody] = useState("");
 
     useEffect(() => {
 
@@ -109,6 +111,16 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
 
     }
 
+    useEffect(() => {
+        alert("Subject" + email_temp_subject)
+        setEmailTempSubject(email_temp_subject)
+    }, [email_temp_subject])
+
+    useEffect(() => {
+        alert("Body" + email_temp_body)
+        setEmailTempBody(email_temp_body)
+    }, [email_temp_body])
+
     return (
         <div className='w-full bg-white'>
             <div className='full flex border-b border-gray-100 py-3 px-3'>
@@ -139,7 +151,7 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
                 <div className='group relative border border-red-500 w-36 h-12'>
                     <div className='border border-primary rounded cursor-pointer px-3 py-2 text-primary hover:shadow-md'>Select Template</div>
                     <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl z-20'>
-                        <EmailTempLists />
+                        <EmailTempLists setEmailTempSubject={setEmailTempSubject} setEmailTempBody={setEmailTempBody} />
                     </div>
                 </div>
 

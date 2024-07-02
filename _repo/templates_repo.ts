@@ -160,8 +160,8 @@ export class MYSQLTemplateRepo implements TemplateRepo {
                 AS total_records FROM templates ${type_filter} ORDER BY template_name ASC LIMIT ${start_from}, ${limit}`);
                 
             }else{
-
-                [rows] = await connection.query<RowDataPacket[]>(`SELECT template_id, template_name FROM templates ${type_filter} ORDER BY template_name ASC `);
+                //template_id, template_name
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM templates ${type_filter} ORDER BY template_name ASC `);
 
             }
     

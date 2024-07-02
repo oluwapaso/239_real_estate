@@ -6,7 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const helpers = new Helpers();
-const EmailTempLists = () => {
+const EmailTempLists = ({ setEmailTempSubject, setEmailTempBody }:
+    {
+        setEmailTempSubject: React.Dispatch<React.SetStateAction<string>>,
+        setEmailTempBody: React.Dispatch<React.SetStateAction<string>>
+    }) => {
 
     const [templates, setTemplates] = useState<TemplateLists[]>([]);
     const [temp_fetched, setTempFetched] = useState(false);
@@ -39,6 +43,11 @@ const EmailTempLists = () => {
 
     }, [])
 
+    const handleClick = (temp_id: number, subject: string, body: string) => {
+        setEmailTempSubject(subject);
+        setEmailTempBody(body);
+    }
+
     return (
         <div className='w-full min-w-[300px] divide-y divide-gray-100 border border-gray-100 overflow-y-auto max-h-[250px]'>
             {/* Loader */}
@@ -52,7 +61,9 @@ const EmailTempLists = () => {
                     (templates.length && templates.length > 0)
                         ? (templates.map((temp) => {
                             return (
-                                <div key={temp.template_id} className='cursor-pointer px-4 py-3 hover:bg-gray-100'>
+                                <div key={temp.template_id} className='cursor-pointer px-4 py-3 hover:bg-gray-100' onClick={() => {
+                                    handleClick(temp.template_id, temp.email_subject, temp.email_body)
+                                }}>
                                     {temp.template_name}
                                 </div>
                             )
