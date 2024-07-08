@@ -89,7 +89,7 @@ export class MYSQLRequestRepo implements RequestRepo {
             
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE property_requests SET status=? WHERE request_id IN(${request_ids}) `, ["Done"]);
-            return result.affectedRows > 0;
+            return result.affectedRows >= 0;
 
         }catch(e: any){
             console.log(e.sqlMessage)

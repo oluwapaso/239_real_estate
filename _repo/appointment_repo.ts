@@ -169,7 +169,7 @@ export class MYSQLAppointmentRepo implements AppointmentRepo {
             
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE appointments SET status=? WHERE appointment_id IN(${appointment_ids}) `, ["Done"]);
-            return result.affectedRows > 0;
+            return result.affectedRows >= 0;
 
         }catch(e: any){
             console.log(e.sqlMessage)

@@ -126,8 +126,8 @@ export class MysqlListingsRepo implements ListingsRepo {
                 // [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
                 
                 [[rows], [total_row]] = await Promise.all([
-                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
+                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties_searcher WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties_searcher WHERE Status='Active' ${search_filter} `),
                 ])
 
             }else if(search_by == "Featured Listings"){
@@ -220,20 +220,20 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                 if(params.mobile_view == "Map"){
                     console.log("Map entry time:", moment().format("HH:mm:ss"));
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties_searcher WHERE City!="0" ${search_filter} AND ${map_filter} 
                     ORDER BY ${order_by} LIMIT 500`);
                     console.log("Map done time:", moment().format("HH:mm:ss"));
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
                     console.log("List entry time:", moment().format("HH:mm:ss"));
-                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
+                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties_searcher WHERE City!="0" ${search_filter} 
                     ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
                     console.log("List done time:", moment().format("HH:mm:ss"));
 
                     console.log("Total entry time:", moment().format("HH:mm:ss"));
-                    [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
+                    [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties_searcher WHERE City!="0" 
                     ${search_filter} ${drawn_filter}`);
                     console.log("Total done time:", moment().format("HH:mm:ss"));
                 }

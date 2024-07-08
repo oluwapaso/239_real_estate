@@ -166,7 +166,7 @@ export class MYSQLTaskRepo implements TaskRepo {
             
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE tasks SET status=? WHERE task_id IN(${task_ids}) `, ["Done"]);
-            return result.affectedRows > 0;
+            return result.affectedRows >= 0;
 
         }catch(e: any){
             console.log(e.sqlMessage)
