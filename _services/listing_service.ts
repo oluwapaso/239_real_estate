@@ -88,7 +88,7 @@ export class ListingsService {
             const prop_prms = this.listings_repo.LoadListings(req, search_filter, order_by);
             const properties = await prop_prms;
             default_resp.success = true;
-            default_resp.data = {properties: properties};
+            default_resp.data = {properties: properties, search_filter: search_filter};
 
         }
 
