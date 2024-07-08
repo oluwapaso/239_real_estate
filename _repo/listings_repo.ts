@@ -240,13 +240,11 @@ export class MysqlListingsRepo implements ListingsRepo {
                 console.log("Map queries done time:", moment().format("HH:mm:ss"));
                 if (params.mobile_view == "Map") {
                     [rows] = query_results[0];
-                    // if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
-                    //     [list_rows] = query_results[1];
-                    //     [total_row] = query_results[2];
-                    // }
-                }
-                
-                if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
+                    if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
+                        [list_rows] = query_results[1];
+                        [total_row] = query_results[2];
+                    }
+                }else if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
                     [list_rows] = query_results[0];
                     [total_row] = query_results[1];
                 }
