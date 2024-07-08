@@ -120,10 +120,15 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
-                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
-                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                // [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
+                // ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
-                [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+                // [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+                
+                [[rows], [total_row]] = await Promise.all([
+                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
+                ])
 
             }else if(search_by == "Featured Listings"){
 
