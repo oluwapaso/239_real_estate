@@ -181,11 +181,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
-                //fields = fields.replace("Images,", ""); //This should speed up things, also each listings have default pix map could use
-
-                fields = `property_id, matrix_unique_id, MLSNumber, BedsTotal, BathsTotal, ListPrice, OriginalListPrice, LastChangeTimestamp, 
-                LastChangeType, OwnershipDesc, PropertyType, DefaultPic, Images, FullAddress, MatrixModifiedDT, TotalArea, ForSaleYN, Status, City, 
-                StateOrProvince, PostalCode`
+                fields = fields.replace("Images,", ""); //This should speed up things, also each listings have default pix map could use
 
                 const north = params.map_bounds.north;
                 const south = params.map_bounds.south;
@@ -214,7 +210,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 
                 if(params.mobile_view == "Map"){
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
-                    ORDER BY ${order_by} LIMIT 50`);
+                    ORDER BY ${order_by} LIMIT 500`);
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
