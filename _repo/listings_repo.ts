@@ -111,9 +111,6 @@ export class MysqlListingsRepo implements ListingsRepo {
         try{
 
             connection = await pool.getConnection();
-            connection_2 = await pool.getConnection();
-            connection_3 = await pool.getConnection();
-           
             const page = params.page;
             const limit = params.limit;
             const start_from = (page - 1) * limit;
@@ -128,14 +125,18 @@ export class MysqlListingsRepo implements ListingsRepo {
                 // [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                 // ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
-                // [total_row] = await connection_2.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+                // [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
                
-                [rows, total_row] = await Promise.all([
+                const query_results = await Promise.all([
                     connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                     ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                    connection_2.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
+                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
                 ]);
 
+                rows = query_results[0];
+                total_row = query_results[1];
+
+                console.log("rows.length:",rows.length, "total_row.length:", total_row.length)
             }else if(search_by == "Featured Listings"){
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
@@ -231,8 +232,8 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                 if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
                     queries.push(
-                        connection_2.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                        connection_3.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter}`)
+                        connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                        connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter}`)
                     );
                 }
 
@@ -345,14 +346,6 @@ export class MysqlListingsRepo implements ListingsRepo {
         }finally{
             if (connection) { 
                 connection.release();
-            }
-
-            if (connection_2) { 
-                connection_2.release();
-            }
-
-            if (connection_3) { 
-                connection_3.release();
             }
         }
 
