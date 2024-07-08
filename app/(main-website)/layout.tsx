@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PageLoaderMain from "@/components/PageLoaderMain";
 
 export const metadata: Metadata = {
-  title: "239 Real Estate",
+  title: "239RE GROUP - MVP REALTY",
   description: `Welcome to 239 Real Estate, where our mission is clear: empowering the community, pursuing excellence, and 
   creating a lasting impact in the world of real estate.`,
 };
