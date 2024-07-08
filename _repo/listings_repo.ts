@@ -106,8 +106,6 @@ export class MysqlListingsRepo implements ListingsRepo {
         let list_rows: any[] = [];
             
         let connection: PoolConnection | null = null;
-        let connection_2: PoolConnection | null = null;
-        let connection_3: PoolConnection | null = null;
         try{
 
             connection = await pool.getConnection();
@@ -128,13 +126,12 @@ export class MysqlListingsRepo implements ListingsRepo {
                 // [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
                
                 const query_results = await Promise.all([
-                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
-                    ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
                     connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
                 ]);
 
-                rows = query_results[0];
-                total_row = query_results[1];
+                [rows] = query_results[0];
+                [total_row] = query_results[1];
 
                 console.log("rows.length:",rows.length, "total_row.length:", total_row.length)
             }else if(search_by == "Featured Listings"){
