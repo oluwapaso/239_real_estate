@@ -186,7 +186,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
-                fields = fields.replace("Images,", ""); //This should speed up things, also each listings have default pix map could use
+                //fields = fields.replace("Images,", ""); //This should speed up things, also each listings have default pix map could use
 
                 const north = params.map_bounds.north;
                 const south = params.map_bounds.south;
@@ -223,6 +223,10 @@ export class MysqlListingsRepo implements ListingsRepo {
                     ${search_filter} ${drawn_filter}) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} 
                     ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
+
+                    query = `SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
+                    ${search_filter} ${drawn_filter}) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} 
+                    ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`;
                 }
                 
             }else{
