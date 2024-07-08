@@ -120,11 +120,16 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
-                console.log("Entry time:",moment().format("HH:mm:ss"));
+                console.log("List Entry time:",moment().format("HH:mm:ss"));
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                 
+                console.log("Done time:", moment().format("HH:mm:ss"), `SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
+                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                
+                console.log("Total Entry time:",moment().format("HH:mm:ss"));
                 [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+                console.log("Done time:", moment().format("HH:mm:ss"), `SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
 
             }else if(search_by == "Featured Listings"){
 
