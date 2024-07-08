@@ -209,7 +209,6 @@ export class MysqlListingsRepo implements ListingsRepo {
                     connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} `),
                 ])
 
-                console.log("Query:", `SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} `)
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
@@ -239,27 +238,21 @@ export class MysqlListingsRepo implements ListingsRepo {
                     map_filter = ` ST_CONTAINS(ST_GeomFromText('POLYGON((${snappedPoly}))'), POINT(Latitude, Longitude))`;
                     drawn_filter = ` AND ${map_filter}`;
                 }
-                
-                console.log("Map queries entry time:", moment().format("HH:mm:ss"));
 
                 if(params.mobile_view == "Map"){
                     console.log("Map entry time:", moment().format("HH:mm:ss"));
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
                     ORDER BY ${order_by} LIMIT 500`);
-                    console.log("Map done time:", moment().format("HH:mm:ss"));
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
-                    console.log("List entry time:", moment().format("HH:mm:ss"));
+                    
                     [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
                     ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
-                    console.log("List done time:", moment().format("HH:mm:ss"));
-
-                    console.log("Total entry time:", moment().format("HH:mm:ss"));
+                    
                     [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
                     ${search_filter} ${drawn_filter}`);
-                    console.log("Total done time:", moment().format("HH:mm:ss"));
                 }
 
             }else{
@@ -271,7 +264,6 @@ export class MysqlListingsRepo implements ListingsRepo {
                 total_records = total_row[0]["total_records"];
             }
 
-            console.log("total_records:", total_records)
             if(search_by == "Map"){
 
                 if(rows.length || list_rows.length){

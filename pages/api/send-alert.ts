@@ -87,8 +87,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
                     if(properties && properties.length > 0){
 
-                        console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length, 
-                        "total_records", properties[0].total_records);
+                        // console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length, 
+                        // "total_records", properties[0].total_records);
 
                         let rest = "";
                         properties.map((prop: any, index: number) => {
@@ -256,9 +256,9 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         message_type: "Property Alert"
                     } 
                     console.log("Sending to:", "alert_id", mail.alert_id, "frequency:", mail.frequency, "user_id:", mail.user_id, from_email, mail.email, mail.subject)
-                    //const send_mail = await mail_service.SendMail(params);
+                    const send_mail = await mail_service.SendMail(params);
 
-                    //console.log("send_mail", send_mail);
+                    console.log("send_mail", send_mail);
                 }));
 
             }else{
