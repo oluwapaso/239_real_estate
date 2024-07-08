@@ -1325,13 +1325,13 @@ export class Helpers {
         }else if(req_body.sort_by=="Parking-DESC"){
             order_by="CAST(GarageSpaces AS SIGNED) DESC";    
         }else if(req_body.sort_by=="Price-ASC"){
-            order_by="CAST(ListPrice AS SIGNED) ASC";   
+            order_by="ListPrice ASC";   
         }else if(req_body.sort_by=="Price-DESC"){
-            order_by="CAST(ListPrice AS SIGNED) DESC";   
+            order_by="ListPrice DESC";   
         }else if(req_body.sort_by=="Built-ASC"){
-            order_by="CAST(YearBuilt AS SIGNED) ASC";   
+            order_by="YearBuilt ASC";   
         }else if(req_body.sort_by=="Built-DESC"){
-            order_by="CAST(YearBuilt AS SIGNED) DESC";   
+            order_by="YearBuilt DESC";   
         }else if(req_body.sort_by=="Date-ASC"){
             order_by="MatrixModifiedDT ASC";   
         }else if(req_body.sort_by=="Date-DESC"){
