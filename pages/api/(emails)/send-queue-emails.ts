@@ -47,8 +47,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const params: SendMailParams = {
                         user_id: mail.user_id,
                         mailer: "Sendgrid",
-                        from_email: "", //mail.from_info,
-                        to_email: "", // mail.to_info,
+                        from_email: mail.from_info,
+                        to_email: mail.to_info,
                         subject: mail.subject,
                         body: mail.email_body,
                         message_type: mail.message_type
