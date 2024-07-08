@@ -227,7 +227,23 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
             searchIDs = `'${searchIDs}'`; 
             if(mail_to && mail_to.length > 0){
 
-                mail_to.forEach(async (mail)=> {
+                // mail_to.forEach(async (mail)=> {
+
+                //     const params: SendMailParams = {
+                //         user_id: mail.user_id,
+                //         mailer: "Sendgrid",
+                //         from_email: from_email,
+                //         to_email: mail.email,
+                //         subject: mail.subject,
+                //         body: mail.message_body,
+                //         message_type: "Property Alert"
+                //     } 
+                //     console.log("Sending to:", "alert_id", mail.alert_id, "frequency:", mail.frequency, "user_id:", mail.user_id, from_email, mail.email, mail.subject)
+                //     //const send_mail = await mail_service.SendMail(params);
+                //     //console.log("send_mail", send_mail)
+                // });
+
+                await Promise.all(mail_to.map(async (mail) => {
 
                     const params: SendMailParams = {
                         user_id: mail.user_id,
@@ -240,8 +256,9 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     } 
                     console.log("Sending to:", "alert_id", mail.alert_id, "frequency:", mail.frequency, "user_id:", mail.user_id, from_email, mail.email, mail.subject)
                     const send_mail = await mail_service.SendMail(params);
-                    console.log("send_mail", send_mail)
-                });
+                    
+                    console.log("send_mail", send_mail);
+                }));
 
             }else{
                 console.log("No alert to send at the moment.");
@@ -249,8 +266,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
             }
 
             if(search_ids && search_ids.length > 0){
-                const isUpdated = await listings_repo.UpdateAlertedSearches(searchIDs);
-                console.log("Updating Update Alerted Searches:", searchIDs, "isUpdated:", isUpdated);
+                //const isUpdated = await listings_repo.UpdateAlertedSearches(searchIDs);
+                console.log("Updating Update Alerted Searches:", searchIDs); //, "isUpdated:", isUpdated
             }
             
             resp.status(200).json({"status":"Success", "message": 'Email sent'});
