@@ -79,14 +79,12 @@ export class MailService {
 
         }else if(mailer == "Sendgrid"){
 
-            console.log("made it here in mailer 11 == Sendgrid")
             try{
 
                 const com_repo = new MYSQLCompanyRepo();
                 const comp_info = await com_repo.GetCompayInfo();
                 const api_info_prms = com_repo.GetApiInfo();
                 const api_info = await api_info_prms
-                console.log("made it here in mailer == Sendgrid")
 
                 const response = await sendEmail(from_email, to_email, subject, body, api_info.data.sendgrid_key); 
                 

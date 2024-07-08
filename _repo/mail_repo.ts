@@ -32,12 +32,14 @@ export class MYSQLMailRepo implements MailRepo {
             const to_email = params.to_email;
             const subject = params.subject;
             const message_type = params.message_type;
+            const batch_id = params.batch_id;
             const date = moment().format("YYYY-MM-DD H:m:s");
             connection = await pool.getConnection();
             
             const [result] = await connection.query<ResultSetHeader>(` 
-                INSERT INTO logged_messages(user_id, from_info, to_info, subject, message_body, message_kind, message_type, date_added) 
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?) `, [user_id, from_email, to_email, subject, message_body, "Email", message_type, date]
+                INSERT INTO logged_messages(user_id, from_info, to_info, subject, message_body, message_kind, message_type, batch_id, 
+                date_added) VALUES(?, ?, ?, ?, ?, ?, ?, ?) `, [user_id, from_email, to_email, subject, message_body, "Email", message_type, 
+                batch_id, date]
             );
             
             if(result.affectedRows>0){

@@ -31,7 +31,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     "from_info": queue.from_info, 
                     "to_info": queue.to_info, 
                     "email_body": queue.email_body, 
-                    "subject": queue.subject
+                    "subject": queue.subject, 
+                    "batch_id": queue.batch_id
                 });
 
                 if(queue.batch_id && queue.batch_id!=""){
@@ -51,7 +52,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         to_email: mail.to_info,
                         subject: mail.subject,
                         body: mail.email_body,
-                        message_type: mail.message_type
+                        message_type: mail.message_type,
+                        batch_id: mail.batch_id,
                     } 
                     
                     const send_mail = await mail_service.SendMail(params);
