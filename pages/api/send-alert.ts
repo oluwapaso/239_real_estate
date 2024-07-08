@@ -255,9 +255,9 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         message_type: "Property Alert"
                     } 
                     console.log("Sending to:", "alert_id", mail.alert_id, "frequency:", mail.frequency, "user_id:", mail.user_id, from_email, mail.email, mail.subject)
-                    const send_mail = await mail_service.SendMail(params);
-                    
-                    console.log("send_mail", send_mail);
+                    //const send_mail = await mail_service.SendMail(params);
+
+                    //console.log("send_mail", send_mail);
                 }));
 
             }else{
