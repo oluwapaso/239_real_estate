@@ -73,7 +73,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, resp: NextApiRespons
                 formData.append('upload_type', "agent_dp");
             }
         }
-
+        console.log(`Endpoint::: ${process.env.NEXT_PUBLIC_PROP_IMAGE_URL}/next-requests/upload_images.php`)
         const phpServerUrl = `${process.env.NEXT_PUBLIC_PROP_IMAGE_URL}/next-requests/upload_images.php`; // Replace with your PHP server URL
         const phpResponse = await fetch(phpServerUrl, {
           method: 'POST',
@@ -82,6 +82,8 @@ const handler: NextApiHandler = async (req: NextApiRequest, resp: NextApiRespons
             return resp.json();
         }).then(data => {
           return data;
+        }).catch((e:any)=>{
+          console.log("Error:", e)
         });
 
         if(phpResponse?.success){

@@ -225,8 +225,15 @@ export class MYSQLAgentsRepo implements AgentsRepo {
             const [admin_row] = await connection.query<RowDataPacket[]>(`SELECT * FROM admins WHERE (email=? OR username=?) `, [username_or_email, username_or_email]);
             if(admin_row.length){
 
-                const admin_info = admin_row[0]
-                const hashed_password = admin_info.password
+                const admin_info = admin_row[0];
+                const hashed_password = admin_info.password;
+                const status = admin_info.status;
+
+                if(status == "Reset Password"){
+                    return {"message": "Password reset is required", "data":null, "success": false}
+                }else if(status == "Inactive"){
+                    return {"message": "Account is inactive, contact a super admin", "data":null, "success": false}
+                }
 
                 const isValidPwrd = await bcrypt.compare(password, hashed_password).then(async (result) => {
 
