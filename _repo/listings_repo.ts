@@ -209,6 +209,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                     connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} `),
                 ])
 
+                console.log("Query:", `SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} `)
             } else if(search_by == "Map"){
                 
                 fields += `, Latitude, Longitude, StatusType`;
