@@ -177,8 +177,26 @@ export class MysqlListingsRepo implements ListingsRepo {
             } else if(search_by == "Alerts"){
 
                 let last_alert = params.last_alert;
+                let alert_frequency = params.alert_frequency;
                 last_alert = moment(last_alert);
-                const lastAlert = last_alert.subtract(4, 'hours').format('YYYY-MM-DD HH:mm:ss');
+
+                let sub_dur = 1;
+                let sub_range = "hours";
+                if(alert_frequency == "Hourly"){
+                    sub_dur = 4;
+                    sub_range = "hours";
+                }else if(alert_frequency == "Daily"){
+                    sub_dur = 1;
+                    sub_range = "days";
+                }else if(alert_frequency == "Weekly"){
+                    sub_dur = 1;
+                    sub_range = "weeks";
+                }else if(alert_frequency == "Monthly"){
+                    sub_dur = 1;
+                    sub_range = "months";
+                }
+                
+                const lastAlert = last_alert.subtract(sub_dur, sub_range).format('YYYY-MM-DD HH:mm:ss');
 
                 console.log("last_alert", params.last_alert, "lastAlert", lastAlert);
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 

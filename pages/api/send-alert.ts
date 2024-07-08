@@ -63,6 +63,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         home_type: alert.home_type,
                         sort_by: alert.sort_by,
                         last_alert: alert.last_alert,
+                        alert_frequency: alert.email_frequency,
                         page: 1,
                         limit: 11
                     }
