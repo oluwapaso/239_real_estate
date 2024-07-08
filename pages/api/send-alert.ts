@@ -85,10 +85,10 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const properties = await prop_prms;
                     
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
-                    console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length, 
-                    "total_records", properties[0].total_records)
-                    
                     if(properties && properties.length > 0){
+
+                        console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length, 
+                        "total_records", properties[0].total_records);
 
                         let rest = "";
                         properties.map((prop: any, index: number) => {
