@@ -101,6 +101,7 @@ export class MysqlListingsRepo implements ListingsRepo {
         const params = req.body;
         const search_by = params.search_by;
         let rows: any[] = [];
+        let total_row: any[] = [];
         let list_rows: any[] = [];
             
         let connection: PoolConnection | null = null;
@@ -122,10 +123,8 @@ export class MysqlListingsRepo implements ListingsRepo {
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
                 Status='Active' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
-
-                query = `SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
-                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`
+                
+                [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
 
             }else if(search_by == "Featured Listings"){
 
@@ -233,6 +232,11 @@ export class MysqlListingsRepo implements ListingsRepo {
                 console.log("Invalid search type:", search_by)
             }
             
+            let total_records = 0;
+            if(total_row.length){
+                total_records = total_row[0]["total_records"];
+            }
+
             if(search_by == "Map"){
 
                 if(rows.length || list_rows.length){
@@ -245,6 +249,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                         
                         return {
                             ...row,
+                            //total_records: total_records,
                         }
 
                     });
@@ -257,6 +262,7 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                         return {
                             ...l_row,
+                            //total_records: total_records,
                         }
                     });
 
@@ -277,6 +283,7 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                         return {
                             ...row,
+                            total_records: total_records,
                         }
 
                     });
