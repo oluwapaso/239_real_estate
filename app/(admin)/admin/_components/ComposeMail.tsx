@@ -3,10 +3,12 @@
 import { Helpers } from '@/_lib/helpers';
 import { APIResponseProps } from '@/components/types';
 import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import EmailTempLists from './EmailTempLists';
+import { temp_codes } from '@/_lib/data';
+import TempCodes from './TempCodes';
 const Ck_Editor_Component = dynamic(() => import("./Ckeditor"), { ssr: false });
 
 const helpers = new Helpers();
@@ -18,8 +20,10 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
     const [subject, setSubject] = useState("");
     const [mail_body, setMailBody] = useState("");
     const [is_sending_msg, setIsSendingMsg] = useState(false);
-    const [email_temp_subject, setEmailTempSubject] = useState("");
-    const [email_temp_body, setEmailTempBody] = useState("");
+    const [editorRef, setEditor] = useState<any>();
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [show_eml_ins_code, setShowEmlInsCode] = useState(false);
+    const eml_temp_code_ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
 
@@ -92,6 +96,7 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
                 });
 
                 setMailBody("");
+                setSubject("");
                 setIsSendingMsg(false);
                 setRefreshActivities(true);
 
@@ -111,15 +116,22 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
 
     }
 
-    useEffect(() => {
-        alert("Subject" + email_temp_subject)
-        setEmailTempSubject(email_temp_subject)
-    }, [email_temp_subject])
+    const insertTextAtCaret = (text: string) => {
+        if (editorRef) {
+            const edtr = editorRef.current;
+            edtr.model.change((writer: any) => {
+                const insertPosition = edtr.model.document.selection.getFirstPosition();
+                writer.insert(` ${text} `, insertPosition);
 
-    useEffect(() => {
-        alert("Body" + email_temp_body)
-        setEmailTempBody(email_temp_body)
-    }, [email_temp_body])
+                // Move the caret to the position after the inserted text
+                const endPosition = writer.createPositionAt(insertPosition.parent, insertPosition.offset + (text.length + 2));
+                writer.setSelection(endPosition);
+            });
+
+            // Focus the editor
+            edtr.editing.view.focus();
+        }
+    };
 
     return (
         <div className='w-full bg-white'>
@@ -145,22 +157,40 @@ function ComposeMail({ user_email, user_id, setRefreshActivities }:
                 </div>
             </div>
             <div className='w-full border border-gray-100 border-r-0 border-l-0'>
-                <Ck_Editor_Component data={mail_body} onDataChange={handleDataChange} height="240px" />
+                <Ck_Editor_Component data={mail_body} onDataChange={handleDataChange} height="240px" setEditor={setEditor} />
             </div>
             <div className='w-full py-5 px-4 flex justify-between items-center'>
-                <div className='group relative border border-red-500 w-36 h-12'>
-                    <div className='border border-primary rounded cursor-pointer px-3 py-2 text-primary hover:shadow-md'>Select Template</div>
-                    <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl z-20'>
-                        <EmailTempLists setEmailTempSubject={setEmailTempSubject} setEmailTempBody={setEmailTempBody} />
+                <div className='flex items-center'>
+                    <div className='group relative w-36 h-11 mr-2'>
+                        <div className='border border-primary rounded cursor-pointer px-3 py-2 h-full flex items-center text-primary hover:shadow-md'>Select Template</div>
+                        <div className='absolute hidden top-[45px] group-hover:block bg-white shadow-xl z-20'>
+                            <EmailTempLists setEmailTempSubject={setSubject} setEmailTempBody={setMailBody} />
+                        </div>
+                    </div>
+
+                    <div className='relative h-11'>
+                        <div className='border border-primary px-3 py-2 h-full flex items-center rounded text-primary hover:shadow-md cursor-pointer'
+                            onClick={() => setShowEmlInsCode(!show_eml_ins_code)}>
+                            Insert Code
+                        </div>
+
+                        <div ref={eml_temp_code_ref} className={`w-[320px] flex-col h-[350px] overflow-x-0hidden overflow-y-scroll border 
+                        bg-white border-primary shadow-lg absolute z-20 right-0 top-full ${show_eml_ins_code ? 'flex' : 'hidden'} pb-10`}>
+                            {
+                                temp_codes.map((code, index) => {
+                                    return (<TempCodes key={index} code={code} insertTextAtCaret={insertTextAtCaret} />)
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
 
-                {!is_sending_msg && <div className='px-6 py-2 rounded flex items-center justify-center bg-sky-700 text-white 
+                {!is_sending_msg && <div className='px-6 py-2 h-11 rounded flex items-center justify-center bg-sky-700 text-white 
                 cursor-pointer' onClick={sendEmail}>
                     Send Email
                 </div>}
 
-                {is_sending_msg && <div className='px-6 py-2 rounded flex items-center justify-center bg-sky-700/50 text-white 
+                {is_sending_msg && <div className='px-6 py-2 h-11 rounded flex items-center justify-center bg-sky-700/50 text-white 
                 cursor-not-allowed'>
                     <AiOutlineLoading3Quarters className='animate-spin mr-2' />  <span>Please Wait...</span>
                 </div>}

@@ -118,10 +118,15 @@ function UserAppointments({ handleAppointmentModal, user_id, refresh_appointment
                                 app_date = <span className=' text-green-700 font-semibold'>Today</span>
                             }
 
+                            let is_due = <></>
+                            if (moment(app.date).isBefore(moment(), 'day')) {
+                                is_due = <span className=' text-red-700 font-normal'>(Due)</span>
+                            }
+
                             return app.status == "Pending" && (
                                 <div key={app.appointment_id} className='w-full flex items-center p-4'>
                                     <div className='flex flex-col flex-grow'>
-                                        <div className='w-full font-medium'>{app.title}</div>
+                                        <div className='w-full font-medium'>{app.title} {is_due}</div>
                                         <div className='w-full text-gray-500 italic text-sm flex items-center mt-1'>
                                             <GoClock size={14} /> <span className='ml-1'>{app.start_time} - {app.end_time} {app_date}</span>
                                         </div>

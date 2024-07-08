@@ -1,6 +1,6 @@
 import { Helpers } from "@/_lib/helpers";
 import { MYSQLAppointmentRepo } from "@/_repo/appointment_repo";
-import { APIResponseProps, AddAppointmentParams, AddTaskParams, MarkAppointmentAsDoneParams, MarkTaskAsDoneParams } from "@/components/types";
+import { APIResponseProps, AddAppointmentParams, AddTaskParams, MarkAppointmentAsDoneParams, MarkMultiAppsAsDoneParams, MarkTaskAsDoneParams } from "@/components/types";
 
 export class AppointmentService {
 
@@ -67,6 +67,37 @@ export class AppointmentService {
             default_resp.message = "Appointment succesfully updated";
         }else{
             default_resp.message = "Unable to update appointment status";
+        }
+        return default_resp;
+
+    }
+
+    public async MarkMultiAppsAsDone(params: MarkMultiAppsAsDoneParams):Promise<APIResponseProps>{
+
+        const appointment_ids = params.appointment_ids;
+
+        const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+
+        if(!appointment_ids || appointment_ids.length < 1){
+            default_resp.message = "Fatal error."
+            return default_resp as APIResponseProps
+        }
+
+        let implode_ids = appointment_ids.join("', '");
+        implode_ids = `'${implode_ids}'`;
+
+        console.log("implode_ids:", implode_ids)
+        const is_updated = await this.app_repo.MarkMultiAppsAsDone(implode_ids);
+        default_resp.success = is_updated;
+        
+        if(is_updated){
+            default_resp.message = "Task succesfully updated";
+        }else{
+            default_resp.message = "Unable to update task status";
         }
         return default_resp;
 

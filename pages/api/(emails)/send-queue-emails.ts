@@ -1,6 +1,6 @@
 import { MYSQLMailRepo } from "@/_repo/mail_repo";
 import { MailService } from "@/_services/mail_service";
-import { SendMailParams } from "@/components/types";
+import { QueueError, SendMailParams } from "@/components/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const mail_service = new MailService();
@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
         const queues = await queue_prms;
         const mail_to: any[] = [];
         const sent_ids: any[] = [];
-        const errored_ids: any[] = [];
-
+        const errored_ids: QueueError[] = [];
+        const batch_ids: any[] = [];
+        
         if(queues && queues.length){
 
             const queue_ids: any[] = [];
@@ -33,6 +34,10 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     "subject": queue.subject
                 });
 
+                if(queue.batch_id && queue.batch_id!=""){
+                    batch_ids.push(queue.batch_id);
+                }
+
             }));
 
             if(mail_to && mail_to.length > 0){
@@ -42,8 +47,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const params: SendMailParams = {
                         user_id: mail.user_id,
                         mailer: "Sendgrid",
-                        from_email: mail.from_info,
-                        to_email: mail.to_info,
+                        from_email: "", //mail.from_info,
+                        to_email: "", // mail.to_info,
                         subject: mail.subject,
                         body: mail.email_body,
                         message_type: mail.message_type
@@ -53,7 +58,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     if(send_mail.success){
                         sent_ids.push(mail.queue_id);
                     }else{
-                        errored_ids.push(mail.queue_id);
+                        errored_ids.push({queue_id:mail.queue_id, error_message: send_mail.message});
                     }
 
                 }));
@@ -68,11 +73,26 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                 console.log("delQueue:", delQueue);
             }
 
+            console.log("errored_ids.length:", errored_ids.length)
             if(errored_ids && errored_ids.length > 0){
                 const isErrUpdated = await email_repo.MarkAsErrored(errored_ids);
                 console.log("isErrUpdated:", isErrUpdated);
             }
+
+            console.log("batch_ids.length:", batch_ids.length)
+            if(batch_ids && batch_ids.length > 0){
+
+                const batch_uids = Array.from(new Set(batch_ids))
+                console.log("Has batch email to update:", "batch_ids.length", batch_ids.length, "batch_uids.length", batch_uids.length)
+                const isBatchUpdated = await email_repo.UpdateBatchMessageStats(batch_uids);
+                const isBatchStatsCounted = await email_repo.CountBatchMessageStats(batch_uids);
+                console.log("isBatchUpdated:", isBatchUpdated, "isBatchStatsCounted:", isBatchStatsCounted);
+            }
             
+            if(errored_ids && errored_ids.length > 0 && sent_ids.length < 1){
+                resp.status(200).json({"status":"Error", "message": "No queued emails sent."});
+            }
+
             resp.status(200).json({"status":"Success", "message": 'Email sent'});
 
         }else{

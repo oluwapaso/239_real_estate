@@ -1,11 +1,13 @@
 import { Helpers } from "@/_lib/helpers";
 import { MYSQLCompanyRepo } from "@/_repo/company_repo";
-import { APIResponseProps, LoadSingleAutoResponderParams, SendMailParams } from "@/components/types";
+import { AddBatchMessageParams, APIResponseProps, BatchMailErrorsParams, GetSingleUserParams, LoadSingleAutoResponderParams, 
+    SendMailParams, SetBatchMessageStatsParams } from "@/components/types";
 import { sendEmail } from "@/_lib/sendgridMailer";
 import nodemailer from 'nodemailer';
 import { MYSQLMailRepo } from "@/_repo/mail_repo"; 
 import { MYSQLAutoResponderRepo } from "@/_repo/auto_responder"; 
 import { MYSQLTemplateRepo } from "@/_repo/templates_repo";
+import { NextApiRequest } from "next";
 
 export class MailService {
 
@@ -13,6 +15,7 @@ export class MailService {
     mail_repo = new MYSQLMailRepo();
     ar_repo = new MYSQLAutoResponderRepo();
     temp_repo = new MYSQLTemplateRepo();
+    //user_repo = new MYSQLUserRepo();
 
     public async SendMail(params: SendMailParams): Promise<APIResponseProps> {
 
@@ -151,6 +154,148 @@ export class MailService {
             console.log("UNable to load ar for :", params.message_type);
         }
         
+        return default_resp;
+
+    }
+
+
+    public async SendBatchEmail(req: NextApiRequest): Promise<APIResponseProps> {
+
+        const from_email = req.body.from_email;
+        const mail_body = req.body.mail_body;
+        const subject = req.body.subject;
+        const user_ids = req.body.user_ids;
+        const mailer = req.body.mailer;
+        let template_name = req.body.template_name;
+        let unsubscribed = 0;
+        let errored = 0;
+        let queued = 0;
+        let errors: BatchMailErrorsParams[] = [];
+
+        console.log("made it here SendBatchMail()")
+        const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+
+        //Early return
+        if(!user_ids || user_ids.length < 1){
+            default_resp.message = "No user is selected for this batch email";
+            return default_resp;
+        }
+
+        if(!template_name || template_name == ""){
+            template_name = subject
+        }
+        //Else continue
+        const batch_params: AddBatchMessageParams = {
+            type: "Email",
+            total_messages: user_ids.length, 
+            template_name: template_name,
+        }  
+
+        let [is_added, batch_id] = await this.mail_repo.AddBatchMessage(batch_params);
+
+        //Early return
+        if(!is_added) {
+            default_resp.message = "Unable to add batch email.";
+            return default_resp;
+        }
+
+        //Else continue
+        await Promise.all(
+            user_ids.map(async (user_id: number) => {
+                
+                if(user_id) {
+
+                    const params: GetSingleUserParams = {
+                        search_by: "User ID",
+                        fields: "user_id, email, firstname, sub_to_mailing_lists",
+                        user_id: String(user_id)
+                    } 
+
+                    //Lazy-load MYSQLUserRepo to avoid import cycle
+                    const { MYSQLUserRepo } = await import("@/_repo/user_repo");
+                    const user_repo = new MYSQLUserRepo();
+                    const user_info = await user_repo.GetSingleUser({params}) as any;
+                    
+                    if(user_info && typeof user_info != "string"){
+
+                        //Early sync return
+                        if(user_info.sub_to_mailing_lists != "true"){
+                            errors.push({user_id: user_id, batch_id: batch_id, to_email: user_info.email, 
+                            error:"User unsubscribed from receiving mass email. You can still contact them individually"})
+                            unsubscribed++;
+                            return; //We are in async function, it's just breking out of current iteration
+                        }
+
+                        //Early sync return
+                        if(!this.helpers.validateEmail(user_info.email)){
+                            errors.push({user_id: user_id, batch_id: batch_id, to_email: user_info.email, error:"Invalid email address"})
+                            errored++;
+                            return; //We are in async function, it's just breking out of current iteration
+                        }  
+
+                        //Else continue
+                        const replaced_body = await this.temp_repo.ReplaceTemplateCode(mail_body, "Email", user_id);
+                        const replaced_subject = await this.temp_repo.ReplaceTemplateCode(subject, "Email", user_id);
+
+                        const queue_params: SendMailParams = {
+                            user_id: user_id,
+                            mailer: mailer,
+                            from_email: from_email,
+                            to_email: user_info.email,
+                            subject: replaced_subject,
+                            body: replaced_body,
+                            message_type: "CRM Message",
+                            batch_id: batch_id,
+                        } 
+
+                        const add_to_queue = await this.mail_repo.AddMailToQueue(queue_params);
+                        if(add_to_queue){
+                            queued++;
+                        }else{
+                            errors.push({user_id: user_id, batch_id: batch_id, to_email: user_info.email, error: "Unable to add message to queue."})
+                            errored++;
+                            return; //We are in async function, it's just breking out of current iteration
+                        }
+
+                    }else{
+                        errors.push({user_id: user_id, batch_id: batch_id, to_email:"", error:"Invalid account info.."})
+                        errored++;
+                    }
+
+                }else{
+                    errors.push({user_id: 0, batch_id: batch_id, to_email:"", error:"Invalid account info."})
+                    errored++;
+                }
+
+            })
+        )
+
+        if(queued > 0 || errored > 0 || unsubscribed > 0){
+            default_resp.success = true;
+            default_resp.message = `${queued} batch email${queued > 1 ? "s":""} queued successfully.`;
+        }else{
+            default_resp.message = `Unable to add email${queued > 1 ? "s":""} to queue.`;
+        }
+
+        //Log batch email errors 
+        if(errors.length > 0 && (errored>0 || unsubscribed > 0)){
+            const isErrAdded = await this.mail_repo.LogBatchMailErrors(errors);
+        }
+
+        //Update batch email stats 
+        const stats_params: SetBatchMessageStatsParams = {
+            type: "Email",
+            batch_id: batch_id, 
+            errored: errored,
+            unsubscribed: unsubscribed,
+            queued: queued,
+        }  
+        let isUpdated = await this.mail_repo.SetBatchMessageStats(stats_params);
+
         return default_resp;
 
     }

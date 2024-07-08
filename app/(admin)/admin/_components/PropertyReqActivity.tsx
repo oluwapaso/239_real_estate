@@ -1,12 +1,20 @@
+"use client"
+
+import { Helpers } from '@/_lib/helpers';
 import moment from 'moment'
 import Link from 'next/link';
 import React from 'react'
 import { BsInfoCircle } from 'react-icons/bs';
-import { FaHandHoldingDollar } from 'react-icons/fa6';
+import { FaCheck, FaHandHoldingDollar } from 'react-icons/fa6';
 import { IoWalkSharp } from 'react-icons/io5';
 import { LiaBinocularsSolid } from 'react-icons/lia';
 import { TbHomeDollar } from 'react-icons/tb';
+import Swal from 'sweetalert2';
+import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
+const helpers = new Helpers();
 const PropertyRequestActivity = ({ activity, index, activities_len }: { activity: any, index: number, activities_len: number }) => {
 
     let icon = <></>;
@@ -14,6 +22,63 @@ const PropertyRequestActivity = ({ activity, index, activities_len }: { activity
     let description = activity.description;
     let desc: any = {};
     let req_body: React.JSX.Element = <></>
+
+    const AcknowledgeLoader = () => {
+        return <div className='py-1 px-2 rounded text-white bg-primary/50 flex items-center justify-center text-sm font-medium 
+                cursor-pointer hover:shadow-lg'>
+            <AiOutlineLoading3Quarters size={14} className='animate-spin mr-2' /> <span>Please wait...</span>
+        </div>
+    }
+
+    const Acknowledged = () => {
+        return <div className='py-1 px-2 text-green-700 flex items-center justify-center text-sm font-medium'>
+            <FaCheck size={13} /> <span className='ml-1'>Acknowledged</span>
+        </div>
+    }
+
+    const AcknowledgeRequest = async (request_id: number) => {
+        const result = await Swal.fire({
+            title: "Are you sure you this request has been acknowledged?",
+            text: "This can not be undone",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes Continue',
+        });
+
+        if (result.isConfirmed) {
+
+            try {
+                const act_btn_cont = document.getElementById("act_btn_cont_" + request_id) as HTMLElement;
+                if (act_btn_cont) {
+                    const root = createRoot(act_btn_cont);
+                    root.render(<AcknowledgeLoader />);
+                    await helpers.AcknowledgeRequest(request_id);
+                    root.render(<Acknowledged />);
+                }
+            } catch (e: any) {
+                console.log(e.message);
+            }
+
+        } else {
+            // Handle cancel action
+            console.log('Canceled');
+        }
+
+    }
+
+    let ack_btn = <></>
+    if (activity.field_1 == "Pending") {
+        ack_btn = <div className='py-1 px-2 rounded text-white bg-primary flex items-center justify-center text-sm font-medium 
+                cursor-pointer hover:shadow-lg' onClick={() => AcknowledgeRequest(activity.activity_id)}>
+            <FaCheck size={13} /> <span className='ml-1'>Acknowledge</span>
+        </div>
+    } else {
+        ack_btn = <div className='py-1 px-2 text-green-700 flex items-center justify-center text-sm font-medium'>
+            <FaCheck size={13} /> <span className='ml-1'>Acknowledged</span>
+        </div>
+    }
 
     if (description && description != "" && typeof description == "string") {
         desc = JSON.parse(description);
@@ -136,9 +201,14 @@ const PropertyRequestActivity = ({ activity, index, activities_len }: { activity
                             <span>{moment(activity.date).fromNow()}</span>
                             <span className='ml-1 text-sm text-gray-500'>({moment(activity.date).format("MMMM Do, YYYY h:m:s A")})</span>
                         </div>
-                        <div className='w-full text-base font-medium text-sky-800'>{activity.type}</div>
+                        <div className='w-full text-base font-medium text-sky-800 flex items-center'>
+                            <div className='mr-1'>{activity.type}</div>
+                            <div className='text-[14px]'>
+                                {activity.field_1 == "Pending" ? <span className='text-orange-600'>(Not yet acknowledged)</span> : <span className=' text-green-600'>(Acknowledged)</span>}</div>
+                        </div>
                     </div>
                     {req_body}
+                    <div className='flex mt-2' id={`act_btn_cont_${activity.activity_id}`}>{ack_btn}</div>
                 </div>
             </div>
         </li>

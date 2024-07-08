@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { BiAddToQueue } from 'react-icons/bi'
-import { BsArrowLeftShort, BsChevronDown } from 'react-icons/bs'
-import { FaWordpressSimple } from 'react-icons/fa'
+import { BsArrowLeftShort, BsChevronDown, BsInfoSquare } from 'react-icons/bs'
+import { FaTasks, FaWordpressSimple } from 'react-icons/fa'
 import { IoConstructOutline, IoLocationOutline, IoSettings } from 'react-icons/io5'
 import { MdChatBubbleOutline, MdDashboard, MdDashboardCustomize, MdOutlineSupportAgent } from 'react-icons/md'
 import { PiUserList, PiUserPlus } from 'react-icons/pi'
@@ -13,11 +13,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../GlobalRedux/store'
 import { menu_toggled } from '../GlobalRedux/app/appSlice'
 import { logout, showPageLoader } from '../GlobalRedux/user/userSlice'
-import { useRouter } from 'next/navigation'
-import { FaCity, FaGears, FaRobot, FaUsers } from 'react-icons/fa6'
+import { usePathname, useRouter } from 'next/navigation'
+import { FaCity, FaGears, FaListOl, FaRobot, FaUsers } from 'react-icons/fa6'
 import useCurrentBreakpoint from '@/_hooks/useMediaQuery'
 import { HiChatBubbleLeftEllipsis } from 'react-icons/hi2'
 import { CiViewList } from 'react-icons/ci'
+import { ImCalendar } from 'react-icons/im'
+import moment from 'moment'
 
 const list_class = "flex items-center text-gray-300 rounded-md text-sm cursor-pointer gap-x-4 hover:bg-slate-800 mt-2 p-2"
 export type MainMenuType = {
@@ -46,11 +48,16 @@ const SideBars = () => {
     const menuOpen = useSelector((state: RootState) => state.app_settings.menu_opened);
     const dispatch = useDispatch();
     const router = useRouter();
+    const use_path = usePathname();
 
     const menuList: MenuType[] = [
         { "title": "Dashboard", "link": "/admin/dashboard", "icon": <MdDashboardCustomize /> },
         { "title": "Users", "link": "/admin/all-users?stage=Any&page=1", "icon": <FaUsers /> },
         { "title": "Settings", "link": "/admin/settings", "icon": <IoSettings /> },
+        { "title": "Tasks", "link": "/admin/tasks?type=Upcoming Tasks&page=1", "icon": <FaTasks /> },
+        { "title": "Appointments", "link": "/admin/appointments?type=Upcoming Appointments&page=1", "icon": <ImCalendar /> },
+        { "title": "Requests", "link": "/admin/requests?type=Info Requests&page=1", "icon": <BsInfoSquare /> },
+        { "title": "Batch Messages", "link": "/admin/batch-messages?type=Email&page=1", "icon": <FaListOl /> },
         { "title": "Cities", "link": "/admin/all-cities", "icon": <FaCity /> },
         {
             "title": "Communities", "link": "", "icon": <IoLocationOutline />,
@@ -150,7 +157,8 @@ const MenuItem = ({ menu, menuOpen, closeMenu }: { menu: MenuType, menuOpen: boo
     const showLoader = () => {
         const pathname = window.location.href.split("admin/")[1];
         const link = menu.link.split("admin/")[1];
-        if (pathname != link) {
+        //console.log("decodeURIComponent(pathname):", decodeURIComponent(pathname), "link:", link)
+        if (decodeURIComponent(pathname) != link) {
             return dispatch(showPageLoader());
         }
     }

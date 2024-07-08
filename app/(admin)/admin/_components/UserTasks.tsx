@@ -112,10 +112,15 @@ function UserTasks({ handleTaskModal, user_id, refresh_tasks, setRefreshTasks }:
                                 task_date = <span className=' text-green-700 font-semibold'>Today</span>
                             }
 
+                            let is_due = <></>
+                            if (moment(task.date).isBefore(moment(), 'day')) {
+                                is_due = <span className=' text-red-700 font-normal'>(Due)</span>
+                            }
+
                             return task.status == "Pending" && (
                                 <div key={task.task_id} className='w-full flex items-center p-4'>
                                     <div className='flex flex-col flex-grow'>
-                                        <div className='w-full font-medium'>{task.title}</div>
+                                        <div className='w-full font-medium'>{task.title} {is_due}</div>
                                         <div className='w-full text-gray-500 italic text-sm flex items-center'>
                                             <GoClock size={14} /> <span className='ml-1'>{task_date} at {task.time} </span>
                                         </div>

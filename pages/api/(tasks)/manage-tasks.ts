@@ -1,5 +1,5 @@
 import { TaskService } from "@/_services/task_service";
-import { AddTaskParams, MarkTaskAsDoneParams } from "@/components/types";
+import { APIResponseProps, AddTaskParams, MarkMultiTaskAsDoneParams, MarkTaskAsDoneParams } from "@/components/types";
 import { NextApiRequest, NextApiResponse } from "next"
 
 const task_service = new TaskService();
@@ -24,11 +24,27 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
     } else if(req.method == "PATCH"){
         
         const req_body = req.body;
-        const payload: MarkTaskAsDoneParams = {
-            task_id: req_body.task_id
+        const type = req_body.type;
+        let response: APIResponseProps | null = null ; 
+
+        if(type == "Single"){
+
+            const payload: MarkTaskAsDoneParams = {
+                task_id: req_body.task_id
+            }
+            
+            response = await task_service.MarkTaskAsDone(payload);
+
+        }else if(type == "Multiple"){
+            
+            const payload: MarkMultiTaskAsDoneParams = {
+                task_ids: req_body.task_ids
+            }
+            
+            response = await task_service.MarkMultiTaskAsDone(payload);
+
         }
-        
-        const response = await task_service.MarkTaskAsDone(payload);
+
         resp.status(200).json(response);
 
     } else{

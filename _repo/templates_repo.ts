@@ -201,7 +201,6 @@ export class MYSQLTemplateRepo implements TemplateRepo {
         if(user_info && typeof user_info != "string"){
 
             user_id = user_info.user_id;
-            
             temp_body = temp_body.replace(/{{firstname}}/ig, user_info.firstname || "");
             temp_body = temp_body.replace(/{{lastname}}/ig, user_info.lastname || "");
             temp_body = temp_body.replace(/{{email}}/ig, user_info.email || "");

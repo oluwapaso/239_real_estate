@@ -1,6 +1,6 @@
 import { Helpers } from "@/_lib/helpers";
 import { MYSQLTaskRepo } from "@/_repo/task_repo";
-import { APIResponseProps, AddTaskParams, MarkTaskAsDoneParams } from "@/components/types";
+import { APIResponseProps, AddTaskParams, MarkMultiTaskAsDoneParams, MarkTaskAsDoneParams } from "@/components/types";
 
 export class TaskService {
 
@@ -59,7 +59,38 @@ export class TaskService {
         }
 
         console.log("params:", params)
-        const is_updated = await this.task_repo.MarktaskAsDone(params);
+        const is_updated = await this.task_repo.MarkTaskAsDone(params);
+        default_resp.success = is_updated;
+        
+        if(is_updated){
+            default_resp.message = "Task succesfully updated";
+        }else{
+            default_resp.message = "Unable to update task status";
+        }
+        return default_resp;
+
+    }
+
+    public async MarkMultiTaskAsDone(params: MarkMultiTaskAsDoneParams):Promise<APIResponseProps>{
+
+        const task_ids = params.task_ids;
+
+        const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+
+        if(!task_ids || task_ids.length < 1){
+            default_resp.message = "Fatal error."
+            return default_resp as APIResponseProps
+        }
+
+        let implode_ids = task_ids.join("', '");
+        implode_ids = `'${implode_ids}'`;
+
+        console.log("implode_ids:", implode_ids)
+        const is_updated = await this.task_repo.MarkMultiTaskAsDone(implode_ids);
         default_resp.success = is_updated;
         
         if(is_updated){

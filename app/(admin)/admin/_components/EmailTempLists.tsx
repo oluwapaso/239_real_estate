@@ -6,10 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const helpers = new Helpers();
-const EmailTempLists = ({ setEmailTempSubject, setEmailTempBody }:
+const EmailTempLists = ({ setEmailTempSubject, setEmailTempBody, setEmailTempName }:
     {
         setEmailTempSubject: React.Dispatch<React.SetStateAction<string>>,
-        setEmailTempBody: React.Dispatch<React.SetStateAction<string>>
+        setEmailTempBody: React.Dispatch<React.SetStateAction<string>>,
+        setEmailTempName?: React.Dispatch<React.SetStateAction<string>>
     }) => {
 
     const [templates, setTemplates] = useState<TemplateLists[]>([]);
@@ -43,9 +44,23 @@ const EmailTempLists = ({ setEmailTempSubject, setEmailTempBody }:
 
     }, [])
 
-    const handleClick = (temp_id: number, subject: string, body: string) => {
-        setEmailTempSubject(subject);
-        setEmailTempBody(body);
+    const handleClick = (temp_id: number, subject: string, body: string, template_name: string) => {
+        setEmailTempSubject("");
+        setEmailTempBody("");
+        if (setEmailTempName) {
+            setEmailTempName("");
+        }
+        // Set a temporary timeout to ensure states are cleared before updating
+        const timer = setTimeout(() => {
+            setEmailTempSubject(subject);
+            setEmailTempBody(body);
+            if (setEmailTempName) {
+                setEmailTempName(template_name);
+            }
+        }, 100);
+
+        // Clean up the timer if the component unmounts
+        return () => clearTimeout(timer);
     }
 
     return (
@@ -62,7 +77,7 @@ const EmailTempLists = ({ setEmailTempSubject, setEmailTempBody }:
                         ? (templates.map((temp) => {
                             return (
                                 <div key={temp.template_id} className='cursor-pointer px-4 py-3 hover:bg-gray-100' onClick={() => {
-                                    handleClick(temp.template_id, temp.email_subject, temp.email_body)
+                                    handleClick(temp.template_id, temp.email_subject, temp.email_body, temp.template_name)
                                 }}>
                                     {temp.template_name}
                                 </div>

@@ -1,13 +1,14 @@
 import pool from "@/_lib/db_conn";
-import { AddAppointmentParams, AddTaskParams, Appointment, AutoResponderDetails, AutoResponderLists, LoadSingleAutoResponderParams,LoadUserAppointmentParams,LoadUserTasksParams,MarkAppointmentAsDoneParams,MarkTaskAsDoneParams,Task,UpdateAutoResponderParams } from "@/components/types";
+import { AddAppointmentParams, AddTaskParams, Appointment, AutoResponderDetails, AutoResponderLists, LoadAppointmentsParams, LoadSingleAutoResponderParams,LoadUserAppointmentParams,LoadUserTasksParams,MarkAppointmentAsDoneParams,MarkTaskAsDoneParams,Task,UpdateAutoResponderParams } from "@/components/types";
 import { ResultSetHeader, RowDataPacket } from "mysql2"; 
 import { PoolConnection } from "mysql2/promise";
 
 export interface AppointmentRepo { 
     AddNewAppointment(params: AddAppointmentParams): Promise<[boolean, number]>
-    LoadAppointments(params: LoadSingleAutoResponderParams): Promise<AutoResponderDetails | null>
+    LoadAppointments(params: LoadAppointmentsParams): Promise<Task[] | null>
     LoadUserAppointments(params: LoadUserAppointmentParams): Promise<Appointment[] | null>
     MarkAppointmentAsDone(params: MarkAppointmentAsDoneParams) : Promise<boolean>
+    MarkMultiAppsAsDone(appointment_ids: string) : Promise<boolean>
 }
 
 export class MYSQLAppointmentRepo implements AppointmentRepo {
@@ -48,45 +49,56 @@ export class MYSQLAppointmentRepo implements AppointmentRepo {
 
     }
 
-    public async LoadAppointments(params: LoadSingleAutoResponderParams): Promise<AutoResponderDetails | null> {
-        
+    public async LoadAppointments(params: LoadAppointmentsParams): Promise<Task[] | null> {
+
+        const paginated = params.paginated;
+        const app_type = params.appointment_type;
+        let rows: RowDataPacket[] = [];
+
         let connection: PoolConnection | null = null;
         try{
-
-            let rows: RowDataPacket[] = []
-            const search_by = params.search_by;
-            const value = params.search_value;
-            const type = params.template_type;
+            
             connection = await pool.getConnection();
-
-            if(!type || type == ''){
-                if(search_by == "AR Type"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE ar_type=? `, [value]);
-                }else if(search_by == "AR Id"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE auto_responder_id=? `, [value]);
-                }
+            let type_filter = "";
+            if(app_type == "Upcoming Appointments"){
+                type_filter = ` WHERE a.status='Pending' AND a.date > CURDATE() `;
+            }else if(app_type == "Overdue Appointments"){
+                type_filter = ` WHERE a.status='Pending' AND a.date < CURDATE() `;
+            }else if(app_type == "Completed Appointments"){
+                type_filter = ` WHERE a.status='Done' `;
             }else{
-                if(search_by == "AR Type"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE ar_type=? AND type=? `, [value, type]);
-                }else if(search_by == "AR Id"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE auto_responder_id=? AND type=? `, [value, type]);
-                }
+                 return []; 
             }
 
-            if(rows.length){
-                const formattedRows = rows.map((row) => {
-                    return {
-                        ...row,
-                    } as AutoResponderDetails
-                });
-                return formattedRows[0];
+            if(paginated){
+            
+                const page = params.page;
+                const limit = params.limit;
+                const start_from = (page - 1) * limit;
+
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT a.*, u.firstname, u.lastname, (SELECT COUNT(*) AS total_records 
+                FROM appointments ${type_filter}) AS total_records FROM appointments AS a JOIN users AS u ON a.user_id=u.user_id ${type_filter} 
+                ORDER BY a.date ASC LIMIT ${start_from}, ${limit}`);
+                
             }else{
-                return null
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT a.*, u.firstname, u.lastname FROM appointments AS a JOIN users AS u 
+                ON a.user_id=u.user_id ${type_filter} ORDER BY a.date ASC `);
+
             }
+    
+            const formattedRows = rows.map((row) => {
+    
+                return {
+                    ...row,
+                }
+
+            });
+
+            return formattedRows as Task[] | null;
 
         }catch(e: any){
-            console.log(e.sqlMessage);
-            return e.sqlMessage
+            console.log(e.sqlMessage)
+            return null; 
         }finally{
             if (connection) { 
                 connection.release();
@@ -137,6 +149,26 @@ export class MYSQLAppointmentRepo implements AppointmentRepo {
             
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE appointments SET status=? WHERE appointment_id=? `, ["Done", appointment_id]);
+            return result.affectedRows > 0;
+
+        }catch(e: any){
+            console.log(e.sqlMessage)
+            return false; 
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
+    public async MarkMultiAppsAsDone(appointment_ids: string) : Promise<boolean>{
+
+        let connection: PoolConnection | null = null;
+        try{
+            
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE appointments SET status=? WHERE appointment_id IN(${appointment_ids}) `, ["Done"]);
             return result.affectedRows > 0;
 
         }catch(e: any){

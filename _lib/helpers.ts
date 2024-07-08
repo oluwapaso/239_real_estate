@@ -1,6 +1,6 @@
 import { RootState } from "@/app/(admin)/admin/GlobalRedux/store";
-import { APIResponseProps, AgentsType, Appointment, AutoResponderDetails, AutoResponderLists, AutomationDetails, AutomationInfoAndStep, Automations, BlogCategories, BlogCommentsListsParams, 
-    BlogPostInfoParams, CityInfo, CommunityInfo, ServiceLists, Task, TemplateDetails, TemplateLists, User } from "@/components/types";
+import { APIResponseProps, AgentsType, Appointment, AutoResponderDetails, AutoResponderLists, AutomationDetails, AutomationInfoAndStep, Automations, BatchMessageStats, BatchMessages, BlogCategories, BlogCommentsListsParams, 
+    BlogPostInfoParams, CityInfo, CommunityInfo, ProperyRequests, ServiceLists, Task, TemplateDetails, TemplateLists, User } from "@/components/types";
 import { NextApiRequest } from "next";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -676,6 +676,34 @@ export class Helpers {
 
     }
 
+    public LoadTasks = async (payload: {
+        paginated: boolean;
+        search_type: string,
+        task_type: string;
+        page: number;
+        limit: number;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(tasks)/load-tasks`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<Task[]> => {
+            if (!resp.ok) {
+                throw new Error("Unable to load tasks.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
     public async LoadUserTasks(user_id: number): Promise<Task[]>{
 
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
@@ -684,7 +712,7 @@ export class Helpers {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({user_id}),
+            body: JSON.stringify({paginated:false, "user_id": user_id, "search_type": "User Tasks"}),
         }).then((resp): Promise<Task[]> => {
             if (!resp.ok) {
                 throw new Error("Unable to load user tasks.")
@@ -698,7 +726,7 @@ export class Helpers {
 
     }
 
-    public async MarkTaskAsDone(task_id: number): Promise<boolean>{
+    public async MarkTaskAsDone(task_id: number): Promise<boolean> {
 
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
         return fetch(`${apiBaseUrl}/api/(tasks)/manage-tasks`, {
@@ -706,10 +734,60 @@ export class Helpers {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({task_id}),
+            body: JSON.stringify({task_id, "type":"Single"}),
         }).then((resp): Promise<boolean> => {
             if (!resp.ok) {
-                throw new Error("Unable to load user tasks.")
+                throw new Error("Unable to update tasks.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public async MarkMultipleTasksAsDone(task_ids: string[]): Promise<boolean>{
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(tasks)/manage-tasks`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({task_ids, "type":"Multiple"}),
+        }).then((resp): Promise<boolean> => {
+            if (!resp.ok) {
+                throw new Error("Unable to update tasks.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+     public LoadAppointments = async (payload: {
+        paginated: boolean;
+        search_type: string,
+        appointment_type: string;
+        page: number;
+        limit: number;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(appointments)/load-appointments`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<Appointment[]> => {
+            if (!resp.ok) {
+                throw new Error("Unable to load appointments.")
             }
 
             return resp.json();
@@ -728,7 +806,7 @@ export class Helpers {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({user_id}),
+            body: JSON.stringify({paginated: false, "user_id": user_id, "search_type": "User Appointments"}),
         }).then((resp): Promise<Appointment[]> => {
             if (!resp.ok) {
                 throw new Error("Unable to load user appointments.")
@@ -750,10 +828,32 @@ export class Helpers {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({appointment_id}),
+            body: JSON.stringify({appointment_id, "type": "Single"}),
         }).then((resp): Promise<boolean> => {
             if (!resp.ok) {
                 throw new Error("Unable to load user appointments.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public async MarkMultipleAppointmentsAsDone(appointment_ids: string[]): Promise<boolean>{
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(appointments)/manage-appointments`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({appointment_ids, "type":"Multiple"}),
+        }).then((resp): Promise<boolean> => {
+            if (!resp.ok) {
+                throw new Error("Unable to update appointments.")
             }
 
             return resp.json();
@@ -776,6 +876,34 @@ export class Helpers {
         }).then((resp): Promise<any> => {
             if (!resp.ok) {
                 throw new Error("Unable to load user's activities.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public LoadPropertyRequests = async (payload: {
+        paginated: boolean;
+        search_type: string,
+        request_type: string;
+        page: number;
+        limit: number;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(property-requests)/load-requests`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<ProperyRequests[]> => {
+            if (!resp.ok) {
+                throw new Error("Unable to load requests.")
             }
 
             return resp.json();
@@ -813,6 +941,50 @@ export class Helpers {
 
     }
 
+    public async AcknowledgeRequest(request_id: number): Promise<boolean> {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(property-requests)/manage-requests`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({request_id, "type":"Single"}),
+        }).then((resp): Promise<boolean> => {
+            if (!resp.ok) {
+                throw new Error("Unable to update requests.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public async AcknowledgeMultiRequest(request_ids: string[]): Promise<APIResponseProps>{
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(property-requests)/manage-requests`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({request_ids, "type":"Multiple"}),
+        }).then((resp): Promise<APIResponseProps> => {
+            if (!resp.ok) {
+                throw new Error("Unable to update requests.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
     public async LoadAutomationInfoStep(automation_id: number): Promise<AutomationInfoAndStep> {
 
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
@@ -832,6 +1004,85 @@ export class Helpers {
         }).then(data => {
             return data
         })
+
+    }
+
+    public LoadBatchMessages = async (payload: {
+        paginated: boolean;
+        message_type: string;
+        page: number;
+        limit: number;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(messages)/load-batch-messages`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<BatchMessages[]> => {
+            
+            if (!resp.ok) {
+                throw new Error("Unable to load batch messages.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public LoadSingleBatchMessage = async (payload: {batch_id: string}) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(messages)/load-single-batch-message`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<BatchMessages> => {
+            
+            if (!resp.ok) {
+                throw new Error("Unable to load batch message info.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
+
+    }
+
+    public LoadBatchMessageStats = async (payload: {
+        paginated: boolean;
+        message_type: string;
+        page: number;
+        limit: number;
+    }) => {
+
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        return fetch(`${apiBaseUrl}/api/(messages)/load-batch-message-stats`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then((resp): Promise<BatchMessageStats[]> => {
+            
+            if (!resp.ok) {
+                throw new Error("Unable to load batch messages stats.")
+            }
+
+            return resp.json();
+
+        }).then(data => {
+            return data
+        });
 
     }
 

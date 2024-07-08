@@ -5,7 +5,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import bcrypt from "bcryptjs"
 import moment from "moment";
 import { NextApiRequest } from "next";
-import { MailService } from "@/_services/mail_service";
+//import { MailService } from "@/_services/mail_service";
 import { MYSQLCompanyRepo } from "./company_repo";
 import { MYSQLNotesRepo } from "./notes_repo";
 import { PoolConnection } from "mysql2/promise";
@@ -24,11 +24,13 @@ export interface UserRepo {
     AddBuyingRequest(req: NextApiRequest): Promise<boolean>
     AddShowingRequest(req: NextApiRequest): Promise<boolean>
     AddInquiryRequest(req: NextApiRequest): Promise<boolean>
+    UpdateLastSeen(req: NextApiRequest): Promise<boolean>
+    UpdateLeadStatus(req: NextApiRequest): Promise<boolean>
 }
 
 export class MYSQLUserRepo implements UserRepo {
 
-    mail_service = new MailService();
+    //mail_service = new MailService();
     com_repo = new MYSQLCompanyRepo();
     note_repo = new MYSQLNotesRepo();
 
@@ -190,7 +192,10 @@ export class MYSQLUserRepo implements UserRepo {
                         body: "",
                         message_type: "New Account"
                     } 
-                    const send_email_ar = await this.mail_service.SendAutoResponder(mail_params);
+                    //Lazy-load MYSQLUserRepo to avoid import cycle
+                    const {MailService} = await import("@/_services/mail_service");
+                    const mail_service = new MailService();
+                    const send_email_ar = await mail_service.SendAutoResponder(mail_params);
 
                     return this.UserAuthLogin(params);
                 }else{
@@ -515,6 +520,32 @@ export class MYSQLUserRepo implements UserRepo {
 
     }
 
+     public async UpdateLeadStatus(req: NextApiRequest): Promise<boolean> {
+
+        const user_ids = req.body.user_ids;
+        const lead_stage = req.body.lead_stage;
+        let userIds = user_ids.join("', '");
+        userIds = `'${userIds}'`;
+
+        let connection: PoolConnection | null = null;
+
+        try{
+
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE users SET lead_stage=? WHERE user_id IN(${userIds}) `, [lead_stage]);
+            return result.affectedRows > 0;
+
+        }catch(e: any){
+            console.log(e.sqlMessage)
+            return false
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
     public async LoadUsers(params: LoadUsersParams): Promise<User[] | null> {
 
         const paginated = params.paginated;
@@ -621,7 +652,7 @@ export class MYSQLUserRepo implements UserRepo {
             (SELECT COUNT(*) AS total_selling_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Selling Request') AS TotalSellingRequests,
             (SELECT COUNT(*) AS total_buying_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Buying Request') AS TotalBuyingRequests,
             (SELECT COUNT(*) AS total_info_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Info Request') AS TotalInfoRequests,
-            (SELECT COUNT(*) AS total_tour_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Info Request') AS TotalTourRequests,
+            (SELECT COUNT(*) AS total_tour_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Tour Request') AS TotalTourRequests,
             (SELECT COUNT(*) AS total_showing_req FROM property_requests WHERE user_id='${user_id}' AND request_type='Showing Request') AS TotalShowingRequests
             `);
             
@@ -670,7 +701,7 @@ export class MYSQLUserRepo implements UserRepo {
                 message_kind AS field_1, subject AS field_2, from_info AS field_3, to_info AS field_4, date_added AS date FROM logged_messages 
                 WHERE user_id='${user_id}' AND message_kind='SMS')
                 UNION (SELECT user_id, 'property_requests' AS table_name, request_id AS activity_id, request_info AS description, request_type AS type, 
-                NULL AS field_1, NULL AS field_2, NULL AS field_3, NULL AS field_4, date_added AS date FROM property_requests WHERE user_id='${user_id}')
+                status AS field_1, NULL AS field_2, NULL AS field_3, NULL AS field_4, date_added AS date FROM property_requests WHERE user_id='${user_id}')
                 ORDER BY date DESC LIMIT ${start_from}, ${limit}`);
             
             }else if(type == "Notes" || type == "Call Log" || type == "Unfavorite a Property" || type == "Favorite a Property" || 
@@ -699,7 +730,7 @@ export class MYSQLUserRepo implements UserRepo {
                 const request_type = type.replace("Requests", "Request");
                 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT user_id, 'property_requests' AS table_name, request_id AS activity_id, 
-                request_info AS description, request_type AS type, NULL AS field_1, NULL AS field_2, NULL AS field_3, NULL AS field_4, 
+                request_info AS description, request_type AS type, status AS field_1, NULL AS field_2, NULL AS field_3, NULL AS field_4, 
                 date_added AS date FROM property_requests WHERE user_id='${user_id}' AND request_type='${request_type}' ORDER BY date DESC 
                 LIMIT ${start_from}, ${limit}`);
 

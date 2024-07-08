@@ -729,6 +729,10 @@ export type MarkTaskAsDoneParams = {
     task_id: number
 }
 
+export type MarkMultiTaskAsDoneParams = {
+    task_ids: string[]
+}
+
 export type Task = {
     task_id: number
     user_id: number
@@ -736,16 +740,30 @@ export type Task = {
     date: string
     time: string
     status: string
+    firstname?: string
+    lastname?: string
     completed_tasks: number
     pending_tasks: number
+    total_records: number
 } 
 
 export type LoadUserTasksParams = {
     user_id: number
 }
 
+export type LoadTasksParams = {
+    paginated: boolean
+    task_type: string
+    page: number
+    limit: number
+}
+
 export type MarkAppointmentAsDoneParams = {
     appointment_id: number
+}
+
+export type MarkMultiAppsAsDoneParams = {
+    appointment_ids: string[]
 }
 
 export type AddAppointmentParams = { 
@@ -768,9 +786,19 @@ export type Appointment = {
     end_time: string
     status: string
     notes: string
+    firstname?: string
+    lastname?: string
     completed_appointments: number
     pending_appointments: number
+    total_records: number
 } 
+
+export type LoadAppointmentsParams = {
+    paginated: boolean
+    appointment_type: string
+    page: number
+    limit: number
+}
 
 export type LoadUserAppointmentParams = {
     user_id: number
@@ -807,7 +835,8 @@ export type SendMailParams = {
     to_email: string
     subject: string
     body: string
-    message_type: string
+    message_type: string,
+    batch_id?: number
 }
 
 export type SentMailParams = Omit<SendMailParams, "mailer">
@@ -875,4 +904,162 @@ export type AutomationInfoAndStep = {
     published_version: string
     steps: any
     versions: any
+}
+
+export type CheckedItems = {
+    [key: number]: boolean;
+};
+
+export type ProperyRequests = {
+    request_id: number
+    user_id: number
+    firstname: string
+    lastname: string
+    request_type: string
+    request_info: string
+    status: string
+    date_added: string
+    total_records?: number
+}
+
+export type LoadUserRequestsParams = {
+    user_id: number
+}
+
+export type LoadRequestsParams = {
+    paginated: boolean
+    request_type: string
+    page: number
+    limit: number
+}
+
+export type AcknowledgeRequestParams = {
+    request_id: number
+}
+
+export type AcknowledgeMultiRequestParams = {
+    request_ids: string[]
+}
+
+export type BatchMessages = {
+    batch_id: number
+    message_type: string
+    template_name: string
+    status: string
+    total_messages: string
+    queued: string
+    total_sent: string
+    total_errored: string
+    unsubscribed: string
+    date_sent: string
+    total_records?: number
+}
+
+export type LoadBatchMessagesParams = {
+    paginated: boolean
+    message_type: string
+    page: number
+    limit: number
+}
+
+export type LoadBatchMessageStatsParams = {
+    paginated: boolean
+    batch_id: number
+    message_type: string
+    page: number
+    limit: number
+}
+
+export type LoadSingleBatchMessageParams = {
+    batch_id: number
+}
+
+export type BatchMailErrorsParams = {
+    user_id: number
+    batch_id: number
+    to_email: string
+    error: string
+}
+
+export type AddBatchMessageParams = {
+    type: "Email" | "SMS"
+    total_messages: number
+    template_name: string
+}
+
+export type SetBatchMessageStatsParams = {
+    type: "Email" | "SMS"
+    batch_id: number
+    errored: number
+    unsubscribed: number
+    queued: number
+}
+
+export type BatchSMSErrorsParams = {
+    user_id: number
+    batch_id: number
+    to_phone: string
+    error: string
+}
+
+export type SendSMSParams = {
+    user_id: number
+    from_phone: string
+    to_phone: string
+    body: string
+    message_type: string,
+    batch_id?: number
+}
+
+export type BatchMessageStats = {
+    firstname: number
+    lastname: string
+    email: string
+    user_id: string
+    to_email: string
+    status: string
+    error_message: string
+    total_records: number
+}
+
+export type PendingBatchEmail = {
+    queue_id: number
+    firstname: number
+    lastname: string
+    email: string
+    to_info: string
+    user_id: number
+    status: string
+    error_message: string
+    date_queued: string
+    total_records: number
+}
+
+export type SentBatchEmail = {
+    message_id: number
+    firstname: number
+    lastname: string
+    email: string
+    to_info: string
+    user_id: number
+    date_added: string
+    total_records: number
+}
+
+export type UnsubscribedBatchEmail = {
+    error_id: number
+    firstname: number
+    lastname: string
+    email: string
+    to_email: string
+    to_phone: string
+    user_id: number
+    error_message: string
+    date_added: string
+    total_records: number
+}
+
+export type QueueError = {
+    queue_id: number
+    error_message: string
 }

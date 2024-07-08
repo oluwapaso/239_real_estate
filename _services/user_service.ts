@@ -525,6 +525,34 @@ export class UserService {
 
     }
 
+    public async UpdateLeadStatus(req: NextApiRequest):Promise<APIResponseProps>{
+
+        const user_ids = req.body.user_ids;
+        const lead_stage = req.body.lead_stage;
+
+        const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+        
+        if(!lead_stage || !user_ids){
+            default_resp.message = "UpdateLeadStatus: fatal error."
+            return default_resp as APIResponseProps
+        }
+
+        const isUpdated = await this.user_repo.UpdateLeadStatus(req);
+        if(isUpdated){
+            default_resp.success = true;
+            default_resp.message = "Lead status sucessfully updated";
+        }else{
+            default_resp.message = "Unable to update lead status.";
+        }
+
+        return default_resp;
+
+    }
+
     public async AddSellingRequest(req: NextApiRequest):Promise<APIResponseProps>{
 
         const user_id = req.body.user_id;

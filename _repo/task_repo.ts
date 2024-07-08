@@ -1,13 +1,14 @@
 import pool from "@/_lib/db_conn";
-import { AddTaskParams, AutoResponderDetails, AutoResponderLists, LoadSingleAutoResponderParams,LoadUserTasksParams,MarkTaskAsDoneParams,Task,UpdateAutoResponderParams } from "@/components/types";
+import { AddTaskParams, AutoResponderDetails, AutoResponderLists, LoadSingleAutoResponderParams,LoadTasksParams,LoadUserTasksParams,MarkTaskAsDoneParams,Task,UpdateAutoResponderParams } from "@/components/types";
 import { ResultSetHeader, RowDataPacket } from "mysql2"; 
 import { PoolConnection } from "mysql2/promise";
 
 export interface TaskRepo { 
     AddNewTask(params: AddTaskParams): Promise<[boolean, number]>
-    LoadTasks(params: LoadSingleAutoResponderParams): Promise<AutoResponderDetails | null>
+    LoadTasks(params: LoadTasksParams): Promise<Task[] | null>
     LoadUserTasks(params: LoadUserTasksParams): Promise<Task[] | null>
-    MarktaskAsDone(params: MarkTaskAsDoneParams) : Promise<boolean>
+    MarkTaskAsDone(params: MarkTaskAsDoneParams) : Promise<boolean>
+    MarkMultiTaskAsDone(task_ids: string) : Promise<boolean>
     LoadAutoResponders(): Promise<AutoResponderLists[] | null>
 }
 
@@ -45,45 +46,56 @@ export class MYSQLTaskRepo implements TaskRepo {
 
     }
 
-    public async LoadTasks(params: LoadSingleAutoResponderParams): Promise<AutoResponderDetails | null> {
+    public async LoadTasks(params: LoadTasksParams): Promise<Task[] | null> {
+
+        const paginated = params.paginated;
+        const task_type = params.task_type;
+        let rows: RowDataPacket[] = [];
 
         let connection: PoolConnection | null = null;
         try{
-
-            let rows: RowDataPacket[] = []
-            const search_by = params.search_by;
-            const value = params.search_value;
-            const type = params.template_type;
+            
             connection = await pool.getConnection();
-
-            if(!type || type == ''){
-                if(search_by == "AR Type"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE ar_type=? `, [value]);
-                }else if(search_by == "AR Id"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE auto_responder_id=? `, [value]);
-                }
+            let type_filter = "";
+            if(task_type == "Upcoming Tasks"){
+                type_filter = ` WHERE t.status='Pending' AND t.date > CURDATE() `;
+            }else if(task_type == "Overdue Tasks"){
+                type_filter = ` WHERE t.status='Pending' AND t.date < CURDATE() `;
+            }else if(task_type == "Completed Tasks"){
+                type_filter = ` WHERE t.status='Done' `;
             }else{
-                if(search_by == "AR Type"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE ar_type=? AND type=? `, [value, type]);
-                }else if(search_by == "AR Id"){
-                    [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM auto_responders WHERE auto_responder_id=? AND type=? `, [value, type]);
-                }
+                 return []; 
             }
 
-            if(rows.length){
-                const formattedRows = rows.map((row) => {
-                    return {
-                        ...row,
-                    } as AutoResponderDetails
-                });
-                return formattedRows[0];
+            if(paginated){
+            
+                const page = params.page;
+                const limit = params.limit;
+                const start_from = (page - 1) * limit;
+
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT t.*, u.firstname, u.lastname, (SELECT COUNT(*) AS total_records 
+                FROM tasks ${type_filter}) AS total_records FROM tasks AS t JOIN users AS u ON t.user_id=u.user_id ${type_filter} 
+                ORDER BY t.date ASC LIMIT ${start_from}, ${limit}`);
+                
             }else{
-                return null
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT t.*, u.firstname, u.lastname FROM tasks AS t JOIN users AS u 
+                ON t.user_id=u.user_id ${type_filter} ORDER BY t.date ASC `);
+
             }
+    
+            const formattedRows = rows.map((row) => {
+    
+                return {
+                    ...row,
+                }
+
+            });
+
+            return formattedRows as Task[] | null;
 
         }catch(e: any){
-            console.log(e.sqlMessage);
-            return e.sqlMessage
+            console.log(e.sqlMessage)
+            return null; 
         }finally{
             if (connection) { 
                 connection.release();
@@ -125,7 +137,7 @@ export class MYSQLTaskRepo implements TaskRepo {
 
     }
 
-    public async MarktaskAsDone(params: MarkTaskAsDoneParams) : Promise<boolean>{
+    public async MarkTaskAsDone(params: MarkTaskAsDoneParams) : Promise<boolean>{
 
         const task_id = params.task_id;
         let connection: PoolConnection | null = null;
@@ -134,6 +146,26 @@ export class MYSQLTaskRepo implements TaskRepo {
             
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE tasks SET status=? WHERE task_id=? `, ["Done", task_id]);
+            return result.affectedRows > 0;
+
+        }catch(e: any){
+            console.log(e.sqlMessage)
+            return false; 
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
+    public async MarkMultiTaskAsDone(task_ids: string) : Promise<boolean>{
+
+        let connection: PoolConnection | null = null;
+        try{
+            
+            connection = await pool.getConnection();
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE tasks SET status=? WHERE task_id IN(${task_ids}) `, ["Done"]);
             return result.affectedRows > 0;
 
         }catch(e: any){

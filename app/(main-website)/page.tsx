@@ -34,7 +34,7 @@ export default function Home() {
     <>
       <Header page="Home" />
       <Neighbourhood />
-      <FeaturedListings />
+      {/** <FeaturedListings /> **/}
       <OurServices />
       <AllTestimonials />
       <Footer />
