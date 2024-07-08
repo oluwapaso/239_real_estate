@@ -240,7 +240,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 }
 
                 if(params.mobile_view == "Map"){
-                    console.log("Map entry time:", moment().format("HH:mm:ss"));
+                    
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
                     ORDER BY ${order_by} LIMIT 500`);
                 }

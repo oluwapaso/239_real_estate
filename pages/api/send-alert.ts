@@ -267,7 +267,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
             }
 
             if(search_ids && search_ids.length > 0){
-                //const isUpdated = await listings_repo.UpdateAlertedSearches(searchIDs);
+                const isUpdated = await listings_repo.UpdateAlertedSearches(searchIDs);
                 console.log("Updating Update Alerted Searches:", searchIDs); //, "isUpdated:", isUpdated
             }
             
