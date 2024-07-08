@@ -120,8 +120,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
-                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                 
                 [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
@@ -235,6 +234,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 total_records = total_row[0]["total_records"];
             }
 
+            console.log("total_records:", total_records)
             if(search_by == "Map"){
 
                 if(rows.length || list_rows.length){
