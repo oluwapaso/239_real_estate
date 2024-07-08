@@ -124,16 +124,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
                 [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
-               
-                // const query_results = await Promise.all([
-                //     connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                //     connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
-                // ]);
 
-                // [rows] = query_results[0];
-                // [total_row] = query_results[1];
-
-                console.log("main query:", `SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`)
             }else if(search_by == "Featured Listings"){
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
@@ -221,51 +212,26 @@ export class MysqlListingsRepo implements ListingsRepo {
                 }
                 
                 console.log("Map queries entry time:", moment().format("HH:mm:ss"));
-                let queries = [];
-                if (params.mobile_view == "Map") {
-                    queries.push(connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
-                    AND ${map_filter} ORDER BY ${order_by} LIMIT 500`));
+
+                if(params.mobile_view == "Map"){
+                    console.log("Map entry time:", moment().format("HH:mm:ss"));
+                    [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
+                    ORDER BY ${order_by} LIMIT 500`);
+                    console.log("Map done time:", moment().format("HH:mm:ss"));
                 }
 
-                if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
-                    queries.push(
-                        connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                        connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter}`)
-                    );
+                if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
+                    console.log("List entry time:", moment().format("HH:mm:ss"));
+                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
+                    ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                    //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
+                    console.log("List done time:", moment().format("HH:mm:ss"));
+
+                    console.log("Total entry time:", moment().format("HH:mm:ss"));
+                    [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
+                    ${search_filter} ${drawn_filter}`);
+                    console.log("Total done time:", moment().format("HH:mm:ss"));
                 }
-
-                const query_results = await Promise.all(queries);
-                console.log("Map queries done time:", moment().format("HH:mm:ss"));
-                if (params.mobile_view == "Map") {
-                    [rows] = query_results[0];
-                    if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
-                        [list_rows] = query_results[1];
-                        [total_row] = query_results[2];
-                    }
-                }else if ((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)) {
-                    [list_rows] = query_results[0];
-                    [total_row] = query_results[1];
-                }
-
-                // if(params.mobile_view == "Map"){
-                //     console.log("Map entry time:", moment().format("HH:mm:ss"));
-                //     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
-                //     ORDER BY ${order_by} LIMIT 500`);
-                //     console.log("Map done time:", moment().format("HH:mm:ss"));
-                // }
-
-                // if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
-                //     console.log("List entry time:", moment().format("HH:mm:ss"));
-                //     [list_rows] = await connection_2.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
-                //     ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
-                //     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
-                //     console.log("List done time:", moment().format("HH:mm:ss"));
-
-                //     console.log("Total entry time:", moment().format("HH:mm:ss"));
-                //     [total_row] = await connection_3.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
-                //     ${search_filter} ${drawn_filter}`);
-                //     console.log("Total done time:", moment().format("HH:mm:ss"));
-                // }
 
             }else{
                 console.log("Invalid search type:", search_by)
