@@ -218,14 +218,12 @@ export class MysqlListingsRepo implements ListingsRepo {
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
-                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
-                    ${search_filter} ${drawn_filter}) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} 
-                    ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
+                    ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
 
-                    query = `SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
-                    ${search_filter} ${drawn_filter}) AS total_records FROM properties WHERE City!="0" ${search_filter} ${drawn_filter} 
-                    ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`;
+                    [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
+                    ${search_filter} ${drawn_filter}`);
                 }
                 
             }else{
@@ -249,7 +247,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                         
                         return {
                             ...row,
-                            //total_records: total_records,
+                            total_records: total_records,
                         }
 
                     });
@@ -262,11 +260,11 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                         return {
                             ...l_row,
-                            //total_records: total_records,
+                            total_records: total_records,
                         }
                     });
 
-                    return {"map_data":formattedRows, "list_data": formattedLists, "query": query}
+                    return {"map_data":formattedRows, "list_data": formattedLists, total_records: total_records, "query": query}
                     //return formattedRows;
                 }else{
                     return [];
