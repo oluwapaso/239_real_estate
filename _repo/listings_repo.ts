@@ -120,6 +120,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
+                console.log("Entry time:",moment().format("HH:mm:ss"));
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                 
@@ -272,6 +273,7 @@ export class MysqlListingsRepo implements ListingsRepo {
 
             } else{
 
+                console.log("Process time:",moment().format("HH:mm:ss"));
                 if(rows.length){
                     const formattedRows = rows.map((row) => {
                         
@@ -286,7 +288,7 @@ export class MysqlListingsRepo implements ListingsRepo {
 
                     });
 
-                    (await pool.getConnection()).release();
+                    console.log("Return time:",moment().format("HH:mm:ss"));
                     return formattedRows;
                 }else{
                     return [];
