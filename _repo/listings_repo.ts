@@ -120,20 +120,20 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
-                // [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
-                // ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
+                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
 
-                // [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+                [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
                
-                const query_results = await Promise.all([
-                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
-                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
-                ]);
+                // const query_results = await Promise.all([
+                //     connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                //     connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `),
+                // ]);
 
-                [rows] = query_results[0];
-                [total_row] = query_results[1];
+                // [rows] = query_results[0];
+                // [total_row] = query_results[1];
 
-                console.log("rows.length:",rows.length, "total_row.length:", total_row.length)
+                console.log("main query:", `SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`)
             }else if(search_by == "Featured Listings"){
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
