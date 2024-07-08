@@ -105,9 +105,13 @@ export class MysqlListingsRepo implements ListingsRepo {
         let list_rows: any[] = [];
             
         let connection: PoolConnection | null = null;
+        let connection_2: PoolConnection | null = null;
+        let connection_3: PoolConnection | null = null;
         try{
 
             connection = await pool.getConnection();
+            connection_2 = await pool.getConnection();
+            connection_3 = await pool.getConnection();
            
             const page = params.page;
             const limit = params.limit;
@@ -120,17 +124,11 @@ export class MysqlListingsRepo implements ListingsRepo {
             let query = "";
             if(search_by == "List"){
 
-                console.log("List Entry time:",moment().format("HH:mm:ss"));
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
-                
-                console.log("Done time:", moment().format("HH:mm:ss"), `SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
-                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
-                
-                console.log("Total Entry time:",moment().format("HH:mm:ss"));
-                [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
-                console.log("Done time:", moment().format("HH:mm:ss"), `SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
 
+                [total_row] = await connection_2.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' ${search_filter} `);
+               
             }else if(search_by == "Featured Listings"){
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' ${search_filter} 
@@ -218,17 +216,23 @@ export class MysqlListingsRepo implements ListingsRepo {
                 }
                 
                 if(params.mobile_view == "Map"){
+                    console.log("Map entry time:", moment().format("HH:mm:ss"));
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 
                     ORDER BY ${order_by} LIMIT 500`);
+                    console.log("Map done time:", moment().format("HH:mm:ss"));
                 }
 
                 if((params.mobile_view == "List" && params.screen_width <= 960) || (params.mobile_view == "Map" && params.screen_width > 960)){
-                    [list_rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
+                    console.log("List entry time:", moment().format("HH:mm:ss"));
+                    [list_rows] = await connection_2.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} 
                     ${drawn_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
                     //AND Latitude>=$minLat AND Latitude<=$maxLat AND Longitude<=$maxLng AND Longitude>=$minLng
+                    console.log("List done time:", moment().format("HH:mm:ss"));
 
-                    [total_row] = await connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
+                    console.log("Total entry time:", moment().format("HH:mm:ss"));
+                    [total_row] = await connection_3.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE City!="0" 
                     ${search_filter} ${drawn_filter}`);
+                    console.log("Total done time:", moment().format("HH:mm:ss"));
                 }
                 
             }else{
@@ -307,6 +311,14 @@ export class MysqlListingsRepo implements ListingsRepo {
         }finally{
             if (connection) { 
                 connection.release();
+            }
+
+            if (connection_2) { 
+                connection_2.release();
+            }
+
+            if (connection_3) { 
+                connection_3.release();
             }
         }
 
