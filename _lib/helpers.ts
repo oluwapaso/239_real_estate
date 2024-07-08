@@ -1119,12 +1119,12 @@ export class Helpers {
 
         if(req_body.mls_name && req_body.mls_name !=""){
             const mls_name = req_body.mls_name.toLowerCase();
-            qry_loc = ` AND LOWER(City)='${mls_name}' `;
+            qry_loc = ` AND City='${mls_name}' `;
         }
 
         if(req_body.mls_county_name && req_body.mls_county_name !=""){
             const mls_county_name = req_body.mls_county_name.toLowerCase();
-            qry_loc = ` AND LOWER(CountyOrParish)='${mls_county_name}' `;
+            qry_loc = ` AND CountyOrParish='${mls_county_name}' `;
         }
 
         if(req_body.location && req_body.location !=""){

@@ -116,11 +116,16 @@ export class MysqlListingsRepo implements ListingsRepo {
             LastChangeType, OwnershipDesc, PropertyType, DefaultPic, Images, FullAddress, MatrixModifiedDT, TotalArea, ForSaleYN, Status, City, 
             StateOrProvince, PostalCode`;
 
+            let query = "";
             if(search_by == "List"){
 
                 [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
                 Status='Active' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
                 ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+
+                query = `SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
+                Status='Active' ${search_filter}) AS total_records FROM properties WHERE Status='Active' ${search_filter} 
+                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`
 
             }else if(search_by == "Featured Listings"){
 
@@ -251,7 +256,7 @@ export class MysqlListingsRepo implements ListingsRepo {
                         }
                     });
 
-                    return {"map_data":formattedRows, "list_data": formattedLists}
+                    return {"map_data":formattedRows, "list_data": formattedLists, "query": query}
                     //return formattedRows;
                 }else{
                     return [];
