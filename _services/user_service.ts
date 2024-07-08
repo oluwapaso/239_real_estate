@@ -52,6 +52,10 @@ export class UserService {
             return {"message": "Invalid account info provided.", "success": false}
         }
 
+        const com_repo = new MYSQLCompanyRepo();
+        const api_info_prms = com_repo.GetApiInfo();
+        const api_info = await api_info_prms;
+
         if(status=="Active" || status=="Inactive" || status=="Reset Password"){
 
             const resetToken = this.user_repo.GetResetToken({
@@ -187,27 +191,26 @@ export class UserService {
         </table>
         </div>`;
 
-        const transporter = nodemailer.createTransport({
-            host: process.env.NEXT_PUBLIC_MAIL_HOST,
-            port: 465,
-            secure: true,
-            auth:{
-                user: process.env.NEXT_PUBLIC_MAILER,
-                pass: process.env.NEXT_PUBLIC_PWORD,
-            }
-        })
-
-        const mailOptions = {
-            from: process.env.NEXT_PUBLIC_MAILER,
-            to: req.body.account_email,
-            subject: process.env.NEXT_PUBLIC_COMPANY_NAME+": Reset your account password",
-            html: msg_body
-        }
-
         try{
         
-            await transporter.sendMail(mailOptions);
-            return {"message": "Reset Link Sent", "success": true}
+            let from_email = api_info.data.sendgrid_mailer;
+            const params: SendMailParams = {
+                user_id: 0,
+                mailer: "",
+                from_email: from_email,
+                to_email: req.body.account_email,
+                subject: "Reset your admin password",
+                body: msg_body,
+                message_type: req.body.message_type
+            } 
+            
+            const send_mail = await this.mail_service.SendMail(params);
+            if(send_mail.message == "Email sent!"){
+                return {"message": "Reset Link Sent", "success": true, data: send_mail}
+            }else{
+                return {"message": send_mail.message, "success": true, data: send_mail}
+            }
+
         
         }catch(e){
             return {"message":"Failed to send email: "+e, "success": true}

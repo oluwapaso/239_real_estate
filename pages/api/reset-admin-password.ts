@@ -1,11 +1,14 @@
 import { Helpers } from "@/_lib/helpers";
 import { MYSQLAgentsRepo } from "@/_repo/agents_repo";
-import { APIResponseProps, AddTokenParams, AgentsType, GetSingleAdminParams, GetSingleAgentParams } from "@/components/types";
+import { MYSQLCompanyRepo } from "@/_repo/company_repo";
+import { MailService } from "@/_services/mail_service";
+import { APIResponseProps, AddTokenParams, AgentsType, GetSingleAdminParams, GetSingleAgentParams, SendMailParams } from "@/components/types";
 import moment from "moment";
 import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from 'nodemailer';
 
 const agent_repo = new MYSQLAgentsRepo();
+const mail_service = new MailService();
 const helpers = new Helpers();
 
 export default async function handler(req: NextApiRequest, resp: NextApiResponse<APIResponseProps>){
@@ -17,7 +20,11 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
     }else if(req.method == "POST") {
         
         const req_body = req.body 
-        const account_email = req_body.account_email
+        const account_email = req_body.account_email;
+
+        const com_repo = new MYSQLCompanyRepo();
+        const api_info_prms = com_repo.GetApiInfo();
+        const api_info = await api_info_prms;
 
         const params: GetSingleAdminParams = {
             search_by:"Email",
@@ -178,27 +185,25 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
         </table>
         </div>`;
 
-        const transporter = nodemailer.createTransport({
-            host: process.env.NEXT_PUBLIC_MAIL_HOST,
-            port: 465,
-            secure: true,
-            auth:{
-                user: process.env.NEXT_PUBLIC_MAILER,
-                pass: process.env.NEXT_PUBLIC_PWORD,
-            }
-        })
-
-        const mailOptions = {
-            from: process.env.NEXT_PUBLIC_MAILER,
-            to: req_body.account_email,
-            subject: "Reset your admin password",
-            html: msg_body
-        }
-
         try{
-        
-            await transporter.sendMail(mailOptions)
-            resp.status(200).json({"message":"Reset Link Sent"})
+            
+            let from_email = api_info.data.sendgrid_mailer;
+            const params: SendMailParams = {
+                user_id: 0,
+                mailer: "",
+                from_email: from_email,
+                to_email: req_body.account_email,
+                subject: "Reset your admin password",
+                body: msg_body,
+                message_type: req.body.message_type
+            } 
+            
+            const send_mail = await mail_service.SendMail(params);
+            if(send_mail.message == "Email sent!"){
+                resp.status(200).json({success: true, "message":"Reset Link Sent", "data": send_mail});
+            }else{
+                resp.status(200).json(send_mail);
+            }
         
         }catch(e){
             resp.status(500).json({"message":"Failed to send email: "+e })
