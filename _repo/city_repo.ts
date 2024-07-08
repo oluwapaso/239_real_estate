@@ -180,17 +180,32 @@ export class MYSQLCityRepo implements CityRepo {
             if(city_info && city_info.mls_name){
                 const mls_name = city_info?.mls_name;
 
-                const [data] = await connection.query<RowDataPacket[]>(`SELECT
-                (SELECT COUNT(*) FROM properties WHERE PropertyType='Lot & Land' AND Status='Active' AND City='${mls_name}') as Lands,
-                (SELECT COUNT(*) FROM properties WHERE PropertyType='Residential' AND Status='Active' AND City='${mls_name}') as Residentials,
-                (SELECT COUNT(*) FROM properties WHERE PropertyType='Commercial' AND Status='Active' AND City='${mls_name}') as Commercial_Sale,
-                (SELECT COUNT(*) FROM properties WHERE PropertyType='Residential Income' AND Status='Active' AND City='${mls_name}') as Residential_Income,
-                (SELECT COUNT(*) FROM properties WHERE PropertyType='Boat Dock' AND Status='Active' AND City='${mls_name}') as Docks,
-                (SELECT AVG(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}') as AVG_Price,
-                (SELECT MAX(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}' AND ListPrice > 0) as Highest_Price,
-                (SELECT MIN(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}' AND ListPrice > 0) as Lowest_Price,
-                (SELECT AVG(CAST(PricePerAcre AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}') as AVG_Price_Per_SqFt,
-                (SELECT COUNT(*) FROM properties WHERE Status='Active' AND City='${mls_name}') as Total_Listings`);
+                // const [data] = await connection.query<RowDataPacket[]>(`SELECT
+                // (SELECT COUNT(*) FROM properties WHERE PropertyType='Lot & Land' AND Status='Active' AND City='${mls_name}') as Lands,
+                // (SELECT COUNT(*) FROM properties WHERE PropertyType='Residential' AND Status='Active' AND City='${mls_name}') as Residentials,
+                // (SELECT COUNT(*) FROM properties WHERE PropertyType='Commercial' AND Status='Active' AND City='${mls_name}') as Commercial_Sale,
+                // (SELECT COUNT(*) FROM properties WHERE PropertyType='Residential Income' AND Status='Active' AND City='${mls_name}') as Residential_Income,
+                // (SELECT COUNT(*) FROM properties WHERE PropertyType='Boat Dock' AND Status='Active' AND City='${mls_name}') as Docks,
+                // (SELECT AVG(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}') as AVG_Price,
+                // (SELECT MAX(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}' AND ListPrice > 0) as Highest_Price,
+                // (SELECT MIN(CAST(ListPrice AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}' AND ListPrice > 0) as Lowest_Price,
+                // (SELECT AVG(CAST(PricePerAcre AS DECIMAL)) FROM properties WHERE Status='Active' AND City='${mls_name}') as AVG_Price_Per_SqFt,
+                // (SELECT COUNT(*) FROM properties WHERE Status='Active' AND City='${mls_name}') as Total_Listings`);
+
+                const [data] = await connection.query<RowDataPacket[]>(`
+                SELECT
+                    SUM(CASE WHEN PropertyType = 'Lot & Land' THEN 1 ELSE 0 END) AS Lands,
+                    SUM(CASE WHEN PropertyType = 'Residential' THEN 1 ELSE 0 END) AS Residentials,
+                    SUM(CASE WHEN PropertyType = 'Commercial' THEN 1 ELSE 0 END) AS Commercial_Sale,
+                    SUM(CASE WHEN PropertyType = 'Residential Income' THEN 1 ELSE 0 END) AS Residential_Income,
+                    SUM(CASE WHEN PropertyType = 'Boat Dock' THEN 1 ELSE 0 END) AS Docks,
+                    AVG(CAST(ListPrice AS DECIMAL)) AS AVG_Price,
+                    MAX(CASE WHEN ListPrice > 0 THEN CAST(ListPrice AS DECIMAL) ELSE NULL END) AS Highest_Price,
+                    MIN(CASE WHEN ListPrice > 0 THEN CAST(ListPrice AS DECIMAL) ELSE NULL END) AS Lowest_Price,
+                    AVG(CAST(PricePerAcre AS DECIMAL)) AS AVG_Price_Per_SqFt,
+                    COUNT(*) AS Total_Listings
+                FROM properties
+                WHERE Status='Active' AND City='${mls_name}'`);
 
                 if(data.length) {
                     default_rep.success = true;

@@ -101,7 +101,7 @@ const PropertyDetails = () => {
         downpay_dollar: 30000,
         downpay_percent: 20,
         length_of_mortgage: 30,
-        interest_rate: 3,
+        interest_rate: 7,
     }
 
     const [mapCenter, setMapCenter] = useState(center);
