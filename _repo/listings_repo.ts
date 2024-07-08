@@ -198,11 +198,16 @@ export class MysqlListingsRepo implements ListingsRepo {
                 
                 const lastAlert = last_alert.subtract(sub_dur, sub_range).format('YYYY-MM-DD HH:mm:ss');
 
-                console.log("last_alert", params.last_alert, "lastAlert", lastAlert);
-                [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
-                Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} 
-                ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+                //console.log("last_alert", params.last_alert, "lastAlert", lastAlert);
+                // [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields}, (SELECT COUNT(*) AS total_records FROM properties WHERE 
+                // Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter}) AS total_records FROM properties WHERE 
+                // Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} 
+                // ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`);
+
+                [[rows], [total_row]] = await Promise.all([
+                    connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}`),
+                    connection.query<RowDataPacket[]>(`SELECT COUNT(*) AS total_records FROM properties WHERE Status='Active' AND MatrixModifiedDT >= '${lastAlert}' ${search_filter} `),
+                ])
 
             } else if(search_by == "Map"){
                 

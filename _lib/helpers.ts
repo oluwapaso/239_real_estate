@@ -1293,7 +1293,7 @@ export class Helpers {
         if(req_body.photos){
             must_have_query += ` AND (DefaultPic!='' AND DefaultPic IS NOT NULL) OR (Images!='' AND Images!='[]' AND Images IS NOT NULL) `;
         }
-        console.log("must_have_query:", must_have_query)
+        //console.log("must_have_query:", must_have_query)
         if(req_body.max_hoa && req_body.max_hoa > 0){
 
             if(req_body.include_incomp_hoa_data){

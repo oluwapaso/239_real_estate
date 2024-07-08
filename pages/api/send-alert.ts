@@ -86,10 +86,11 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
                     console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length)
-                    if(properties && properties.length){
+                    
+                    if(properties && properties.length > 0){
 
                         let rest = "";
-                        properties.forEach((prop: any, index: number)=> {
+                        properties.map((prop: any, index: number) => {
                             if(index>0){ //Skipping first property
 
                                 let prop_address = prop.FullAddress;
@@ -125,7 +126,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                                 </div>`
                             }
                         });
-                        
+
                         let address_main = properties[0].FullAddress;
                         address_main = address_main.replace(/[^a-zA-Z0-9]+/g, "-");
                         const msg_body = `<body style="background-color: #EFEFEF; padding-top: 70px; padding-bottom: 70px;">
@@ -206,7 +207,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         </div>
                         </center>
                         </body>`
-                        
+
                         mail_to.push({
                             "user_id": user_info.user_id, 
                             "alert_id": alert.search_id,
@@ -215,16 +216,15 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                             "message_body": msg_body, 
                             "subject": `${properties[0].total_records} new listing${properties[0].total_records > 1 ? "s" : "" } in your search`
                         });
-
-                    }
-
+                    } 
 
                 }
 
             }));
 
             let searchIDs = search_ids.join("', '");
-            searchIDs = `'${searchIDs}'`; 
+            searchIDs = `'${searchIDs}'`;
+            console.log("Num of mails to send:", mail_to.length)
             if(mail_to && mail_to.length > 0){
 
                 // mail_to.forEach(async (mail)=> {
