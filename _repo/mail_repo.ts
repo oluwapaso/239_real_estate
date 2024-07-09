@@ -38,7 +38,7 @@ export class MYSQLMailRepo implements MailRepo {
             
             const [result] = await connection.query<ResultSetHeader>(` 
                 INSERT INTO logged_messages(user_id, from_info, to_info, subject, message_body, message_kind, message_type, batch_id, 
-                date_added) VALUES(?, ?, ?, ?, ?, ?, ?, ?) `, [user_id, from_email, to_email, subject, message_body, "Email", message_type, 
+                date_added) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) `, [user_id, from_email, to_email, subject, message_body, "Email", message_type, 
                 batch_id, date]
             );
             
