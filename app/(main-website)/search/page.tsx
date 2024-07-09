@@ -1022,17 +1022,17 @@ const SearchPage = () => {
     let map_view_cntrl = "";
     let list_view_cntrl = "";
 
-    if (is1Xm || is2Xm || isXs || isSm || isMd) {
+    if (is1Xm || is2Xm || isXs || isSm || isMd || isTab) {
         overflow_filters = "overflow-x-auto overflow-y-hidden";
         mobile_filters = "right-0 top-0";
         page_cols = "grid-cols-1";
 
         if (isSm || isMd) {
-            mobile_filters = "right-[0] top-[135px]";
+            //mobile_filters = "right-[0] top-[135px]";
         }
 
         if (isMd) {
-            mobile_filters = "right-[100%] translate-x-[150%] top-[135px]";
+            //mobile_filters = "right-[100%] translate-x-[150%] top-[135px]";
         }
 
         map_view_cntrl = "hidden";
@@ -1061,7 +1061,7 @@ const SearchPage = () => {
             <section className='w-full bg-white h-[calc(100vh-80px)] relative'>
                 <div className='w-full h-full overflow-y-hidden relative flex flex-col'>
 
-                    <div className={`w-full py-2 px-2 sm:px-4 border-t border-b border-gray-400 ${overflow_filters}`}>
+                    <div className={`w-full py-2 px-2 sm:px-4 border-t border-b border-gray-400 relative z-[100] ${overflow_filters}`}>
                         <div className={`${is1Xm && "min-w-[700px]"} ${(is2Xm || isXs || isSm || isMd) && "min-w-[840px]"} tab:min-w-full flex items-center`}>
                             <div className='min-w-[200px] 2xs:min-w-[260px] xs:min-w-[320px] max-w-[320px] relative'>
                                 <input type='text' placeholder='Location...' className='form-control' name='location' autoComplete="off"
@@ -1103,7 +1103,7 @@ const SearchPage = () => {
                                 </div>
                             </div>
 
-                            <div className='sm:px-4 flex items-center space-x-2'>
+                            <div className='sm:px-4 flex items-center space-x-2 relative z-[100]'>
                                 <div className='relative z-[100] hidden tab:block'>
                                     <button className='h-[40px] p-2 bg-white border border-gray-500 rounded-md flex items-center justify-center'
                                         onClick={() => handleMenuBox("sales_type_shown")}>
@@ -1156,13 +1156,13 @@ const SearchPage = () => {
                                         <span>{more_range}</span>
                                         <span className={`ml-2 ${box_state.more_shown ? "rotate-180" : null}`}><MdOutlineKeyboardArrowDown size={20} /></span>
                                     </button>
-                                    <div className={`w-full sm:w-[450px] fixed tab:absolute ${mobile_filters} bg-transparent ${box_state.more_shown ? "block" : "hidden"}`}>
+                                    <div className={`w-full lg:w-[450px] fixed lg:absolute ${mobile_filters} bg-transparent ${box_state.more_shown ? "block" : "hidden"}`}>
                                         <div className='w-full bg-white m-0 tab:mt-1 shadow-xl relative'>
                                             <div className='bg-gray-100 py-3 px-3 h-[48px] flex justify-between'>
                                                 <span>More Filters</span>
-                                                <FaTimes size={22} className='sm:hidden' onClick={() => handleMenuBox("more_shown")} />
+                                                <FaTimes size={22} className='lg:hidden' onClick={() => handleMenuBox("more_shown")} />
                                             </div>
-                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] tab:max-h-[650px] overflow-y-scroll'>
+                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] lg:h-[calc(100vh-225px)] lg:h-[calc(100vh-225px)] max-h-[100%] lg:max-h-[650px] overflow-y-scroll'>
 
                                                 <div className='w-full mb-6 tab:hidden'>
                                                     <SalesType payload={payload} handleSalesType={handleSalesType} />
@@ -1418,7 +1418,8 @@ const SearchPage = () => {
                         </div>
                     </div>
 
-                    <div className={`w-full grid grid-cols-1 tab:grid-cols-5 lg:grid-cols-6 lgScrn:grid-cols-5 flex-grow h-[calc(100%-60px)] relative`}>
+                    <div className={`w-full grid grid-cols-1 tab:grid-cols-5 lg:grid-cols-6 lgScrn:grid-cols-5 flex-grow h-[calc(100%-60px)] 
+                        relative z-[99]`}>
                         <div className={`h-full col-span-full tab:col-span-3 lg:col-span-4 lgScrn:col-span-3 ${map_view_cntrl}`}>
                             {(mobileView == "Map" && googleMapKey != "") && <MapContainer zoom={payload.zoom} setPayload={setPayload} handleSearch={handleSearch} payload={payload}
                                 properties={properties} mapAddress={mapAddress} initialLoad={initialLoad} setInitialLoad={setInitialLoad}
@@ -1498,7 +1499,7 @@ const SearchPage = () => {
                         </div>
 
                         <div className='w-full absolute bottom-3 flex justify-center *:flex *:px-4 *:py-3 *:bg-gray-100 text-sm 
-                        z-[100] *:drop-shadow-md *:items-center pointer-events-none tab:hidden'>
+                        z-[99] *:drop-shadow-md *:items-center pointer-events-none tab:hidden'>
                             <button className={`${mobileView == "Map" && "!bg-primary text-white"} rounded-l-md pointer-events-auto`}
                                 onClick={() => { updateView("Map"); setInitialLoad(true); }}><FaMap size={14} /> <span className='ml-1'>Map</span></button>
                             <button className={`${mobileView == "List" && "!bg-primary text-white"} rounded-r-md pointer-events-auto`}
