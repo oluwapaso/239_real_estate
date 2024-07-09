@@ -1022,17 +1022,17 @@ const SearchPage = () => {
     let map_view_cntrl = "";
     let list_view_cntrl = "";
 
-    if (is1Xm || is2Xm || isXs || isSm || isMd || isTab) {
+    if (is1Xm || is2Xm || isXs || isSm || isMd) {
         overflow_filters = "overflow-x-auto overflow-y-hidden";
         mobile_filters = "right-0 top-0";
         page_cols = "grid-cols-1";
 
         if (isSm || isMd) {
-            //mobile_filters = "right-[0] top-[135px]";
+            mobile_filters = "right-[0] top-[135px]";
         }
 
         if (isMd) {
-            //mobile_filters = "right-[100%] translate-x-[150%] top-[135px]";
+            mobile_filters = "right-[100%] translate-x-[150%] top-[135px]";
         }
 
         map_view_cntrl = "hidden";
@@ -1156,13 +1156,13 @@ const SearchPage = () => {
                                         <span>{more_range}</span>
                                         <span className={`ml-2 ${box_state.more_shown ? "rotate-180" : null}`}><MdOutlineKeyboardArrowDown size={20} /></span>
                                     </button>
-                                    <div className={`w-full lg:w-[450px] fixed lg:absolute ${mobile_filters} bg-transparent ${box_state.more_shown ? "block" : "hidden"}`}>
+                                    <div className={`w-full sm:w-[450px] fixed tab:absolute ${mobile_filters} bg-transparent ${box_state.more_shown ? "block" : "hidden"}`}>
                                         <div className='w-full bg-white m-0 tab:mt-1 shadow-xl relative'>
                                             <div className='bg-gray-100 py-3 px-3 h-[48px] flex justify-between'>
                                                 <span>More Filters</span>
-                                                <FaTimes size={22} className='lg:hidden' onClick={() => handleMenuBox("more_shown")} />
+                                                <FaTimes size={22} className='sm:hidden' onClick={() => handleMenuBox("more_shown")} />
                                             </div>
-                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] lg:h-[calc(100vh-225px)] lg:h-[calc(100vh-225px)] max-h-[100%] lg:max-h-[650px] overflow-y-scroll'>
+                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] tab:max-h-[650px] overflow-y-scroll'>
 
                                                 <div className='w-full mb-6 tab:hidden'>
                                                     <SalesType payload={payload} handleSalesType={handleSalesType} />

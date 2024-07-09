@@ -207,8 +207,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         </div>
                         </div>
                         </center>
-                        </body>`
-
+                        </body>`;
+                        
                         mail_to.push({
                             "user_id": user_info.user_id, 
                             "alert_id": alert.search_id,
@@ -217,7 +217,8 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                             "message_body": msg_body, 
                             "subject": `${properties[0].total_records} new listing${properties[0].total_records > 1 ? "s" : "" } in your search`
                         });
-                    } 
+
+                    }
 
                 }
 
