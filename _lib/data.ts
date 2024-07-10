@@ -37,3 +37,41 @@ export const temp_codes = [
     { "code": "{{primary_logo_link}}", "description": "Broker's primary logo link" },
     { "code": "{{secondary_logo_link}}", "description": "Broker's secondary logo link" },
 ]
+
+
+export const select_cities = [{
+        "location": "NAPLES",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Marco Island",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "BONITA SPRINGS",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Estero",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Fort Myers",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Ave Maria",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Cape Coral",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Sanibel Island",
+        "TABLE_NAME": "City"
+    },
+    {
+        "location": "Lehigh Acres",
+        "TABLE_NAME": "City"
+    }];

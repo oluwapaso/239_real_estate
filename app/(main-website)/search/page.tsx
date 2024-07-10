@@ -34,6 +34,7 @@ import { FaList, FaMap } from 'react-icons/fa6'
 import { useSession } from 'next-auth/react'
 import { useModal } from '@/app/contexts/ModalContext'
 import { hidePageLoader } from '../(main-layout)/GlobalRedux/app/appSlice'
+import { select_cities } from '@/_lib/data'
 
 const helper = new Helpers();
 const SearchPage = () => {
@@ -131,7 +132,7 @@ const SearchPage = () => {
     const [properties, setProperties] = useState<any[]>([]);
     const [prop_lists, setPropLists] = useState<any[]>([]);
     const [isPropsLoading, setIsPropsLoading] = useState(true);
-    const [cities_results, setCitiesResults] = useState<any[]>([]);
+    const [cities_results, setCitiesResults] = useState<any[]>(select_cities);
     const [address_results, setAddressResults] = useState<any[]>([]);
     const [postal_results, setPostalResults] = useState<any[]>([]);
     const [listings_results, setListingsResults] = useState<any[]>([]);
@@ -816,6 +817,8 @@ const SearchPage = () => {
                     setIsPropsLoading(false);
                 }
 
+            } else {
+                setIsPropsLoading(false);
             }
 
         });
@@ -867,7 +870,7 @@ const SearchPage = () => {
 
                     });
 
-                    setCitiesResults(cities);
+                    //setCitiesResults(cities);
                     setAddressResults(addresses);
                     setPostalResults(postals);
                     setListingsResults(listings);
@@ -1062,15 +1065,24 @@ const SearchPage = () => {
                 <div className='w-full h-full overflow-y-hidden relative flex flex-col'>
 
                     <div className={`w-full border-t relative z-[100] ${overflow_filters}`}>
-                        <div className={`${is1Xm && "min-w-[700px]"} ${(is2Xm || isXs || isSm || isMd) && "min-w-[840px]"} 
-                            py-2 px-2 sm:px-4 tab:min-w-full flex items- border-b border-gray-300`}>
-                            <div className='min-w-[200px] 2xs:min-w-[260px] xs:min-w-[320px] max-w-[320px]'>
-                                <input type='text' placeholder='Location...' className='form-control' name='location' autoComplete="off"
-                                    value={payload.location} onChange={(e) => handleCommonChange(e)} />
+                        { /**
+                         * ${is1Xm && "min-w-[700px]"} ${(is2Xm || isXs || isSm || isMd) && "min-w-[840px]"}
+                         */}
+                        <div className={`py-2 px-2 sm:px-4 tab:min-w-full flex items- border-b border-gray-300`}>
+                            <div className='flex-grow min-w-[200px] 2xs:min-w-[260px] xs:min-w-[320px] md:max-w-[320px] relative'
+                                ref={searchBoxRef}>
+                                <div className='w-full flex'>
+                                    <input type='text' placeholder='Location...' className='form-control flex-grow' name='location' autoComplete="off"
+                                        value={payload.location} onChange={(e) => handleCommonChange(e)} onFocus={() => setIsSrchOpenOpen(true)} />
+                                    <div className='md:hidden h-[42px] w-[45px] flex items-center justify-center bg-primary text-white'
+                                        onClick={() => { setInitialLoad(true); }}>
+                                        <IoSearch size={15} />
+                                    </div>
+                                </div>
 
-                                <div className={`w-[400px] bg-white absolute top-[46px] drop-shadow-2xl border border-gray-200 z-10
+                                <div className={`w-[400px] bg-white absolute top-[46px] drop-shadow-2xl border border-gray-200 z-[100]
                                 ${isSrchOpen ? "block" : "hidden"} max-h-[450px]
-                                    overflow-x-hidden overflow-y-auto`} ref={searchBoxRef}>
+                                    overflow-x-hidden overflow-y-auto`}>
                                     <div className='w-full flex flex-col'>
                                         {
                                             (cities_results.length > 0) && (
@@ -1163,7 +1175,7 @@ const SearchPage = () => {
                                                 <span>More Filters</span>
                                                 <FaTimes size={22} className='sm:hidden' onClick={() => handleMenuBox("more_shown")} />
                                             </div>
-                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] tab:max-h-[70vh] lg:max-h-[650px] overflow-y-scroll'>
+                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] md:max-h-[70vh] lg:max-h-[650px] overflow-y-scroll'>
 
                                                 <div className='w-full mb-6 tab:hidden'>
                                                     <SalesType payload={payload} handleSalesType={handleSalesType} />
@@ -1400,7 +1412,7 @@ const SearchPage = () => {
                                     </div>
                                 </div>
 
-                                <div className='relative z-[99]'>
+                                <div className='relative z-[99] hidden md:block'>
                                     <button className='h-[40px] py-2 px-5 bg-primary border border-primary rounded-md text-white 
                                     hover:drop-shadow-xl flex items-center justify-center font-normal' onClick={() => {
                                             setInitialLoad(true);
@@ -1409,7 +1421,7 @@ const SearchPage = () => {
                                     </button>
                                 </div>
 
-                                <div className='relative z-[99]'>
+                                <div className='relative z-[99] hidden md:block'>
                                     <button className='h-[40px] py-2 px-5 bg-primary border border-primary rounded-md text-white 
                                     hover:drop-shadow-xl flex items-center justify-center font-normal' onClick={handleSaveModal}>
                                         <TfiSave size={12} /> <span className='ml-1'>Save Search</span>
