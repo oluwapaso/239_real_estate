@@ -14,7 +14,7 @@ const SalesType = ({ payload, handleSalesType }: { payload: any, handleSalesType
                 </label>
             </div>
 
-            <div className="w-full hover:bg-gray-50 py-3 px-3">
+            <div className="w-full hover:bg-gray-50 py-3 px-3 hidden">
                 <label className="flex items-center cursor-pointer" htmlFor="for_rent">
                     <input className="custom_radio" type="checkbox" name="sales_type" id="for_rent"
                         onChange={(e) => handleSalesType("For Rent")} checked={payload.sales_type == "For Rent"} />

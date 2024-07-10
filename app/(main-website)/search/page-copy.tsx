@@ -1061,10 +1061,9 @@ const SearchPage = () => {
             <section className='w-full bg-white h-[calc(100vh-80px)] relative'>
                 <div className='w-full h-full overflow-y-hidden relative flex flex-col'>
 
-                    <div className={`w-full border-t relative z-[100] ${overflow_filters}`}>
-                        <div className={`${is1Xm && "min-w-[700px]"} ${(is2Xm || isXs || isSm || isMd) && "min-w-[840px]"} 
-                            py-2 px-2 sm:px-4 tab:min-w-full flex items- border-b border-gray-300`}>
-                            <div className='min-w-[200px] 2xs:min-w-[260px] xs:min-w-[320px] max-w-[320px]'>
+                    <div className={`w-full py-2 px-2 sm:px-4 border-t border-b border-gray-400 relative z-[100] ${overflow_filters}`}>
+                        <div className={`${is1Xm && "min-w-[700px]"} ${(is2Xm || isXs || isSm || isMd) && "min-w-[840px]"} tab:min-w-full flex items-center`}>
+                            <div className='min-w-[200px] 2xs:min-w-[260px] xs:min-w-[320px] max-w-[320px] relative'>
                                 <input type='text' placeholder='Location...' className='form-control' name='location' autoComplete="off"
                                     value={payload.location} onChange={(e) => handleCommonChange(e)} />
 
@@ -1104,7 +1103,7 @@ const SearchPage = () => {
                                 </div>
                             </div>
 
-                            <div className='sm:px-4 flex items-center space-x-2 z-[100]'>
+                            <div className='sm:px-4 flex items-center space-x-2 relative z-[100]'>
                                 <div className='relative z-[100] hidden tab:block'>
                                     <button className='h-[40px] p-2 bg-white border border-gray-500 rounded-md flex items-center justify-center'
                                         onClick={() => handleMenuBox("sales_type_shown")}>
@@ -1163,7 +1162,7 @@ const SearchPage = () => {
                                                 <span>More Filters</span>
                                                 <FaTimes size={22} className='sm:hidden' onClick={() => handleMenuBox("more_shown")} />
                                             </div>
-                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] tab:max-h-[70vh] lg:max-h-[650px] overflow-y-scroll'>
+                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] tab:max-h-[650px] overflow-y-scroll'>
 
                                                 <div className='w-full mb-6 tab:hidden'>
                                                     <SalesType payload={payload} handleSalesType={handleSalesType} />
@@ -1182,7 +1181,7 @@ const SearchPage = () => {
                                                     <PropertyTypes payload={payload} handlePropertyType={handlePropertyType} />
                                                 </div>
 
-                                                <div className={`w-full hidden ${payload.sales_type == "For Rent" && "!hidden"}`}>
+                                                <div className={`w-full ${payload.sales_type == "For Rent" && "!hidden"}`}>
                                                     <label className='w-full flex items-center mb-1'>
                                                         <span>Max HOA</span>
                                                         <span className='group ml-2 cursor-pointer'>
@@ -1209,7 +1208,7 @@ const SearchPage = () => {
                                                         })}
                                                     </select>
                                                 </div>
-                                                <div className={`w-full ${(payload.max_hoa >= 0 && payload.sales_type != "For Rent") ? "block-- hidden mt-2" : "hidden"}`} id='inc_incom_hoa_data_cont'>
+                                                <div className={`w-full ${(payload.max_hoa >= 0 && payload.sales_type != "For Rent") ? "block mt-2" : "hidden"}`} id='inc_incom_hoa_data_cont'>
                                                     <input type='checkbox' className='styled-checkbox' name='include_incomp_hoa_data' id='include_incomp_hoa_data'
                                                         checked={payload.include_incomp_hoa_data} onChange={(e) => { handleHOA(e); }} />
                                                     <label className='' htmlFor="include_incomp_hoa_data">
@@ -1417,89 +1416,90 @@ const SearchPage = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className={`w-full grid grid-cols-1 tab:grid-cols-5 lg:grid-cols-6 lgScrn:grid-cols-5 flex-grow h-[calc(100vh-139px)] 
+                    <div className={`w-full grid grid-cols-1 tab:grid-cols-5 lg:grid-cols-6 lgScrn:grid-cols-5 flex-grow h-[calc(100%-60px)] 
                         relative z-[99]`}>
-                            <div className={`h-full col-span-full tab:col-span-3 lg:col-span-4 lgScrn:col-span-3 ${map_view_cntrl}`}>
-                                {(mobileView == "Map" && googleMapKey != "") && <MapContainer zoom={payload.zoom} setPayload={setPayload} handleSearch={handleSearch} payload={payload}
-                                    properties={properties} mapAddress={mapAddress} initialLoad={initialLoad} setInitialLoad={setInitialLoad}
-                                    setPolyLists={setPolyLists} api_key={googleMapKey} />
-                                }
-                            </div>
-                            <div className={`h-full col-span-full tab:col-span-2 border-l border-gray-400 overflow-x-hidden overflow-y-scroll ${list_view_cntrl}`}>
-                                <div className='px-2 sm:px-4 py-4 shadow bg-white'>
-                                    <div className='w-full font-bold text-lg'>{reslt_hdr}</div>
-                                    <div className='w-full mt-1 flex flex-col sm:flex-row justify-between items-start sm:items-center'>
+                        <div className={`h-full col-span-full tab:col-span-3 lg:col-span-4 lgScrn:col-span-3 ${map_view_cntrl}`}>
+                            {(mobileView == "Map" && googleMapKey != "") && <MapContainer zoom={payload.zoom} setPayload={setPayload} handleSearch={handleSearch} payload={payload}
+                                properties={properties} mapAddress={mapAddress} initialLoad={initialLoad} setInitialLoad={setInitialLoad}
+                                setPolyLists={setPolyLists} api_key={googleMapKey} />
+                            }
+                        </div>
+                        <div className={`h-full col-span-full tab:col-span-2 border-l border-gray-400 overflow-x-hidden overflow-y-scroll 
+                         ${list_view_cntrl}`}>
+                            <div className='px-2 sm:px-4 py-4 shadow bg-white'>
+                                <div className='w-full font-bold text-lg'>{reslt_hdr}</div>
+                                <div className='w-full mt-1 flex flex-col sm:flex-row justify-between items-start sm:items-center'>
+                                    <div className='flex items-center'>
+                                        <span>{numeral(total_record).format("0,0")} Result{total_record > 1 ? "s" : null}</span>
+                                        {
+                                            total_filters > 0 && (
+                                                <span className='text-red-600 flex items-center cursor-pointer p-1 ml-1 hover:bg-gray-100'
+                                                    onClick={handleClearFilters}>
+                                                    <IoCloseSharp size={17} />
+                                                    <span className=' text-sm'>Clear {total_filters} Filter{total_filters > 1 ? "s" : null}</span>
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div className='relative z-[99]'>
                                         <div className='flex items-center'>
-                                            <span>{numeral(total_record).format("0,0")} Result{total_record > 1 ? "s" : null}</span>
-                                            {
-                                                total_filters > 0 && (
-                                                    <span className='text-red-600 flex items-center cursor-pointer p-1 ml-1 hover:bg-gray-100'
-                                                        onClick={handleClearFilters}>
-                                                        <IoCloseSharp size={17} />
-                                                        <span className=' text-sm'>Clear {total_filters} Filter{total_filters > 1 ? "s" : null}</span>
-                                                    </span>
-                                                )
-                                            }
+                                            <span className='mr-2'>Sort:</span>
+                                            <button onClick={() => handleMenuBox("sort_shown")} className='flex items-center text-sky-700'>
+                                                <span className=''>{filter_by}</span>
+                                                <span className={`ml-1 ${box_state.sort_shown ? "rotate-180" : null}`}>
+                                                    <MdOutlineKeyboardArrowDown size={22} />
+                                                </span>
+                                            </button>
                                         </div>
-                                        <div className='relative z-[99]'>
-                                            <div className='flex items-center'>
-                                                <span className='mr-2'>Sort:</span>
-                                                <button onClick={() => handleMenuBox("sort_shown")} className='flex items-center text-sky-700'>
-                                                    <span className=''>{filter_by}</span>
-                                                    <span className={`ml-1 ${box_state.sort_shown ? "rotate-180" : null}`}>
-                                                        <MdOutlineKeyboardArrowDown size={22} />
-                                                    </span>
-                                                </button>
-                                            </div>
 
-                                            <div className={`w-[250px] left-0 sm:right-0 absolute bg-transparent ${box_state.sort_shown ? "block" : "hidden"}`}>
-                                                <div className='w-full bg-white m-0 mt-1 drop-shadow-lg rounded-lg *:cursor-pointer *:py-3 *:px-3'>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Price-DESC")}>Price (High to Low)</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Price-ASC")}>Price (Low to High)</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Date-DESC")}>Newest Firsts</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Date-ASC")}>Oldest Firsts</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Beds-DESC")}>Bedrooms</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Baths-DESC")}>Bathrooms</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("SqFt-DESC")}>Square Feet</div>
-                                                    <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Lots-DESC")}>Lot Size</div>
-                                                </div>
+                                        <div className={`w-[250px] left-0 sm:right-0 absolute bg-transparent ${box_state.sort_shown ? "block" : "hidden"}`}>
+                                            <div className='w-full bg-white m-0 mt-1 drop-shadow-lg rounded-lg *:cursor-pointer *:py-3 *:px-3'>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Price-DESC")}>Price (High to Low)</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Price-ASC")}>Price (Low to High)</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Date-DESC")}>Newest Firsts</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Date-ASC")}>Oldest Firsts</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Beds-DESC")}>Bedrooms</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Baths-DESC")}>Bathrooms</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("SqFt-DESC")}>Square Feet</div>
+                                                <div className="w-full hover:bg-gray-50" onClick={() => handleSort("Lots-DESC")}>Lot Size</div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div className='w-full mt-2 grid grid-cols-1 xs:grid-cols-2 tab:grid-cols-1 lgScrn:grid-cols-2 gap-y-4 gap-2 sm:gap-4 mx-auto 
+                                <div className='w-full mt-2 grid grid-cols-1 xs:grid-cols-2 tab:grid-cols-1 lgScrn:grid-cols-2 gap-y-4 gap-2 sm:gap-4 mx-auto 
                                 max-w-[410px] xs:!max-w-[100%]'>
-                                        {
-                                            isPropsLoading && (<div className='w-full flex justify-center items-center min-h-60 sm:col-span-full'>
-                                                <AiOutlineLoading3Quarters size={35} className='animate-spin' />
-                                            </div>)
-                                        }
+                                    {
+                                        isPropsLoading && (<div className='w-full flex justify-center items-center min-h-60 sm:col-span-full'>
+                                            <AiOutlineLoading3Quarters size={35} className='animate-spin' />
+                                        </div>)
+                                    }
 
-                                        {
-                                            !isPropsLoading ?
-                                                prop_lists.length > 0
-                                                    ? (prop_lists.map((prop) => <PropertyCard key={prop.listing_id} prop={prop} page="Map" />))
-                                                    : (<div className='w-full flex justify-center items-center min-h-60 sm:col-span-full'>
-                                                        No results found.
-                                                    </div>)
-                                                : ""
-                                        }
+                                    {
+                                        !isPropsLoading ?
+                                            prop_lists.length > 0
+                                                ? (prop_lists.map((prop) => <PropertyCard key={prop.listing_id} prop={prop} page="Map" />))
+                                                : (<div className='w-full flex justify-center items-center min-h-60 sm:col-span-full'>
+                                                    No results found.
+                                                </div>)
+                                            : ""
+                                    }
 
-                                        <div className='w-full mt-3 col-span-1 sm:col-span-full'>
-                                            {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path={`${url_path}&`} /> : null}
-                                        </div>
+                                    <div className='w-full mt-3 col-span-1 sm:col-span-full'>
+                                        {total_page > 0 ? <Pagination totalPage={total_page} curr_page={curr_page} url_path={`${url_path}&`} /> : null}
                                     </div>
                                 </div>
+                            </div>
 
-                                <div className='p-8 px-3 md:px-8 bg-primary'>
-                                    <Footer page='Search' />
-                                </div>
+                            <div className='p-8 px-3 md:px-8 bg-primary'>
+                                <Footer page='Search' />
                             </div>
                         </div>
 
-                        <div className='w-full absolute bottom-10 flex justify-center *:flex *:px-4 *:py-3 *:bg-gray-100 text-sm 
-                                z-[99] *:drop-shadow-md *:items-center pointer-events-none tab:hidden'>
+                        <div className='w-full absolute bottom-3 flex justify-center *:flex *:px-4 *:py-3 *:bg-gray-100 text-sm 
+                        z-[99] *:drop-shadow-md *:items-center pointer-events-none tab:hidden'>
                             <button className={`${mobileView == "Map" && "!bg-primary text-white"} rounded-l-md pointer-events-auto`}
                                 onClick={() => { updateView("Map"); setInitialLoad(true); }}><FaMap size={14} /> <span className='ml-1'>Map</span></button>
                             <button className={`${mobileView == "List" && "!bg-primary text-white"} rounded-r-md pointer-events-auto`}
@@ -1507,8 +1507,6 @@ const SearchPage = () => {
                                 <FaList size={14} /> <span className='ml-1'>List</span></button>
                         </div>
                     </div>
-
-
 
                 </div>
             </section>
