@@ -92,7 +92,9 @@ const CompanyInfo = () => {
                                     <div className='col-span-1 sm:col-span-2'>
                                         <label htmlFor="company_name" className='form-label'>Stages</label>
                                         <TagsInput value={stages} onChange={setStages} name="stages" placeHolder="Enter stage name"
-                                            classNames={{ input: "rounded-none", tag: 'bg-red-500' }} />
+                                            classNames={{ input: "rounded-none", tag: 'bg-red-500' }} separators={["Enter", ","]} />
+                                        <small className='w-full text-red-600'>Press <strong>Enter</strong> or <strong>Comma </strong>
+                                            to add item</small>
                                     </div>
 
                                     <div className='col-span-1 sm:col-span-2 mt-4'>

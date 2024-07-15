@@ -368,7 +368,7 @@ export class MYSQLAgentsRepo implements AgentsRepo {
     
     }
 
-     public async UpdateAgentInfo(params: UpdateAgentParams): Promise<APIResponseProps> {
+    public async UpdateAgentInfo(params: UpdateAgentParams): Promise<APIResponseProps> {
 
         const default_rep: APIResponseProps = {
             message: "",

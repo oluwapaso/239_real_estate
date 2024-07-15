@@ -567,7 +567,8 @@ export class MYSQLUserRepo implements UserRepo {
                 let stage_filter = "";
 
                 if(keyword && keyword !=""){
-                    kw_filter = ` AND (email LIKE '%${keyword}%' OR secondary_email LIKE '%${keyword}%' OR phone_1 LIKE '%${keyword}%' 
+                    kw_filter = ` AND (firstname LIKE '%${keyword}%' OR lastname LIKE '%${keyword}%' OR CONCAT(firstname, " ", lastname) 
+                    LIKE '%${keyword}%' OR email LIKE '%${keyword}%' OR secondary_email LIKE '%${keyword}%' OR phone_1 LIKE '%${keyword}%' 
                     OR phone_2 LIKE '%${keyword}%' OR work_phone LIKE '%${keyword}%')`;
                 }
 

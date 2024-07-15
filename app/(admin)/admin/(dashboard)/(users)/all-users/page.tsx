@@ -115,7 +115,7 @@ const AllUsers = () => {
 
         let link = `/admin/all-users?stage=${leadStg}`;
         if (keyword && keyword != "") {
-            link += `keyword=${keyword}&page=1`;
+            link += `&keyword=${keyword}&page=1`;
         } else {
             link += `&page=1`;
         }
