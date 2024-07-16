@@ -1175,7 +1175,7 @@ const SearchPage = () => {
                                                 <span>More Filters</span>
                                                 <FaTimes size={22} className='sm:hidden' onClick={() => handleMenuBox("more_shown")} />
                                             </div>
-                                            <div className='w-full py-4 px-4 h-[calc(100vh-88px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] md:max-h-[70vh] lg:max-h-[650px] overflow-y-scroll'>
+                                            <div className='w-full py-4 px-4 h-[calc(100vh-220px)] sm:h-[calc(100vh-225px)] tab:h-[calc(100vh-225px)] max-h-[100%] md:max-h-[70vh] lg:max-h-[650px] overflow-y-scroll'>
 
                                                 <div className='w-full mb-6 tab:hidden'>
                                                     <SalesType payload={payload} handleSalesType={handleSalesType} />

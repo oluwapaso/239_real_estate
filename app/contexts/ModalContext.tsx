@@ -37,6 +37,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     const closeModal = () => {
         document.body.style.overflowY = 'auto';
         setShowModal(false);
+
     };
 
     const handleLoginModal = () => {

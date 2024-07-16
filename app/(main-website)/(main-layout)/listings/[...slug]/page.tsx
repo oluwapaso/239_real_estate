@@ -404,6 +404,7 @@ const PropertyDetails = () => {
                     });
 
                     handleLoginModal();
+
                 } else {
                     toast.dismiss();
                     close_modal();

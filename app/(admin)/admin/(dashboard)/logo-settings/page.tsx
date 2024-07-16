@@ -172,7 +172,8 @@ function LogoSettings() {
                         <div className='col-span-1 lg:col-span-2 p-3 sm:p-7 bg-white shadow-lg'>
 
                             {(selectedPriLogo || comp_info.primary_logo?.image_loc) && (
-                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed cursor-pointer">
+                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed 
+                                cursor-pointer bg-gray-100">
                                     <img src={selectedPriLogo || comp_info.primary_logo?.image_loc} alt="" />
                                 </div>)
                             }
@@ -213,7 +214,8 @@ function LogoSettings() {
                         <div className='col-span-1 lg:col-span-2 p-3 sm:p-7 bg-white shadow-lg'>
 
                             {(selectedSecLogo || comp_info.secondary_logo?.image_loc) && (
-                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed cursor-pointer">
+                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed 
+                                cursor-pointer bg-gray-100">
                                     <img src={selectedSecLogo || comp_info.secondary_logo?.image_loc} alt="" />
                                 </div>)
                             }
@@ -253,7 +255,8 @@ function LogoSettings() {
                         <div className='col-span-1 lg:col-span-2 p-3 sm:p-7 bg-white shadow-lg'>
 
                             {(selectedMlsLogo || comp_info.mls_logo?.image_loc) && (
-                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed cursor-pointer">
+                                <div className="w-full rounded mb-2 flex items-center justify-center border-2 border-dashed 
+                                cursor-pointer bg-gray-100">
                                     <img src={selectedMlsLogo || comp_info.mls_logo?.image_loc} alt="" />
                                 </div>)
                             }

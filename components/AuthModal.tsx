@@ -7,8 +7,8 @@ function AuthModal({ children, show, closeModal, title }: { children: React.Reac
     return (
         show && (
             <dialog className="fixed left-0 top-0 w-full h-full bg-black bg-opacity-50 z-[200] overflow-auto backdrop-blur-sm flex 
-            justify-center items-center">
-                <div className={`bg-white m-autorelative rounded overflow-hidden w-[500px] max-w-[95%]`}>
+            justify-center items-center overflow-y-auto py-3">
+                <div className={`bg-white m-auto relative rounded overflow-hidden w-[500px] max-w-[95%]`}>
                     <div className="w-full px-6 py-4 flex justify-between items-center relative bg-gray-50">
                         <h2 className="font-semibold text-md uppercase text-xl">{title}</h2>
                         <div className="text-black flex justify-center items-center cursor-pointer self-start "
