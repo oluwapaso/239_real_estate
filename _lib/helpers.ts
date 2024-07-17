@@ -1109,11 +1109,13 @@ export class Helpers {
         let qry_price = "";
         let sales_type_query = "";
         let prop_type_query = "";
+        let sub_prop_type_query = "";
         let qry_lots = "";
         let qry_sqft = "";
         let year_query = "";
         let parking_query = "";
-        let must_have_query = "";
+        let main_must_have_query = "";
+        let other_must_have_query = "";
         let hoa_query = "";
         let order_by = "";
 
@@ -1182,45 +1184,6 @@ export class Helpers {
             } 
 
         }
-        
-        if(req_body.home_type && req_body.home_type !=""){
-             
-            if(req_body.home_type.Any != 'Yes'){
-                
-                if(req_body.home_type.House == 'Yes' || req_body.home_type.Residential == 'Yes'){
-                    prop_type_query += ` PropertyType='Residential' OR `;
-                }
-
-                if(req_body.home_type.Commercial == 'Yes'){
-                    prop_type_query += ` PropertyType='Commercial' OR `;
-                }
-                
-                if(req_body.home_type.Dock == "Yes"){
-                    prop_type_query += ` PropertyType='Boat Dock' OR`;   
-                } 
-                
-                if(req_body.home_type.Land == "Yes"){
-                    prop_type_query += ` PropertyType='Lot & Land' OR`;   
-                }
-
-                if(req_body.home_type.SingleFamily == 'Yes'){
-                    prop_type_query += ` OwnershipDesc='Single Family' OR`;
-                }
-                
-                if(req_body.home_type.Condo == 'Yes'){
-                    prop_type_query += ` OwnershipDesc='Condo' OR`;
-                }
-                
-                if(req_body.home_type.CoOp == 'Yes'){
-                    prop_type_query += ` OwnershipDesc='Co-Op' OR `;
-                }
-
-                prop_type_query = this.rTrim(prop_type_query, "OR");
-                if(prop_type_query!=""){
-                    prop_type_query = ` AND (${prop_type_query})`;
-                }
-            }
-        } 
 
         if((req_body.min_lot && req_body.min_lot!='0' && req_body.min_lot!='') || (req_body.max_lot && req_body.max_lot!='0' && req_body.max_lot!='')){
 
@@ -1267,32 +1230,91 @@ export class Helpers {
         }
         
         if(req_body.virtual_tour ){
-            must_have_query += ` AND (VirtualTourURL!='' OR VirtualTourURL2!='') `;
+            main_must_have_query += ` AND (VirtualTourURL!='' OR VirtualTourURL2!='') `;
         }
 
         if(req_body.garage){
-            must_have_query += ` AND CAST(GarageSpaces AS SIGNED) > 0 `;
+            main_must_have_query += ` AND CAST(GarageSpaces AS SIGNED) > 0 `;
         }
 
         if(req_body.basement){
-            must_have_query += ` AND AdditionalRooms LIKE '%basement%' `;
+            main_must_have_query += ` AND AdditionalRooms LIKE '%basement%' `;
         }
 
         if(req_body.pool){
-            must_have_query += ` AND (PrivatePoolYN='1' OR Amenities LIKE '%Pool%') `;
+            main_must_have_query += ` AND (PrivatePoolYN='1' OR Amenities LIKE '%Pool%') `;
         }
 
         if(req_body.view){
-            must_have_query += ` AND (View!='' AND View IS NOT NULL AND View!='None') `;
+            other_must_have_query += ` AND (View!='' AND View IS NOT NULL AND View!='None') `;
         }
 
         if(req_body.waterfront){
-            must_have_query += ` AND WaterfrontYN='1' `;
+            other_must_have_query += ` AND WaterfrontYN='1' `;
         }
 
         if(req_body.photos){
-            must_have_query += ` AND ((DefaultPic!='' AND DefaultPic IS NOT NULL) OR (Images!='' AND Images!='[]' AND Images IS NOT NULL)) `;
+            other_must_have_query += ` AND ((DefaultPic!='' AND DefaultPic IS NOT NULL) OR (Images!='' AND Images!='[]' AND Images IS NOT NULL)) `;
         }
+
+        let has_main_prop = false;
+        let has_sub_prop = false;
+        if(req_body.home_type && req_body.home_type !=""){
+             
+            if(req_body.home_type.Any != 'Yes'){
+                
+                if(req_body.home_type.House == 'Yes' || req_body.home_type.Residential == 'Yes'){
+                    prop_type_query += ` PropertyType='Residential' OR`;
+                    has_main_prop = true;
+                }
+
+                if(req_body.home_type.Commercial == 'Yes'){
+                    sub_prop_type_query += ` PropertyType='Commercial' OR`;
+                    has_sub_prop = true;
+                }
+
+                if(req_body.home_type.Dock == 'Yes'){
+                    sub_prop_type_query += ` PropertyType='Boat Dock' OR`;
+                    has_sub_prop = true;
+                }
+                
+                if(req_body.home_type.Land == "Yes"){
+                    sub_prop_type_query += ` PropertyType='Lot & Land' OR`;   
+                    has_sub_prop = true;
+                }
+
+                if(req_body.home_type.SingleFamily == 'Yes'){
+                    prop_type_query += ` OwnershipDesc='Single Family' OR`;
+                    has_main_prop = true;
+                }
+                
+                if(req_body.home_type.Condo == 'Yes'){
+                    prop_type_query += ` OwnershipDesc='Condo' OR`;
+                    has_main_prop = true;
+                }
+                
+                if(req_body.home_type.CoOp == 'Yes'){
+                    prop_type_query += ` OwnershipDesc='Co-Op' OR`;
+                    has_main_prop = true;
+                }
+
+                prop_type_query = this.rTrim(prop_type_query, "OR");
+                if(prop_type_query!=""){
+                    //prop_type_query = ` AND (${prop_type_query})`;
+                    prop_type_query = ` ((${prop_type_query}) ${qry_beds} ${qry_baths})`;
+                }
+
+                sub_prop_type_query = this.rTrim(sub_prop_type_query, "OR");
+                if(sub_prop_type_query!=""){
+                    sub_prop_type_query = ` OR ${sub_prop_type_query}`;
+                }
+
+                prop_type_query = ` AND (${prop_type_query} ${sub_prop_type_query} ${main_must_have_query}) `;
+            }else{
+                prop_type_query = ` AND ((PropertyType='Residential' ${qry_beds} ${qry_baths} ${main_must_have_query}) OR PropertyType='Commercial' OR PropertyType='Lot & Land' OR PropertyType='Boat Dock')` 
+            }
+        } 
+
         //console.log("must_have_query:", must_have_query)
         if(req_body.max_hoa && req_body.max_hoa > 0){
 
@@ -1340,8 +1362,8 @@ export class Helpers {
             order_by="MatrixModifiedDT DESC";  
         }
         
-        return [`${qry_loc} ${qry_beds} ${qry_baths} ${qry_price} ${sales_type_query} ${prop_type_query} ${qry_lots} ${qry_sqft} 
-        ${year_query} ${parking_query} ${must_have_query} ${hoa_query}`, order_by];
+        //${qry_beds} ${qry_baths} ${must_have_query} ${hoa_query} ${parking_query}
+        return [`${qry_loc} ${qry_price} ${sales_type_query} ${prop_type_query} ${qry_lots} ${qry_sqft} ${year_query}`, order_by];
     }
 
     public formatPrice(price: number): string {
