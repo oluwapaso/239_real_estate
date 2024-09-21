@@ -1298,7 +1298,7 @@ export class Helpers {
             }else if(req_body.sales_type == 'For Rent'){
                 req_body.home_type = "";
                 req_body.max_hoa = null;
-                sales_type_query = ` AND (PropertyClass='RNT' AND Status='Active') `;
+                //sales_type_query = ` AND (PropertyClass='RNT' AND Status='Active') `;
             }else if(req_body.sales_type == "Sold"){
                 sales_type_query = ` AND (Status='Closed' OR Status='Sold') `;   
             } 
@@ -1429,7 +1429,10 @@ export class Helpers {
                     sub_prop_type_query = ` OR ${sub_prop_type_query}`;
                 }
 
-                prop_type_query = ` AND (${prop_type_query} ${sub_prop_type_query} ${main_must_have_query} ${other_must_have_query}) `;
+                if((prop_type_query && prop_type_query !="") || (sub_prop_type_query && sub_prop_type_query !="") || 
+                (main_must_have_query && main_must_have_query !="") || (other_must_have_query && other_must_have_query !="")){
+                    prop_type_query = ` AND (${prop_type_query} ${sub_prop_type_query} ${main_must_have_query} ${other_must_have_query}) `;
+                }
             }else{
                 prop_type_query = ` AND ((PropertyType='Residential' ${qry_beds} ${qry_baths} ${main_must_have_query} ${other_must_have_query}) OR PropertyType='Commercial' OR PropertyType='Lot & Land' OR PropertyType='Boat Dock')` 
             }
