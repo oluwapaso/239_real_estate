@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
 
                         let counter = 0;
                         //Search
-                        rets.search("Property", prop_class, query, params)
+                        await rets.search("Property", prop_class, query, params)
                         .then(async (objects: any) => {
                             //console.log("objects", objects[0], "objects count", objects.length);
                             //console.dir(objects[0], { depth: null });
