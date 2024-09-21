@@ -96,7 +96,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
 
                 console.log("params", params, "rets", rets)
                 //Search
-                rets.search("Property", defaultClass, query, params)
+                await rets.search("Property", defaultClass, query, params)
                 .then(async (objects: any) => {
         
                     //console.log("objects", objects[0], "objects count", objects.length);
