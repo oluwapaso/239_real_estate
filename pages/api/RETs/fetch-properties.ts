@@ -9,6 +9,10 @@ import { Helpers } from "@/_lib/helpers";
 const helpers = new Helpers();
 export default async function handler(req: NextApiRequest, resp: NextApiResponse<APIResponseProps>){
     
+    resp.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins, you can restrict this to specific origins
+    resp.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
     if(req.method == "OPTIONS") {
 
         resp.status(200)
