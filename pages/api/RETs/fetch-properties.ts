@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
             productVersion: '2.0',
             authMethod: 'digest', // or 'basic' if required
         };
-        console.log("retsConfig", retsConfig)
+        
         try {
 
             const rets_url = process.env.NEXT_PUBLIC_RETS_URL as string;
@@ -94,6 +94,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     Offset: offset,
                 };
 
+                console.log("params", params, "rets", rets)
                 //Search
                 rets.search("Property", defaultClass, query, params)
                 .then(async (objects: any) => {
