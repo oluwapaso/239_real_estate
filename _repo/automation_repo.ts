@@ -795,132 +795,132 @@ export class MYSQLAutomationRepo implements AutomationRepo {
 
             connection = await pool.getConnection();
             const [autom_row] = await connection.query<RowDataPacket[]>(`SELECT step_position FROM automation_steps WHERE automation_id=?`, [automation_id]);
-            if(autom_row.length){
+            if(autom_row.length < 1 && step_id > 0){
+                default_resp.message = "Invalid drip info provided."
+                return default_resp;
+            }
 
-                const [parent_row] = await connection.query<RowDataPacket[]>(` SELECT step_id, step_uid, step_position, step_type 
-                FROM automation_steps WHERE parent_id=? AND automation_id=? `, [step_id, automation_id]);
-                    
-                const [add_result] = await connection.query<ResultSetHeader>(` INSERT INTO automation_steps(automation_id, step_type) 
-                VALUES(?, ?) `, [automation_id, "Action"]
-                );
+            const [parent_row] = await connection.query<RowDataPacket[]>(` SELECT step_id, step_uid, step_position, step_type 
+            FROM automation_steps WHERE parent_id=? AND automation_id=? `, [step_id, automation_id]);
+                
+            const [add_result] = await connection.query<ResultSetHeader>(` INSERT INTO automation_steps(automation_id, step_type) 
+            VALUES(?, ?) `, [automation_id, "Action"]
+            );
 
-                if(add_result.affectedRows >0 ){
-                    
-                    const new_step_id = add_result.insertId;
-                    const new_step_uid = `action_${new_step_id}`;
-                    
-                    /** Attaches new step to the clicked parent **/
-                    let newChildren = '[]';
+            if(add_result.affectedRows >0 ){
+                
+                const new_step_id = add_result.insertId;
+                const new_step_uid = `action_${new_step_id}`;
+                
+                /** Attaches new step to the clicked parent **/
+                let newChildren = '[]';
 
-                    /** Need to attach new child to clicked parent and attach old child to new child **/
-                    if(parent_row.length >0 ){
+                /** Need to attach new child to clicked parent and attach old child to new child **/
+                if(parent_row.length >0 ){
 
-                        const old_step_id = parent_row[0].step_id;
-                        const old_step_uid = parent_row[0].step_uid;
-                        const old_step_position = parent_row[0].step_position;
+                    const old_step_id = parent_row[0].step_id;
+                    const old_step_uid = parent_row[0].step_uid;
+                    const old_step_position = parent_row[0].step_position;
 
-                        const [next_row] = await connection.query<RowDataPacket[]>(`SELECT step_id, step_position FROM automation_steps 
-                        WHERE automation_id=? AND CAST(step_position AS UNSIGNED)>=? AND step_id!=? `, [automation_id, old_step_position, 
-                        new_step_id]);
+                    const [next_row] = await connection.query<RowDataPacket[]>(`SELECT step_id, step_position FROM automation_steps 
+                    WHERE automation_id=? AND CAST(step_position AS UNSIGNED)>=? AND step_id!=? `, [automation_id, old_step_position, 
+                    new_step_id]);
 
-                        if(next_row.length >0 ){
+                    if(next_row.length >0 ){
 
-                            const updateQuery = `UPDATE automation_steps SET step_position=? WHERE automation_id=? AND step_id=?`;
-                            for (const rowNextPos of next_row) {
-                                const next_step_id = rowNextPos.step_id;
-                                const next_step_pos = rowNextPos.step_position;
-                                const up_step_pos_to = parseInt(next_step_pos) + 1;
+                        const updateQuery = `UPDATE automation_steps SET step_position=? WHERE automation_id=? AND step_id=?`;
+                        for (const rowNextPos of next_row) {
+                            const next_step_id = rowNextPos.step_id;
+                            const next_step_pos = rowNextPos.step_position;
+                            const up_step_pos_to = parseInt(next_step_pos) + 1;
 
-                                const [updateResult] = await connection.query<ResultSetHeader>(updateQuery, [ 
-                                    up_step_pos_to, automation_id, next_step_id,
-                                ]);
+                            const [updateResult] = await connection.query<ResultSetHeader>(updateQuery, [ 
+                                up_step_pos_to, automation_id, next_step_id,
+                            ]);
 
-                                if (updateResult.affectedRows === 0) {
-                                    throw new Error('Failed to update the step position');
-                                }
+                            if (updateResult.affectedRows === 0) {
+                                throw new Error('Failed to update the step position');
                             }
-
                         }
 
-                        newChildren = `["${old_step_uid}"]`;
-                        
-                        //Extra update for old child details
-                        const [old_child_update] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET parent_id=?, 
-                            parent_uid=?, parent_type=? WHERE automation_id=? AND step_id=? `, [new_step_id, new_step_uid, "action", 
-                            automation_id, old_step_id]
-                        );
-
                     }
 
-                    let parent_step_id;
-                    let parent_step_uid;
-                    let parent_step_type;
-                    let old_step_position;
-
-                    if(step_id != "0"){
-                        
-                        //Select the clicked step 
-                        const [clicked_step] = await connection.query<RowDataPacket[]>(`SELECT step_id, step_uid, step_position, 
-                        step_type FROM automation_steps WHERE step_id=? AND automation_id=? `, [step_id, automation_id]);
-                        
-                        if(clicked_step.length >0 ){
-
-                            parent_step_id = clicked_step[0].step_id;
-                            parent_step_uid = clicked_step[0].step_uid;
-                            parent_step_type = clicked_step[0].step_type;
-                            const parent_step_pos = clicked_step[0].step_position;
-                            old_step_position = parseInt(parent_step_pos) + 1; //Actually new step position
-
-                        }else{
-                            //Early return
-                            default_resp.message = "Invalid step info provided."
-                            return default_resp;
-                        }
-
-                    }else{
-                        
-                        parent_step_id = "0";
-                        parent_step_uid = "trigger_container";
-                        parent_step_type = "trigger";
-                        old_step_position = 2; //Actually new step position, always start from 2
-                        
-                    }
-
-                    const event_info = {
-                        "name": "Add New Action",
-                        "wait_time": "5",
-                        "wait_period": "Minutes",
-                        "trigger": "Select To-Do Action",
-                        "value": {}
-                    }
-
-                    const [updateNewStpPos] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET step_uid=?, 
-                        parent_id=?, parent_uid=?, parent_type=?, step_position=?, children=?, event_info=? WHERE automation_id=? 
-                        AND step_id=? `, [new_step_uid, parent_step_id, parent_step_uid, parent_step_type, old_step_position, 
-                        newChildren, JSON.stringify(event_info), automation_id, new_step_id]
+                    newChildren = `["${old_step_uid}"]`;
+                    
+                    //Extra update for old child details
+                    const [old_child_update] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET parent_id=?, 
+                        parent_uid=?, parent_type=? WHERE automation_id=? AND step_id=? `, [new_step_id, new_step_uid, "action", 
+                        automation_id, old_step_id]
                     );
 
-                    if(step_id != ""){
-
-                        const parentChildren = `["${new_step_uid}"]`;
-                        const [updateNewStpPos] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET children=? 
-                            WHERE automation_id=? AND step_id=? `, [parentChildren, automation_id, step_id]
-                        );
-                    
-                    }
-
-                    default_resp.success = true;
-                    default_resp.message = "Success.";
-
-                }else {
-                    default_resp.message = "Unable to add new drip step.";
                 }
 
-                return default_resp;
+                let parent_step_id;
+                let parent_step_uid;
+                let parent_step_type;
+                let old_step_position;
+
+                if(step_id != "0"){
+                    
+                    //Select the clicked step 
+                    const [clicked_step] = await connection.query<RowDataPacket[]>(`SELECT step_id, step_uid, step_position, 
+                    step_type FROM automation_steps WHERE step_id=? AND automation_id=? `, [step_id, automation_id]);
+                    
+                    if(clicked_step.length >0 ){
+
+                        parent_step_id = clicked_step[0].step_id;
+                        parent_step_uid = clicked_step[0].step_uid;
+                        parent_step_type = clicked_step[0].step_type;
+                        const parent_step_pos = clicked_step[0].step_position;
+                        old_step_position = parseInt(parent_step_pos) + 1; //Actually new step position
+
+                    }else{
+                        //Early return
+                        default_resp.message = "Invalid step info provided."
+                        return default_resp;
+                    }
+
+                }else{
+                    
+                    parent_step_id = "0";
+                    parent_step_uid = "trigger_container";
+                    parent_step_type = "trigger";
+                    old_step_position = 2; //Actually new step position, always start from 2
+                    
+                }
+
+                const event_info = {
+                    "name": "Add New Action",
+                    "wait_time": "5",
+                    "wait_period": "Minutes",
+                    "trigger": "Select To-Do Action",
+                    "value": {}
+                }
+
+                const [updateNewStpPos] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET step_uid=?, 
+                    parent_id=?, parent_uid=?, parent_type=?, step_position=?, children=?, event_info=? WHERE automation_id=? 
+                    AND step_id=? `, [new_step_uid, parent_step_id, parent_step_uid, parent_step_type, old_step_position, 
+                    newChildren, JSON.stringify(event_info), automation_id, new_step_id]
+                );
+
+                if(step_id != ""){
+
+                    const parentChildren = `["${new_step_uid}"]`;
+                    const [updateNewStpPos] = await connection.query<ResultSetHeader>(`UPDATE automation_steps SET children=? 
+                        WHERE automation_id=? AND step_id=? `, [parentChildren, automation_id, step_id]
+                    );
+                
+                }
+
+                default_resp.success = true;
+                default_resp.message = "Success.";
 
             }else {
-                default_resp.message = "Invalid drip info provided."
+                default_resp.message = "Unable to add new drip step.";
             }
+
+            return default_resp;
+
 
         } catch(e:any){
             console.log(e);
