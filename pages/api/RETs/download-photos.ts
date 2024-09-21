@@ -1,6 +1,6 @@
 import { APIResponseProps } from "@/components/types";
 import { NextApiRequest, NextApiResponse } from "next";
-import Client from '@aptuitiv/rets-client';
+import Client from '@oluwapaso/rets';
 import AWS from 'aws-sdk'; 
 import { Readable } from 'stream';
 import { MysqlListingsRepo } from "@/_repo/listings_repo";

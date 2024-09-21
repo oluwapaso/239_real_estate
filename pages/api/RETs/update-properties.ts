@@ -1,6 +1,6 @@
 import { APIResponseProps } from "@/components/types";
 import { NextApiRequest, NextApiResponse } from "next";
-import Client from '@aptuitiv/rets-client'; 
+import Client from '@oluwapaso/rets'; 
 import { MysqlListingsRepo } from "@/_repo/listings_repo";    
 import tough from 'tough-cookie'; // For handling cookies
 import "axios-cookiejar-support"; // Import it without calling 
