@@ -113,38 +113,38 @@ const EditAutomation = () => {
                 BuildTriggers(detailsResp.trigger);
                 setIsPublished(detailsResp.published_version);
 
-                alert(detailsResp.automation_status)
+                console.log(detailsResp.automation_status)
                 if (detailsResp.automation_status == "Active") {
-                    alert("Is Active")
-                    const edit_btn = document.querySelector(".edit_btn") as HTMLElement;
+                    console.log("Is Active")
+                    const edit_btn = document.getElementById("edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        alert("edit_btn found")
+                        console.log("edit_btn found")
                         edit_btn.style.display = "block";
                     }
 
-                    const recall_btn = document.querySelector(".recall_btn") as HTMLElement;
+                    const recall_btn = document.getElementById("recall_btn") as HTMLElement;
                     if (recall_btn) {
                         recall_btn.style.display = "flex";
                     }
 
-                    const publish_btn = document.querySelector(".publish_btn") as HTMLElement;
+                    const publish_btn = document.getElementById("publish_btn") as HTMLElement;
                     if (publish_btn) {
                         publish_btn.style.display = "none";
                     }
                 } else {
-                    alert("Is Not active")
-                    const edit_btn = document.querySelector(".edit_btn") as HTMLElement;
+                    console.log("Is Not active")
+                    const edit_btn = document.getElementById("edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        alert("edit_btn found")
+                        console.log("edit_btn found")
                         edit_btn.style.display = "none";
                     }
 
-                    const recall_btn = document.querySelector(".recall_btn") as HTMLElement;
+                    const recall_btn = document.getElementById("recall_btn") as HTMLElement;
                     if (recall_btn) {
                         recall_btn.style.display = "none";
                     }
 
-                    const publish_btn = document.querySelector(".publish_btn") as HTMLElement;
+                    const publish_btn = document.getElementById("publish_btn") as HTMLElement;
                     if (publish_btn) {
                         publish_btn.style.display = "block";
                     }
@@ -932,12 +932,12 @@ const EditAutomation = () => {
                                         </select>
                                         <div className="flex items-center bg-gray-200">
                                             <button className="publish_btn py-2 px-4 bg-green-600 text-white rounded-r rounded-br"
-                                                onClick={() => ChangePublishStatus('Yes')}>
+                                                id='publish_btn' onClick={() => ChangePublishStatus('Yes')}>
                                                 <i className="la la-paper-plane fs-13"></i> Publish
                                             </button>
 
                                             <button className="edit_btn py-2 px-4 bg-sky-600 text-white rounded-r rounded-br"
-                                                onClick={() => DuplicateDrip('Edit')}>
+                                                id='edit_btn' onClick={() => DuplicateDrip('Edit')}>
                                                 <i className="la la-edit fs-13"></i> Edit
                                             </button>
 
@@ -951,7 +951,7 @@ const EditAutomation = () => {
                                         </button>
 
                                         <button className="recall_btn py-2 px-4 bg-orange-600 text-white rounded flex items-center 
-                                        hover:shadow-xl" onClick={RecallDrip}>
+                                        hover:shadow-xl" id="recall_btn" onClick={RecallDrip}>
                                             <FaHistory size={14} /> <span className='ml-2'>Recall</span>
                                         </button>
 
