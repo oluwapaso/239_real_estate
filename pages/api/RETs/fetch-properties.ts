@@ -2,8 +2,6 @@ import { APIResponseProps } from "@/components/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import Client from '@aptuitiv/rets-client'; 
 import { MysqlListingsRepo } from "@/_repo/listings_repo";  
-import axios from "axios";
-import tough from 'tough-cookie'; // For handling cookies
 import "axios-cookiejar-support"; // Import it without calling 
 import { ListingsFields, ListingsJsonFields } from "@/components/data";
 import { Helpers } from "@/_lib/helpers";
@@ -17,9 +15,6 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
     
     }else if(req.method == "POST") {
 
-        // Initialize a cookie jar to store session cookies
-        const cookieJar = new tough.CookieJar();
-
         const retsConfig = {
             username: process.env.NEXT_PUBLIC_RETS_USERNAME as string,
             password: process.env.NEXT_PUBLIC_RETS_PASSWORD as string,
@@ -28,7 +23,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
             productVersion: '2.0',
             authMethod: 'digest', // or 'basic' if required
         };
-
+        console.log("retsConfig", retsConfig)
         try {
 
             const rets_url = process.env.NEXT_PUBLIC_RETS_URL as string;
