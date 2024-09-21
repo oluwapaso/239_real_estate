@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                 }); 
 
                 const propRepo = new MysqlListingsRepo();
-                const props_prms = propRepo.GetPropsWithoutImage(1);
+                const props_prms = propRepo.GetPropsWithoutImage(10);
                 const props = await props_prms;
 
                 if(props.length>0){
@@ -114,7 +114,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     console.error('Error logging out: ', error);
                 });
 
-                resp.status(200).json({"message": "Login successful" as string});   
+                resp.status(200).json({"message": "Image downloaded successful" as string});   
 
             }).catch((e: any)=>{
                 console.error('Login failed', e);
