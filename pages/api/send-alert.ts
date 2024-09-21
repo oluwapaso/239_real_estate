@@ -85,6 +85,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                     const properties = await prop_prms;
                     
                     const no_image = "https://placehold.co/600x400.png?text=No+Image+Found";
+                    console.log("properties.length", properties.length, "search_filter", search_filter, "order_by", order_by)
                     if(properties && properties.length > 0){
 
                         // console.log("Alert ID:", alert.search_id, "Alert Freq:", alert.email_frequency, "properties.length", properties.length, 

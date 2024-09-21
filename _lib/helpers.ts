@@ -1429,9 +1429,9 @@ export class Helpers {
                     sub_prop_type_query = ` OR ${sub_prop_type_query}`;
                 }
 
-                prop_type_query = ` AND (${prop_type_query} ${sub_prop_type_query} ${main_must_have_query}) `;
+                prop_type_query = ` AND (${prop_type_query} ${sub_prop_type_query} ${main_must_have_query} ${other_must_have_query}) `;
             }else{
-                prop_type_query = ` AND ((PropertyType='Residential' ${qry_beds} ${qry_baths} ${main_must_have_query}) OR PropertyType='Commercial' OR PropertyType='Lot & Land' OR PropertyType='Boat Dock')` 
+                prop_type_query = ` AND ((PropertyType='Residential' ${qry_beds} ${qry_baths} ${main_must_have_query} ${other_must_have_query}) OR PropertyType='Commercial' OR PropertyType='Lot & Land' OR PropertyType='Boat Dock')` 
             }
         } 
 
