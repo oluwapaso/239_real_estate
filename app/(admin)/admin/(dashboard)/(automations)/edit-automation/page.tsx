@@ -113,12 +113,12 @@ const EditAutomation = () => {
                 BuildTriggers(detailsResp.trigger);
                 setIsPublished(detailsResp.published_version);
 
-                console.log("detailsResp.automation_status", detailsResp.automation_status)
+                alert(detailsResp.automation_status)
                 if (detailsResp.automation_status == "Active") {
-                    console.log("Is Active")
+                    alert("Is Active")
                     const edit_btn = document.querySelector(".edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        console.log("edit_btn found")
+                        alert("edit_btn found")
                         edit_btn.style.display = "block";
                     }
 
@@ -132,10 +132,10 @@ const EditAutomation = () => {
                         publish_btn.style.display = "none";
                     }
                 } else {
-                    console.log("Is Not active")
+                    alert("Is Not active")
                     const edit_btn = document.querySelector(".edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        console.log("edit_btn found")
+                        alert("edit_btn found")
                         edit_btn.style.display = "none";
                     }
 
