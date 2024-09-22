@@ -113,12 +113,9 @@ const EditAutomation = () => {
                 BuildTriggers(detailsResp.trigger);
                 setIsPublished(detailsResp.published_version);
 
-                alert(detailsResp.automation_status)
                 if (detailsResp.automation_status == "Active") {
-                    alert("Is Active")
                     const edit_btn = document.getElementById("edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        alert("edit_btn found")
                         edit_btn.style.display = "block";
                     }
 
@@ -132,10 +129,8 @@ const EditAutomation = () => {
                         publish_btn.style.display = "none";
                     }
                 } else {
-                    console.log("Is Not active")
                     const edit_btn = document.getElementById("edit_btn") as HTMLElement;
                     if (edit_btn) {
-                        console.log("edit_btn found")
                         edit_btn.style.display = "none";
                     }
 
@@ -411,6 +406,7 @@ const EditAutomation = () => {
             }
 
             const trigger_body = document.getElementById("trigger_body");
+            console.log("trigger_body", trigger_body)
             if (trigger_body) {
                 trigger_body.innerHTML = "";
                 const root = ReactDOM.createRoot(trigger_body);
@@ -902,158 +898,158 @@ const EditAutomation = () => {
                 </div>}
 
                 {
-                    drip_fetched && (
-                        <div className="w-full mt-2">
-                            <div className="w-full">
-                                <h3 className="fw-bold w-full flex items-center">
-                                    <span className='mr-1'>{automation_info.automation_name}</span>
-                                    <FaEdit size={18} onClick={handleEditName} className='cursor-pointer text-sky-700' />
-                                </h3>
+                    //drip_fetched && (
+                    <div className="w-full mt-2">
+                        <div className="w-full">
+                            <h3 className="fw-bold w-full flex items-center">
+                                <span className='mr-1'>{automation_info.automation_name}</span>
+                                <FaEdit size={18} onClick={handleEditName} className='cursor-pointer text-sky-700' />
+                            </h3>
 
-                                <div className="w-full flex justify-between items-center mt-2">
+                            <div className="w-full flex justify-between items-center mt-2">
 
-                                    <div className="w-auto flex items-center">
-                                        <div className="bg-gray-200 py-2 px-4 rounded-l rounded-bl">
-                                            <span className="text-base font-medium">Version:</span>
-                                        </div>
-                                        <select className="form-control max-w-[220px] h-[40px]" name="version_filter"
-                                            value={automation_info.automation_id} onChange={(e) => FilterVersion(e.target.value)}>
-                                            {
-                                                automation_info.versions && automation_info.versions.length && (
-                                                    automation_info.versions.map((version: any, index: number) => {
-                                                        return (
-                                                            <option key={index} value={version.automation_id}>
-                                                                {version.version_number}: &nbsp; {moment(version.last_save).format("MM/DD/YYYY")} - {version.status}
-                                                            </option>
-                                                        )
-                                                    })
-                                                )
-                                            }
-                                        </select>
-                                        <div className="flex items-center bg-gray-200">
-                                            <button className="publish_btn py-2 px-4 bg-green-600 text-white rounded-r rounded-br"
-                                                id='publish_btn' onClick={() => ChangePublishStatus('Yes')}>
-                                                <i className="la la-paper-plane fs-13"></i> Publish
-                                            </button>
-
-                                            <button className="edit_btn py-2 px-4 bg-sky-600 text-white rounded-r rounded-br"
-                                                id='edit_btn' onClick={() => DuplicateDrip('Edit')}>
-                                                <i className="la la-edit fs-13"></i> Edit
-                                            </button>
-
-                                        </div>
+                                <div className="w-auto flex items-center">
+                                    <div className="bg-gray-200 py-2 px-4 rounded-l rounded-bl">
+                                        <span className="text-base font-medium">Version:</span>
                                     </div>
-
-                                    <div className="flex items-center space-x-2">
-                                        <button className="py-2 px-4 bg-sky-600 text-white rounded duplicate_btn flex items-center 
-                                        hover:shadow-xl" onClick={() => DuplicateDrip('Duplicate')}>
-                                            <FaCopy size={14} /> <span className='ml-2'>Duplicate</span>
+                                    <select className="form-control max-w-[220px] h-[40px]" name="version_filter"
+                                        value={automation_info.automation_id} onChange={(e) => FilterVersion(e.target.value)}>
+                                        {
+                                            automation_info.versions && automation_info.versions.length && (
+                                                automation_info.versions.map((version: any, index: number) => {
+                                                    return (
+                                                        <option key={index} value={version.automation_id}>
+                                                            {version.version_number}: &nbsp; {moment(version.last_save).format("MM/DD/YYYY")} - {version.status}
+                                                        </option>
+                                                    )
+                                                })
+                                            )
+                                        }
+                                    </select>
+                                    <div className="flex items-center bg-gray-200">
+                                        <button className="publish_btn py-2 px-4 bg-green-600 text-white rounded-r rounded-br"
+                                            id='publish_btn' onClick={() => ChangePublishStatus('Yes')}>
+                                            <i className="la la-paper-plane fs-13"></i> Publish
                                         </button>
 
-                                        <button className="recall_btn py-2 px-4 bg-orange-600 text-white rounded flex items-center 
-                                        hover:shadow-xl" id="recall_btn" onClick={RecallDrip}>
-                                            <FaHistory size={14} /> <span className='ml-2'>Recall</span>
+                                        <button className="edit_btn py-2 px-4 bg-sky-600 text-white rounded-r rounded-br"
+                                            id='edit_btn' onClick={() => DuplicateDrip('Edit')}>
+                                            <i className="la la-edit fs-13"></i> Edit
                                         </button>
 
-                                        <button className="py-2 px-4 bg-red-600 text-white rounded flex items-center hover:shadow-xl">
-                                            <BiTrash size={14} /> <span className='ml-2'>Delete</span>
-                                        </button>
                                     </div>
                                 </div>
 
+                                <div className="flex items-center space-x-2">
+                                    <button className="py-2 px-4 bg-sky-600 text-white rounded duplicate_btn flex items-center 
+                                        hover:shadow-xl" onClick={() => DuplicateDrip('Duplicate')}>
+                                        <FaCopy size={14} /> <span className='ml-2'>Duplicate</span>
+                                    </button>
+
+                                    <button className="recall_btn py-2 px-4 bg-orange-600 text-white rounded flex items-center 
+                                        hover:shadow-xl" id="recall_btn" onClick={RecallDrip}>
+                                        <FaHistory size={14} /> <span className='ml-2'>Recall</span>
+                                    </button>
+
+                                    <button className="py-2 px-4 bg-red-600 text-white rounded flex items-center hover:shadow-xl">
+                                        <BiTrash size={14} /> <span className='ml-2'>Delete</span>
+                                    </button>
+                                </div>
                             </div>
+
                         </div>
-                    )
+                    </div>
+                    //)
                 }
 
                 {
-                    drip_fetched && (
-                        <div className="m-0 relative w-full py-10 mb-[150px]" id="editor">
-                            <div className="flex flex-col min-w-[100%] w-[min-content] items-center p-0" data-parentid="x" id="addnewblock_x">
-                                <div className="w-[600px] shadow-md relative border border-zinc-700 select-none"
-                                    id="trigger_container" data-unsaved="No">
-                                    <div className="w-full flex items-center bg-gray-700 p-4 cursor-pointer" id="trigger_header"
-                                        data-editing="No" onClick={EditTrigger}>
-                                        <div className="flex items-center justify-center size-16 bg-white" id='trigger_icon'>
-                                            {trigger_icon}
-                                        </div>
-                                        <div className="trigger_info flex flex-col text-white items-center w-auto mr-auto flex-grow 
+                    //drip_fetched && (
+                    <div className="m-0 relative w-full py-10 mb-[150px]" id="editor">
+                        <div className="flex flex-col min-w-[100%] w-[min-content] items-center p-0" data-parentid="x" id="addnewblock_x">
+                            <div className="w-[600px] shadow-md relative border border-zinc-700 select-none"
+                                id="trigger_container" data-unsaved="No">
+                                <div className="w-full flex items-center bg-gray-700 p-4 cursor-pointer" id="trigger_header"
+                                    data-editing="No" onClick={EditTrigger}>
+                                    <div className="flex items-center justify-center size-16 bg-white" id='trigger_icon'>
+                                        {trigger_icon}
+                                    </div>
+                                    <div className="trigger_info flex flex-col text-white items-center w-auto mr-auto flex-grow 
                                         text-left pl-5">
-                                            <h2 className="w-full text-white capitalize m-1 font-normal text-lg">Trigger</h2>
-                                            <div className="w-full font-medium text-xl" id="trigger_out">
-                                                1. A trigger is an event that start your Node.
-                                            </div>
+                                        <h2 className="w-full text-white capitalize m-1 font-normal text-lg">Trigger</h2>
+                                        <div className="w-full font-medium text-xl" id="trigger_out">
+                                            1. A trigger is an event that start your Node.
                                         </div>
                                     </div>
-                                    <div className="w-full hidden grid-cols-2 gap-5 bg-white p-5" id="trigger_body"></div>
+                                </div>
+                                <div className="w-full hidden grid-cols-2 gap-5 bg-white p-5" id="trigger_body"></div>
 
-                                    <div className="w-full hidden bg-white h-[200px] items-center justify-center" id="trigger_loader">
-                                        <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
-                                    </div>
+                                <div className="w-full hidden bg-white h-[200px] items-center justify-center" id="trigger_loader">
+                                    <AiOutlineLoading3Quarters size={30} className='animate animate-spin' />
+                                </div>
 
-                                    <div className="w-full bg-white hidden" id="selected_trigger_cont">
-                                        <div className="w-full flex flex-col text-left p-5">
-                                            <h3 className="w-full font-semibold text-[#4d4b4b] text-base">Select Trigger Event</h3>
-                                            <div className="w-full flex border border-[#E2E2E2] items-center py-1 cursor-pointer" onClick={ChangeTrigger}>
-                                                <div className="flex flex-grow p-2 bg-white items-center">
-                                                    <div className="flex size-8 items-center justify-center bg-white rounded-lg"
-                                                        id="slctd_trgr_icon">
-                                                        {trigger_icon}
-                                                    </div>
-                                                    <div className="w-auto mr-auto flex-grow pl-2 text-left">
-                                                        <h2 className="w-full text-[#4d4b4b] font-semibold text-lg mb-0" id="selected_trigger_name"></h2>
-                                                    </div>
+                                <div className="w-full bg-white hidden" id="selected_trigger_cont">
+                                    <div className="w-full flex flex-col text-left p-5">
+                                        <h3 className="w-full font-semibold text-[#4d4b4b] text-base">Select Trigger Event</h3>
+                                        <div className="w-full flex border border-[#E2E2E2] items-center py-1 cursor-pointer" onClick={ChangeTrigger}>
+                                            <div className="flex flex-grow p-2 bg-white items-center">
+                                                <div className="flex size-8 items-center justify-center bg-white rounded-lg"
+                                                    id="slctd_trgr_icon">
+                                                    {trigger_icon}
                                                 </div>
-
-                                                <div className="px-2">
-                                                    <div className="border border-[#DFDFDF] text-[#0070A6] font-medium py-2 px-4">Change</div>
+                                                <div className="w-auto mr-auto flex-grow pl-2 text-left">
+                                                    <h2 className="w-full text-[#4d4b4b] font-semibold text-lg mb-0" id="selected_trigger_name"></h2>
                                                 </div>
                                             </div>
 
-                                            <div className="w-full relative mt-4 hidden">
-                                                <h3 className="w-full flex items-center">
-                                                    <span className='font-semibold'>Event</span>
-                                                    <span className='ml-1 text-red-600 font-semibold text-lg' id="required">*</span>
-                                                </h3>
-                                                <input type="text" className='form-field' name="trigger_event" id="trigger_event"
-                                                    placeholder="Choose an event" disabled />
-                                                <BiExpand className='absolute right-2 top-10 text-2xl' />
-                                                <div className="hidde absolute z-30 h-auto top-[75px] max-h-[300px] overflow-y-auto
+                                            <div className="px-2">
+                                                <div className="border border-[#DFDFDF] text-[#0070A6] font-medium py-2 px-4">Change</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="w-full relative mt-4 hidden">
+                                            <h3 className="w-full flex items-center">
+                                                <span className='font-semibold'>Event</span>
+                                                <span className='ml-1 text-red-600 font-semibold text-lg' id="required">*</span>
+                                            </h3>
+                                            <input type="text" className='form-field' name="trigger_event" id="trigger_event"
+                                                placeholder="Choose an event" disabled />
+                                            <BiExpand className='absolute right-2 top-10 text-2xl' />
+                                            <div className="hidde absolute z-30 h-auto top-[75px] max-h-[300px] overflow-y-auto
                                                 bg-white border border-[#D1D1D1] w-full shadow-2xl"></div>
-                                            </div>
+                                        </div>
 
-                                            {isPublishedRef.current == "No"
-                                                ? <div className="w-full mt-4 hidden justify-end" id="SaveTriggerBtn">
-                                                    <div className="py-2 px-5 font-normal bg-gray-700 text-white cursor-pointer 
+                                        {isPublishedRef.current == "No"
+                                            ? <div className="w-full mt-4 hidden justify-end" id="SaveTriggerBtn">
+                                                <div className="py-2 px-5 font-normal bg-gray-700 text-white cursor-pointer 
                                                 rounded w-auto" onClick={SaveTrigger}>Continue</div>
-                                                </div>
-                                                : <div className='text-red-600 mt-3'>
-                                                    Sorry, you can't edit an active published automation step. You need to be in edit mode to update step
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="w-full flex flex-col items-center justify-center absolute z-10" id="trigger_new_block_btn">
-                                        <div className='h-[30px] border border-zinc-700'></div>
-                                        <div className=" flex items-center justify-center cursor-pointer rounded-full"
-                                            data-step-id="0" data-parent-id="-1" data-children="" data-parent-uid="none"
-                                            data-parent-type="container"
-                                            onClick={() =>
-                                                AddNewStep({ parent_id: "-1", parent_uid: "none", parent_type: "container", step_id: "0" })
-                                            }>
-                                            <FaPlusCircle size={27} className='hover:drop-shadow-lg hover:scale-[1.2] duration-200' />
-                                        </div>
-                                        <div className='h-[30px] border border-zinc-700'></div>
+                                            </div>
+                                            : <div className='text-red-600 mt-3'>
+                                                Sorry, you can't edit an active published automation step. You need to be in edit mode to update step
+                                            </div>
+                                        }
                                     </div>
                                 </div>
 
-                                {
-                                    renderSteps("trigger_container", isPublishedRef, setAutomationInfoSteps)
-                                }
+                                <div className="w-full flex flex-col items-center justify-center absolute z-10" id="trigger_new_block_btn">
+                                    <div className='h-[30px] border border-zinc-700'></div>
+                                    <div className=" flex items-center justify-center cursor-pointer rounded-full"
+                                        data-step-id="0" data-parent-id="-1" data-children="" data-parent-uid="none"
+                                        data-parent-type="container"
+                                        onClick={() =>
+                                            AddNewStep({ parent_id: "-1", parent_uid: "none", parent_type: "container", step_id: "0" })
+                                        }>
+                                        <FaPlusCircle size={27} className='hover:drop-shadow-lg hover:scale-[1.2] duration-200' />
+                                    </div>
+                                    <div className='h-[30px] border border-zinc-700'></div>
+                                </div>
                             </div>
+
+                            {
+                                drip_fetched ? renderSteps("trigger_container", isPublishedRef, setAutomationInfoSteps) : null
+                            }
                         </div>
-                    )
+                    </div>
+                    //)
                 }
             </div>
 
