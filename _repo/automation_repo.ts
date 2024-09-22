@@ -1333,8 +1333,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
             //Select the clicked step 
             const [to_exec] = await connection.query<RowDataPacket[]>(` SELECT t.*, s.* FROM todo_drips AS t 
             RIGHT JOIN automation_steps AS s ON t.next_step=s.step_position AND t.automation_id=s.automation_id 
-            WHERE t.automation_status='Running' AND t.next_execution_date <= NOW() ORDER BY t.next_execution_date DESC LIMIT ? `, 
-            [1]); //5 or 10
+            WHERE t.automation_status='Running' AND t.next_execution_date <= DATE_ADD(NOW(), INTERVAL 1 HOUR) ORDER BY t.next_execution_date DESC LIMIT ? `, 
+            [5]); //5 or 10
 
             if(to_exec.length >0 ){
                 
