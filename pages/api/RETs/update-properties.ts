@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     const skips = await refresh_prms;
                     if(skips && skips.length){
 
-                        const skip_date = moment(skips[0][skip_col_date]).format("YYYY-MM-DD HH:mm:ss");
+                        const skip_date = skips[0][skip_col_date].toString();
                         const skip_count = parseInt(skips[0][skip_col_count]);
                         console.log("skip_date", skip_date, "skip_count", skip_count)
                         if (skip_date && skip_date != "" && skip_date != "0000-00-00 00:00:00" && skip_count > 0) {
