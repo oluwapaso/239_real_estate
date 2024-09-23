@@ -22,7 +22,7 @@ export class Helpers {
     }
 
     public ucwords(str: string): string {
-        str = str.toLocaleLowerCase();
+        str = str.toLowerCase();
         return str.replace(/\b\w/g, function (char) {
             return char.toUpperCase();
         });

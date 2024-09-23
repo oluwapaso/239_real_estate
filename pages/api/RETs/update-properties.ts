@@ -48,9 +48,9 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     const skips = await refresh_prms;
                     if(skips && skips.length){
 
-                        const skip_date = skips[0][skip_col_date];
+                        const skip_date = moment(skips[0][skip_col_date]).format("YYYY-MM-DD HH:mm:ss");
                         const skip_count = parseInt(skips[0][skip_col_count]);
-
+                        console.log("skip_date", skip_date, "skip_count", skip_count)
                         if (skip_date && skip_date != "" && skip_date != "0000-00-00 00:00:00" && skip_count > 0) {
 
                             modified_date = moment(skip_date).format("YYYY-MM-DD HH:mm:ss");
@@ -61,6 +61,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
 
                         } else {
 
+                            console.log("Using newest");
                             const newest_prms = propRepo.GetNewestProp(prop_class);
                             modified_date = await newest_prms;
 
@@ -85,6 +86,10 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                         await rets.search("Property", prop_class, query, params)
                         .then(async (objects: any) => {
                             //console.log("objects", objects[0], "objects count", objects.length);
+                            
+                            const ReplyText = objects[0].data.rets["@_ReplyText"];
+                            console.log("ReplyText", ReplyText, 'modified_date', modified_date);
+                            return;
                             //console.dir(objects[0], { depth: null });
                             // Step 1: Split the columns by tab character (\t)
                             const columns = objects[0].data.rets.columns.split('\t');
