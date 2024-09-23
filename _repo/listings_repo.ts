@@ -99,6 +99,39 @@ export class MysqlListingsRepo implements ListingsRepo {
 
     }
 
+    // public async AddMultipleListings(listings: ListingData[]): Promise<boolean> {
+    //     let connection: PoolConnection | null = null;
+    //     try {
+    //         connection = await pool.getConnection();
+    //         await connection.beginTransaction();
+
+    //         for (const listing of listings) {
+    //             const dateAdded = moment().format("YYYY-MM-DD");
+    //             const [add_result] = await connection.query<ResultSetHeader>(
+    //                 `INSERT INTO properties(PropertyClass,${listing.fields},DateAdded, full_info) 
+    //                 VALUES(?,${listing.placeholders},?, ?) 
+    //                 ON DUPLICATE KEY UPDATE ${listing.update_cond}, full_info=?`,
+    //                 [listing.defaultClass, ...listing.values, dateAdded, listing.full_info, listing.full_info]
+    //             );
+
+    //             if (add_result.affectedRows <= 0) {
+    //                 console.log("Unable to add property:", listing.values);
+    //             }
+    //         }
+
+    //         await connection.commit();
+    //         return true;
+
+    //     } catch (e: any) {
+    //         if (connection) await connection.rollback();
+    //         console.log(e.sqlMessage);
+    //         return false;
+    //     } finally {
+    //         if (connection) connection.release();
+    //     }
+    // }
+
+
     public async LoadListings(req: NextApiRequest, search_filter: string, order_by: string): Promise<any> { //any[]
 
         const params = req.body;
