@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                             Class: prop_class, // Adjust this to the correct property class
                             Query: query,
                             Format: 'COMPACT-DECODED',
-                            Limit: 5,
+                            Limit: 50,
                             Offset: offset,
                         };
 

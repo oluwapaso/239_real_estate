@@ -1136,7 +1136,7 @@ export class MysqlListingsRepo implements ListingsRepo {
 
             connection = await pool.getConnection();
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM listings_sync WHERE sync_id='1' AND 
-            (RES='Pending' OR LOT='Pending' OR COM='Pending' OR DOCK='Pending')`);// OR RIN='Pending' 
+            (RES='Pending' OR RIN='Pending' OR LOT='Pending' OR COM='Pending' OR DOCK='Pending')`); 
 
             if(rows.length){
                 
