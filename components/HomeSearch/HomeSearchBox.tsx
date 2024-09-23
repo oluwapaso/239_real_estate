@@ -30,7 +30,7 @@ function HomeSearchBox() {
 
             <div className='search-buttons w-full px-4 lg:px-0 flex *:mr-8 *:p-2 *:uppercase *:text-white *:cursor-pointer'>
                 <div onClick={() => handleTab("Buy")} className={`!pl-0 hover:active-search-tab ${openedTab == "Buy" ? "active-search-tab" : ""}`}>Buy</div>
-                <div onClick={() => handleTab("Rent")} className={`hover:active-search-tab ${openedTab == "Rent" ? "active-search-tab" : ""}`}>Rent</div>
+                <div onClick={() => handleTab("Rent")} className={`hidden hover:active-search-tab ${openedTab == "Rent" ? "active-search-tab" : ""}`}>Rent</div>
                 <div onClick={() => handleTab("Sell")} className={`hover:active-search-tab ${openedTab == "Sell" ? "active-search-tab" : ""}`}>Sell</div>
             </div>
         </div>
