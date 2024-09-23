@@ -90,7 +90,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     Class: defaultClass, // Adjust this to the correct property class
                     Query: query,
                     Format: 'COMPACT-DECODED',
-                    Limit: 2,//150
+                    Limit: 150,//
                     Offset: offset,//
                 };
                 
