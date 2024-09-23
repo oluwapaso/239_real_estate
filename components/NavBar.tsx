@@ -279,7 +279,7 @@ function NavBar({ page }: NavProps) {
 
             <div className={`w-full ${menuOpen ? "block backdrop-blur bg-black bg-opacity-35" : "hidden"} 
                 absolute z-[150] h-[100dvh] bottom-0 right-0 top-0 left-0`}>
-                <div id='mobile_menu' className='bg-primary h-[100vh] flex absolute right-0 top-0 w-[100%] max-w-[350px]'>
+                <div id='mobile_menu' className='bg-primary h-[100dvh] flex absolute right-0 top-0 w-[100%] max-w-[350px]'>
                     <div className='w-full h-full *:text-white *:font-play-fair-display relative'>
                         <div className='flex justify-between items-center p-4 border-b border-white'>
                             <span className='text-2xl'>Menu</span> <FaTimes size={28} onClick={closeMenu} />

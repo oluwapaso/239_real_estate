@@ -44,9 +44,9 @@ export const appSlice = createSlice({
     name:"app_slice",
     initialState: compState,
     reducers:{
-        menu_toggled:(_state, action)=>{
+        menu_toggled:(state, action)=>{
             return {
-                ...compState,
+                ...state,
                 menu_opened: action.payload
             }
         },
