@@ -1274,4 +1274,24 @@ export class MysqlListingsRepo implements ListingsRepo {
     
     }
 
+    public async MarkClassAsDone(defaultClass: string): Promise<boolean>{
+        
+        let connection: PoolConnection | null = null;
+        try{
+
+            connection = await pool.getConnection();
+            const [update] = await connection.query<ResultSetHeader>(`UPDATE listings_sync SET ${defaultClass}='Done' WHERE sync_id='1'`);
+            return update.affectedRows >= 0;
+
+        }catch(e: any){
+            console.log(e.message);
+            return false;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+    
+    }
+
 }

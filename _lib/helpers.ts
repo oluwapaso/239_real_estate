@@ -1205,7 +1205,6 @@ export class Helpers {
         }
     };
 
-
     public rTrim(hay: string, niddle: string): string {
         if (hay.endsWith(niddle)) {
             return hay.slice(0, -1*niddle.length);

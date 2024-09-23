@@ -94,11 +94,18 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     Offset: offset,
                 };
 
-                console.log("params", params, "rets", rets)
                 //Search
                 await rets.search("Property", defaultClass, query, params)
                 .then(async (objects: any) => {
-        
+                    
+                    const ReplyText = objects[0].data.rets["@_ReplyText"];
+                    if(ReplyText && ReplyText == "No Records Found."){
+                        await propRepo.MarkClassAsDone(defaultClass);
+                        return resp.status(200).json({"message": `${defaultClass} properties successful replicated` as string});   
+                    }
+
+                    console.log("objects[0]", objects[0].data.rets);
+                    return;
                     //console.log("objects", objects[0], "objects count", objects.length);
                     //console.dir(objects[0], { depth: null });
                     // Step 1: Split the columns by tab character (\t)
@@ -192,7 +199,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     console.error('Error logging out: ', error);
                 });
 
-                resp.status(200).json({"message": "Login successful" as string});   
+                resp.status(200).json({"message": "Property successful added" as string});   
 
             }).catch((e: any)=>{
                 console.error('Login failed', e);
