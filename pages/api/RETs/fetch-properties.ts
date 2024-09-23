@@ -100,12 +100,30 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     
                     const ReplyText = objects[0].data.rets["@_ReplyText"];
                     if(ReplyText && ReplyText == "No Records Found."){
+
                         await propRepo.MarkClassAsDone(defaultClass);
+                        
+                        //Log out
+                        rets.logout().catch((error: any) => {
+                            console.error('Error logging out: ', error);
+                        });
+                        
                         return resp.status(200).json({"message": `${defaultClass} properties successful replicated` as string});   
                     }
 
-                    console.log("objects[0]", objects[0].data.rets);
-                    return;
+                    if(!objects[0].data.rets.columns || !objects[0].data.rets.data || !objects[0].data.rets.count){
+                        
+                        //Log out
+                        rets.logout().catch((error: any) => {
+                            console.error('Error logging out: ', error);
+                        });
+
+                        return resp.status(200).json({"message": `${defaultClass} columns, data OR count is not found!` as string});   
+                    }
+
+                    const total_listings = objects[0].data.rets.count["@_Records"];
+                    console.log("total_listings", total_listings, "ReplyText", ReplyText)
+
                     //console.log("objects", objects[0], "objects count", objects.length);
                     //console.dir(objects[0], { depth: null });
                     // Step 1: Split the columns by tab character (\t)
