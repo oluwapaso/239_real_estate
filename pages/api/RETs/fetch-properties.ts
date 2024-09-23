@@ -130,6 +130,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     const columns = objects[0].data.rets.columns.split('\t');
 
                     // Step 2: Split the data rows by tab character (\t)
+                    console.log("objects[0].data.rets.data", objects[0].data.rets.data)
                     const dataRows = objects[0].data.rets.data.map((row: any) => row.split('\t'));
 
                     // Step 3: Combine columns with data rows
