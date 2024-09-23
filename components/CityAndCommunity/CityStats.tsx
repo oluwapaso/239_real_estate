@@ -52,7 +52,7 @@ function CityStats({ city_slug, community_slug }: { city_slug?: string, communit
         return (
             <div className='w-full mt-6'>
                 <div className='w-full font-bold text-2xl'>Property Stats</div>
-                <div className='w-full mt-1 grid grid-cols-3 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex
+                <div className='w-full mt-1 grid grid-cols-1 2xs:grid-cols-2 sm:grid-cols-3 2xs:gap-x-3 sm:gap-x-6 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex
                     *:items-center *:justify-between *:cursor-pointer *:rounded-md'>
                     <div className=''>
                         <div>
@@ -115,7 +115,7 @@ function CityStats({ city_slug, community_slug }: { city_slug?: string, communit
                     </div>
                 </div>
 
-                <div className='w-full grid grid-cols-2 mt-6 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex 
+                <div className='w-full grid grid-cols-1 2xs:grid-cols-2 mt-6 2xs:gap-x-3 sm:gap-x-6 gap-6 *:bg-white *:border *:border-gray-200 *:shadow-lg *:p-6 *:flex 
                     *:items-center *:justify-between *:cursor-pointer *:rounded-md'>
                     <div>
                         <div>
