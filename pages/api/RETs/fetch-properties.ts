@@ -90,16 +90,16 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     Class: defaultClass, // Adjust this to the correct property class
                     Query: query,
                     Format: 'COMPACT-DECODED',
-                    Limit: 150,//150
-                    Offset: offset,
+                    Limit: 2,//150
+                    Offset: offset,//
                 };
-
+                
                 //Search
                 await rets.search("Property", defaultClass, query, params)
                 .then(async (objects: any) => {
                     
                     const ReplyText = objects[0].data.rets["@_ReplyText"];
-                    if(ReplyText && ReplyText == "No Records Found."){
+                    if((ReplyText && ReplyText == "No Records Found.") || (!Array.isArray(objects[0].data.rets.data))){
 
                         await propRepo.MarkClassAsDone(defaultClass);
                         
@@ -122,7 +122,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     }
 
                     const total_listings = objects[0].data.rets.count["@_Records"];
-                    console.log("total_listings", total_listings, "ReplyText", ReplyText)
+                    console.log("total_listings", total_listings, "ReplyText", ReplyText, 'params', params)
 
                     //console.log("objects", objects[0], "objects count", objects.length);
                     //console.dir(objects[0], { depth: null });
@@ -130,7 +130,6 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     const columns = objects[0].data.rets.columns.split('\t');
 
                     // Step 2: Split the data rows by tab character (\t)
-                    console.log("objects[0].data.rets.data", objects[0].data.rets.data)
                     const dataRows = objects[0].data.rets.data.map((row: any) => row.split('\t'));
 
                     // Step 3: Combine columns with data rows
