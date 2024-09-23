@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                                         }
 
                                     }else{
-                                        console.log("if (!object.contentType.includes('xml'))---->failed----", object) 
+                                        console.log("if (!object.contentType.includes('xml'))---->failed----") 
                                     }
 
                                     index++;

@@ -427,7 +427,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             //(SELECT COUNT(*) AS curr_loading FROM properties WHERE AllPixDownloaded='Loading') < 2
             //Makes sure we are not doing too much at a time, because of RETs server Limitation
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT property_id, matrix_unique_id, Images, FullAddress, City 
-            FROM properties WHERE AllPixDownloaded='No' AND Status='Active' 
+            FROM properties WHERE (AllPixDownloaded='No' OR (AllPixDownloaded='Yes' AND Images='[]')) AND Status='Active' 
             AND (SELECT COUNT(*) AS curr_loading FROM properties WHERE AllPixDownloaded='Loading') < 2 
             ORDER BY last_image_query ASC LIMIT ${limit}`);
             const property_ids: any[] = [];
