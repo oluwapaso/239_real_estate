@@ -1367,8 +1367,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                     if(!user_info || (user_info && (typeof user_info == "string" || typeof user_info == "object" && !user_info.user_id) )){
                         console.log("Continue from next step");
                         default_resp.message= "Invalid user info provided";
-                        this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid user info provided" });
-                        this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                        await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid user info provided" });
+                        await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                         return default_resp;
                     }
 
@@ -1385,8 +1385,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(!temp_info){
                             console.log("Continue from next step");
                             default_resp.message = "Invalid Email template selected for this step";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid Email template selected for this step" });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid Email template selected for this step" });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                             return default_resp;
                         }
 
@@ -1395,8 +1395,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(!email_body || email_body == "" || !email_subject || email_subject == ""){
                             console.log("Continue from next step");
                             default_resp.message = "Email template body/subject is missing";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Email template body/subject is missing" });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Email template body/subject is missing" });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                             return default_resp;
                         }
                         
@@ -1415,12 +1415,12 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(add_to_queue){
                             default_resp.success = add_to_queue;
                             default_resp.message = "Email queued successfully.";    
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Info", message: `Sending ${temp_info.template_name} to the ${user_info.firstname}.` });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Info", message: `Sending ${temp_info.template_name} to the ${user_info.firstname}.` });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                         }else{
                             default_resp.message = "Unable to add auto SMS to queue.";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Unable to add auto SMS to queue." });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Unable to add auto SMS to queue." });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                         } 
 
                     }else if(event_trigger == "Send an SMS"){
@@ -1432,8 +1432,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(!temp_info){
                             console.log("Continue from next step");
                             default_resp.message = "Invalid SMS template selected for this step";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid SMS template selected for this step" });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Invalid SMS template selected for this step" });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                             return default_resp;
                         }
                     
@@ -1441,8 +1441,8 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(!sms_body || sms_body == ""){
                             console.log("Continue from next step");
                             default_resp.message = "SMS template body is missing";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "SMS template body is missing" });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "SMS template body is missing" });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                             return default_resp;
                         }
 
@@ -1459,12 +1459,12 @@ export class MYSQLAutomationRepo implements AutomationRepo {
                         if(add_to_queue){
                             default_resp.success = add_to_queue;
                             default_resp.message = "SMS queued successfully.";    
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Info", message: `Sending ${temp_info.template_name} to the ${user_info.firstname}.` });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Info", message: `Sending ${temp_info.template_name} to the ${user_info.firstname}.` });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                         }else{
                             default_resp.message = "Unable to add auto SMS to queue.";
-                            this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Unable to add auto SMS to queue." });
-                            this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
+                            await this.AddAutomationLog({ automation_id, user_id, step_uid, event_name, type: "Error", message: "Unable to add auto SMS to queue." });
+                            await this.ProcessNextDrip({ automation_id, user_id, step_position, todo_id });
                         } 
 
                     }
@@ -1509,14 +1509,15 @@ export class MYSQLAutomationRepo implements AutomationRepo {
 
         try{
             
-            const delTodoStep = this.DeleteTodoStep({automation_id, user_id, todo_id});
+            const delTodoStep = await this.DeleteTodoStep({automation_id, user_id, todo_id});
             console.log("delTodoStep", delTodoStep);
             connection = await pool.getConnection();
 
             const nextStep = step_position + 1;
             const [next_step] = await connection.query<RowDataPacket[]>(`SELECT event_info FROM automation_steps WHERE automation_id=? 
             AND step_position=? `, [automation_id, nextStep]);
-             
+            console.log('next_step.length', next_step.length);
+
             if(next_step.length > 0){
                 
                 const event_info = next_step[0].event_info;
