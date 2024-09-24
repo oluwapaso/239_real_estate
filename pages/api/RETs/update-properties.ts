@@ -92,10 +92,11 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
 
                                 const isUpdated = await propRepo.UpdateRefreshSkip( `UPDATE refresh_skips SET ${skip_col_date}=NULL, 
                                 ${skip_col_count}='0' WHERE skip_id='1'`);
+                                
                                 //Log out
-                                rets.logout().catch((error: any) => {
-                                    console.error('Error logging out: ', error);
-                                });
+                                // rets.logout().catch((error: any) => {
+                                //     console.error('Error logging out: ', error);
+                                // });
                                 
                                 return resp.status(200).json({"message": `${prop_class} properties successful replicated` as string});   
                             }
@@ -103,9 +104,9 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                             if(!objects[0].data.rets.columns || !objects[0].data.rets.data || !objects[0].data.rets.count){
                                 
                                 //Log out
-                                rets.logout().catch((error: any) => {
-                                    console.error('Error logging out: ', error);
-                                });
+                                // rets.logout().catch((error: any) => {
+                                //     console.error('Error logging out: ', error);
+                                // });
 
                                 return resp.status(200).json({"message": `${prop_class} columns, data OR count is not found!` as string});   
                             }
@@ -235,15 +236,15 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     console.error('Error logging out: ', error);
                 });
 
-                resp.status(200).json({"message": "Login successful" as string});   
+                resp.status(200).json({"message": "Property successful updated" as string});   
 
             }).catch((e: any)=>{
-                console.error('Login failed', e);
+                console.error('Property update failed', e);
                 resp.status(500).json({"message": e as string});
             });
 
         } catch (error) {
-            console.error('Login failed', error);
+            console.error('Property update failed', error);
             resp.status(500).json({"message": error as string})
         }
 

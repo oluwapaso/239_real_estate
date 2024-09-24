@@ -8,6 +8,7 @@ import { MYSQLNotesRepo } from "./notes_repo";
 import { Helpers } from "@/_lib/helpers";
 import { PoolConnection } from "mysql2/promise";
 import { resolve } from "path";
+import { AnyIfEmpty } from "react-redux";
 
 export interface ListingsRepo {
     GetNextReplicateLink(): Promise<string>
@@ -1294,6 +1295,40 @@ export class MysqlListingsRepo implements ListingsRepo {
             }
         }
     
+    }
+
+    public async GetSocialListings(): Promise<any[]>{
+
+        let connection: PoolConnection | null = null;
+        try{
+
+            connection = await pool.getConnection();
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT c.facebook_page_id, p.property_id, p.BathsTotal, p.BedsTotal 
+            FROM company_info AS c CROSS JOIN properties AS p WHERE c.last_facebook_post<(NOW() - INTERVAL 1 HOUR) 
+            AND p.MatrixModifiedDT >= c.last_facebook_post ORDER BY RAND() LIMIT 1`); 
+            console.log("rows.length", rows.length)
+            if(rows.length){
+                
+                const formattedRows = rows.map((row) => {
+                    return {
+                        ...row,
+                    }
+                });
+ 
+                return formattedRows;
+
+            }else{
+                return [];
+            }
+
+        }catch(e: any){
+            console.log(e.sqlMessage);
+            return [];
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
     }
 
 }

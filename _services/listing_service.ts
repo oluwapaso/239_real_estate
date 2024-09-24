@@ -265,7 +265,7 @@ export class ListingsService {
 
     }
    
-   public async UpdateFeaturedListingsSettings(req: NextApiRequest): Promise<APIResponseProps>{
+    public async UpdateFeaturedListingsSettings(req: NextApiRequest): Promise<APIResponseProps>{
 
          const default_resp = {
             message: "",
@@ -281,6 +281,31 @@ export class ListingsService {
             default_resp.message = "Featured listings settings successfully updated";
         }else{
             default_resp.message = "Unable to update featured listings settings";
+        }
+
+        return default_resp;
+
+    }
+
+    public async PostToFacebook(req: NextApiRequest): Promise<APIResponseProps>{
+
+         const default_resp = {
+            message: "",
+            data: {},
+            success: false,
+        }
+
+        const social_prms = this.listings_repo.GetSocialListings();
+        const social = await social_prms;
+
+        if(social.length){
+
+            console.log("social", social);
+            default_resp.success = true;
+            default_resp.message = "New property found";
+
+        }else{
+            default_resp.message = "No new property to post to facebook";
         }
 
         return default_resp;
