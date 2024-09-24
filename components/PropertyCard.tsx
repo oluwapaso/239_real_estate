@@ -28,7 +28,7 @@ const PropertyCard = ({ prop, page }: { prop: any, page?: string }) => {
     if (page == "Map") {
         card_height = "h-[265px]";
     }
-    const link_address = helpers.ucwords(prop.FullAddress).replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;
+    const link_address = helpers.ucwords(prop.FullAddress || prop.MLSAreaMajor || "new-lane").replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;
 
     let prop_icon = <HiOutlineHomeModern size={15} className='text-green-700 mr-1' />
     if (prop.PropertyType == "Lot & Land") {

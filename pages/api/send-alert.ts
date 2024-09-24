@@ -95,7 +95,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                         properties.map((prop: any, index: number) => {
                             if(index>0){ //Skipping first property
 
-                                let prop_address = helpers.ucwords(prop.FullAddress);
+                                let prop_address = helpers.ucwords(prop.FullAddress || prop.MLSAreaMajor || "new-lane");
                                 prop_address = prop_address.replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;;
 
                                 let extra = "";
@@ -162,7 +162,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                             }
                         });
 
-                        let address_main = helpers.ucwords(properties[0].FullAddress);
+                        let address_main = helpers.ucwords(properties[0].FullAddress || properties[0].MLSAreaMajor || "new-lane");
                         address_main = address_main.replace(/[^a-zA-Z0-9]+/g, "-");
                         const msg_body = `<body style="background-color: #EFEFEF; padding-top: 70px; padding-bottom: 70px;">
 

@@ -43,7 +43,7 @@ const CustomMarker = ({ prop, zoom_level }: { prop: any, zoom_level: number }) =
 
     }, [windowRef]);
 
-    const link_address = helper.ucwords(prop.FullAddress).replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;;
+    const link_address = helper.ucwords(prop.FullAddress || prop.MLSAreaMajor || "new-lane").replace(/[^a-zA-Z0-9]+/g, "-") + "-" + prop.StateOrProvince + "-" + prop.PostalCode;;
 
     return (
         <OverlayView key={prop.listing_id} position={{ lat: parseFloat(prop.Latitude), lng: parseFloat(prop.Longitude) }}
@@ -103,7 +103,7 @@ const CustomMarker = ({ prop, zoom_level }: { prop: any, zoom_level: number }) =
                                                                     bg_img = c_prop.Images[0];
                                                                 }
 
-                                                                const address = helper.ucwords(c_prop.FullAddress).replace(/[^a-zA-Z0-9]+/g, "-") + "-" + c_prop.StateOrProvince + "-" + c_prop.PostalCode;
+                                                                const address = helper.ucwords(c_prop.FullAddress || c_prop.MLSAreaMajor || "new-lane").replace(/[^a-zA-Z0-9]+/g, "-") + "-" + c_prop.StateOrProvince + "-" + c_prop.PostalCode;
 
                                                                 return (
                                                                     <CustomLinkMain key={index} href={`/listings/${c_prop.MLSNumber}/${address}`}>
