@@ -1228,7 +1228,7 @@ export class MysqlListingsRepo implements ListingsRepo {
             connection = await pool.getConnection();
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT MatrixModifiedDT FROM properties 
             WHERE PropertyClass='${defaultClass}' ORDER BY MatrixModifiedDT DESC LIMIT 1`); 
-            
+            console.log("rows.length", rows.length)
             if(rows.length){
                 
                 const formattedRows = rows.map((row) => {
@@ -1236,8 +1236,10 @@ export class MysqlListingsRepo implements ListingsRepo {
                         ...row,
                     }
                 });
-                
-                const modified_date = formattedRows[0].MatrixModifiedDT.replace(" ", "T")+"+";
+
+                let modified_date = moment(formattedRows[0].MatrixModifiedDT).format("YYYY-MM-DD HH:mm:ss"); 
+                modified_date = modified_date.replace(" ", "T")+"+";
+                console.log("modified_date", modified_date)
                 return modified_date;
 
             }else{
