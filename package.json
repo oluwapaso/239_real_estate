@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev_xx": "next dev",
-    "dev": "node --max-old-space-size=4096 server.js",
+    "dev": "next dev",
+    "dev_xx_for_fb": "node --max-old-space-size=4096 server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
