@@ -66,26 +66,43 @@ const PropFavs = ({ ListingId, page, MLSNumber, PropAddress }: { ListingId: stri
     let classes = `bottom-0 right-0`;
     if (page && page == "Prop Details") {
         classes = `bottom-[10px] left-2`;
+    } else if (page && page == "Sticky Details") {
+        classes = ` !relative bottom-[0px] left-0`;
     }
 
-    return (
-        <>
-            <div className={`absolute z-[15] flex justify-end items-center transition-all duration-500 ${classes}`}>
-                {
-                    isUpdatingFav ? <div className='p-2 animate-spin'> <AiOutlineLoading3Quarters size={25} className='text-white' /></div> :
-                        (user && user.favorites && user.favorites.length > 0 && user.favorites.includes(ListingId)) ?
-                            <div className='p-2 text-red-600 hover:text-red-400 cursor-pointer'
-                                onClick={() => AddOrRemoveFromFavs(ListingId, "Remove")}><FaHeart size={25} /></div>
-                            : <div className='p-2 text-white hover:text-yellow-500 cursor-pointer'
-                                onClick={() => AddOrRemoveFromFavs(ListingId, "Add")}><FaRegHeart size={25} /></div>
-                }
-            </div>
+    let btn = <div className={`absolute z-[15] flex justify-end items-center transition-all duration-500 ${classes}`}>
+        {
+            isUpdatingFav ? <div className='p-2 animate-spin'> <AiOutlineLoading3Quarters size={25} className='text-white' /></div> :
+                (user && user.favorites && user.favorites.length > 0 && user.favorites.includes(ListingId)) ?
+                    <div className='p-2 text-red-600 hover:text-red-400 cursor-pointer'
+                        onClick={() => AddOrRemoveFromFavs(ListingId, "Remove")}><FaHeart size={25} /></div>
+                    : <div className='p-2 text-white hover:text-yellow-500 cursor-pointer'
+                        onClick={() => AddOrRemoveFromFavs(ListingId, "Add")}><FaRegHeart size={25} /></div>
+        }
+    </div>;
 
+    if (page && page == "Sticky Details") {
+        btn = <div className={`absolute z-[15] flex justify-end items-center transition-all duration-500 ${classes}`}>
             {
-                /** <AuthModal show={showModal} children={modalChildren} closeModal={closeModal} title={modalTitle} /> */
+                isUpdatingFav
+                    ? <button className='rounded-3xl text-white py-0 px-3 flex items-center justify-center bg-red-200 
+                        hover:bg-red-300 hover:shadow-xl font-normal'>
+                        <div className='p-2 animate-spin'> <AiOutlineLoading3Quarters size={25} className='text-white' /></div>
+                    </button>
+                    : (user && user.favorites && user.favorites.length > 0 && user.favorites.includes(ListingId))
+                        ? <button className='rounded-3xl text-white py-0 px-3 flex items-center justify-center bg-red-200 
+                        hover:bg-red-300 hover:shadow-xl font-normal'onClick={() => AddOrRemoveFromFavs(ListingId, "Remove")}>
+                            <div className='p-2 text-red-600 hover:text-red-400 cursor-pointer'><FaHeart size={25} /></div>
+                        </button>
+                        : <button className='rounded-3xl text-white py-0 px-3 flex items-center justify-center bg-red-500 
+                        hover:bg-red-400 hover:shadow-xl font-normal' onClick={() => AddOrRemoveFromFavs(ListingId, "Add")}>
+                            <div className='p-2 text-white cursor-pointer'><FaRegHeart size={25} /></div>
+                        </button>
             }
-        </>
-    )
+        </div>;
+    }
+
+    return btn;
 }
 
 export default PropFavs

@@ -539,7 +539,6 @@ const PropertyDetails = () => {
             </div>
 
             const diffInMinutes = moment().diff(moment(prop.MatrixModifiedDT), 'minutes');
-
             if (prop.Images && prop.Images.length > 0) {
 
                 if (prop.Images.length == 1) {
@@ -553,7 +552,7 @@ const PropertyDetails = () => {
 
                     gallery = <div className='w-full grid grid-cols-2 gap-[2px] h-[70vh] relative overflow-hidden'>
                         <div className='h-full col-span-2 md:col-span-1 bg-cover object-contain cursor-pointer' onClick={() => OpenGallery(0)} style={{ backgroundImage: `url(${prop.Images[0]})`, backgroundPosition: "center", }}></div>
-                        <div className='h-full relative cursor-pointer'>
+                        <div className='h-full hidden md:block relative cursor-pointer'>
                             <div className={`h-full grid grid-cols-1`}>
                                 <div className='bg-cover object-contain' onClick={() => OpenGallery(1)} style={{ backgroundImage: `url(${prop.Images[1]})`, backgroundPosition: "center", }}></div>
                             </div>
@@ -567,7 +566,7 @@ const PropertyDetails = () => {
 
                     gallery = <div className='w-full grid grid-cols-2 gap-[2px] h-[70vh] relative overflow-hidden'>
                         <div className='h-full col-span-2 md:col-span-1 bg-cover object-contain cursor-pointer' onClick={() => OpenGallery(0)} style={{ backgroundImage: `url(${prop.Images[0]})`, backgroundPosition: "center", }}></div>
-                        <div className='h-full relative cursor-pointer'>
+                        <div className='h-full hidden md:block relative cursor-pointer border-3 border-red-500'>
                             <div className={`h-full grid grid-cols-1 gap-[2px]`}>
                                 <div className='bg-cover object-contain' onClick={() => OpenGallery(1)} style={{ backgroundImage: `url(${prop.Images[1]})`, backgroundPosition: "center", }}></div>
                                 <div className='bg-cover object-contain' onClick={() => OpenGallery(2)} style={{ backgroundImage: `url(${prop.Images[2]})`, backgroundPosition: "center", }}></div>
@@ -582,7 +581,7 @@ const PropertyDetails = () => {
 
                     gallery = <div className='w-full grid grid-cols-2 gap-[2px] h-[70vh] relative overflow-hidden'>
                         <div className='h-full col-span-2 md:col-span-1 bg-cover object-contain cursor-pointer' onClick={() => OpenGallery(0)} style={{ backgroundImage: `url(${prop.Images[0]})`, backgroundPosition: "center", }}></div>
-                        <div className='h-full relative cursor-pointer'>
+                        <div className='h-full hidden md:block relative cursor-pointer'>
                             <div className={`h-full w-full grid grid-cols-2 gap-[2px]`}>
                                 <div className='bg-cover object-contain' onClick={() => OpenGallery(1)} style={{ backgroundImage: `url(${prop.Images[1]})`, backgroundPosition: "center", }}></div>
                                 <div className='bg-cover object-contain' onClick={() => OpenGallery(2)} style={{ backgroundImage: `url(${prop.Images[2]})`, backgroundPosition: "center", }}></div>
@@ -788,11 +787,13 @@ const PropertyDetails = () => {
                                     </div>
                                 </div>
 
-                                <div className='justify-self-end grid grid-cols-2 gap-3 items-center'>
+                                <div className='justify-self-end flex items-center space-x-3'>
                                     <button className='rounded-3xl text-white py-2 px-4 md:px-7 flex items-center justify-center bg-sky-600 
-                            hover:bg-sky-500 hover:drop-shadow-xl font-normal' onClick={() => handleInfo("Info")}>Request Info</button>
+                                    hover:bg-sky-500 hover:drop-shadow-xl font-normal' onClick={() => handleInfo("Info")}>Request Info</button>
                                     <button className='rounded-3xl text-white py-2 px-4 md:px-7 flex items-center justify-center bg-green-600
-                            hover:bg-green-500 hover:drop-shadow-xl font-normal' onClick={() => handleInfo("Question")}>Ask a Question</button>
+                                  hover:bg-green-500 hover:drop-shadow-xl font-normal' onClick={() => handleInfo("Question")}>Ask a Question</button>
+
+                                    <PropFavs ListingId={prop.matrix_unique_id} page='Sticky Details' MLSNumber={prop.MLSNumber} PropAddress={prop.FullAddress} />
                                 </div>
                             </div>
                         </div>
@@ -1234,7 +1235,7 @@ const PropertyDetails = () => {
 
                                     <div className='w-full mt-14'>
                                         <h1 className='w-full font-play-fair-display text-3xl md:text-4xl'>Walk Score</h1>
-                                        <div className='w-full mt-16 grid grid-cols-3'>
+                                        <div className='w-full mt-16 grid grid-cols-1 xs:grid-cols-3 gap-y-10'>
                                             <div className='flex flex-col justify-items-center items-center'>
                                                 <div className=''><BsPersonWalking size={50} /></div>
                                                 <div className='text-2xl font-medium mt-3'>Walk Score<sup>&reg;</sup></div>
