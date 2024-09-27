@@ -26,7 +26,7 @@ function Gallery({ photos, show, closeGallery, initialSlide }: { photos: any[], 
             <div key={index} className='relative flex items-center justify-center'>
                 <img src={`${(image && image != "") ? image : "/no-blog-image-added.png"}`} alt={`Alt here`}
                     onError={(e: any) => { e.target.onerror = null; e.target.src = `/no-blog-image-added.png`; }}
-                    className={`w-auto h-[70vh] m-auto`}
+                    className={`w-auto h-[40vh] 2xs:h-[50vh] sm:h-[70vh] m-auto`}
                 />
             </div>
         ));
@@ -48,7 +48,7 @@ function Gallery({ photos, show, closeGallery, initialSlide }: { photos: any[], 
                       z-20 duration-300" onClick={closeGallery}>
                         <MdClose size={35} className="font-bold text-white" />
                     </div>
-                    <div className="z-10 flex items-center w-full h-[70vh] mt-2 mb-2 relative">
+                    <div className="z-10 flex items-center w-full h-[40vh] 2xs:h-[50vh] sm:h-[70vh] mt-2 mb-2 relative">
                         <div className="absolute w-full h-full">
                             <Slider {...settings} lazyLoad="ondemand" className="w-full">
                                 {slides}
