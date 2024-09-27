@@ -1,5 +1,6 @@
 import pool from "@/_lib/db_conn";
 import { APIResponseProps, BlogDraftsInfo, UpdateAPIParams, UpdateCompanyParams, UpdatePrivacyAndTermsParams } from "@/components/types";
+import moment from "moment";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { PoolConnection } from "mysql2/promise";
 
@@ -76,9 +77,10 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         try{
             
             connection = await pool.getConnection();
-            const field = `google_auth_client_id, google_auth_client_secret, facebook_auth_app_id, facebook_auth_app_secret, google_map_key, 
-            facebook_short_token, facebook_long_token, sendgrid_key, sendgrid_mailer, walkscore_api, twillio_account_sid, twillio_auth_token, 
-            twillio_twiml_sid, twillio_phone_number`;
+            const field = `google_auth_client_id, google_auth_client_secret, facebook_auth_app_id, facebook_auth_app_secret, 
+            google_map_key, facebook_page_app_id, facebook_page_id, facebook_page_app_secret, facebook_page_access_token, 
+            facebook_short_token, facebook_long_token, sendgrid_key, sendgrid_mailer, walkscore_api, twillio_account_sid, 
+            twillio_auth_token, twillio_twiml_sid, twillio_phone_number`;
             const [row] = await connection.query<RowDataPacket[]>(`SELECT ${field} FROM company_info WHERE company_id='1' `);
             if(row.length){
                  
@@ -154,12 +156,13 @@ export class MYSQLCompanyRepo implements CompanyRepo {
 
             connection = await pool.getConnection();
             const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET google_auth_client_id=?, google_auth_client_secret=?, 
-            facebook_auth_app_id=?, facebook_auth_app_secret=?, google_map_key=?, facebook_short_token=?, facebook_long_token=?, 
-            sendgrid_key=?, sendgrid_mailer=?, walkscore_api=?, twillio_account_sid=?, twillio_auth_token=?, twillio_twiml_sid=?, 
-            twillio_phone_number=? WHERE company_id=?`, [params.google_auth_client_id, params.google_auth_client_secret, 
-            params.facebook_auth_app_id, params.facebook_auth_app_secret, params.google_map_key, params.facebook_short_token, 
-            params.facebook_long_token, params.sendgrid_key, params.sendgrid_mailer, params.walkscore_api, params.twillio_account_sid, 
-            params.twillio_auth_token, params.twillio_twiml_sid, params.twillio_phone_number, "1"]
+            facebook_auth_app_id=?, facebook_auth_app_secret=?, google_map_key=?, facebook_page_app_id=?, facebook_page_id=?, 
+            facebook_page_app_secret=?, facebook_short_token=?, facebook_long_token=?, sendgrid_key=?, sendgrid_mailer=?, walkscore_api=?, 
+            twillio_account_sid=?, twillio_auth_token=?, twillio_twiml_sid=?, twillio_phone_number=? WHERE company_id=?`, 
+            [params.google_auth_client_id, params.google_auth_client_secret, params.facebook_auth_app_id, params.facebook_auth_app_secret, 
+            params.google_map_key, params.facebook_page_app_id, params.facebook_page_id, params.facebook_page_app_secret, 
+            params.facebook_short_token, params.facebook_long_token, params.sendgrid_key, params.sendgrid_mailer, params.walkscore_api, 
+            params.twillio_account_sid, params.twillio_auth_token, params.twillio_twiml_sid, params.twillio_phone_number, "1"]
             );
 
             if(result.affectedRows > 0){
@@ -408,6 +411,81 @@ export class MYSQLCompanyRepo implements CompanyRepo {
             }
         }
     
+    }
+
+    public async Update_FB_Tokens(pageAccessToken:string, longLivedUserToken: string, short_token: string, expiry_date: string): Promise<APIResponseProps>{
+
+        const default_rep: APIResponseProps = {
+            message: "",
+            data: null,
+            success: false,
+        }
+        let connection: PoolConnection | null = null;
+        
+        try{
+             
+            connection = await pool.getConnection();
+
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET facebook_page_access_token=?, 
+            facebook_short_token=?, facebook_long_token=?, facebook_long_token_expiry=? WHERE company_id=?`, 
+            [pageAccessToken, short_token, longLivedUserToken, expiry_date, "1"]);
+            if(result.affectedRows > 0){
+                
+                default_rep.success = true
+                default_rep.message = "Success."
+                return default_rep
+
+            }else{
+                default_rep.message = "Unable to update header."
+                return default_rep
+            }
+
+        }catch(e: any){
+            default_rep.message = e.sqlMessage
+            return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
+    public async UpdateLast_FB_Post(): Promise<APIResponseProps>{
+
+        const default_rep: APIResponseProps = {
+            message: "",
+            data: null,
+            success: false,
+        }
+        let connection: PoolConnection | null = null;
+        
+        try{
+             
+            connection = await pool.getConnection();
+            const now = moment().format("YYYY-MM-DD HH:mm:ss");
+            const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET last_facebook_post=? WHERE company_id=?`, 
+            [now, "1"]);
+            if(result.affectedRows > 0){
+                
+                default_rep.success = true
+                default_rep.message = "Success."
+                return default_rep
+
+            }else{
+                default_rep.message = "Unable to update last facebook post time."
+                return default_rep
+            }
+
+        }catch(e: any){
+            default_rep.message = e.sqlMessage
+            return default_rep
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
     }
 
 }

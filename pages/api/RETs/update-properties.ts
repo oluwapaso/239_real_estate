@@ -89,15 +89,14 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                             
                             const ReplyText = objects[0].data.rets["@_ReplyText"];
                             if((ReplyText && ReplyText == "Operation Success.") || (Array.isArray(objects[0].data.rets.data))){
-
-                                if(objects[0].data.rets.columns && objects[0].data.rets.data && !objects[0].data.rets.count){
+                            
+                                if(objects[0].data.rets.columns && objects[0].data.rets.data && objects[0].data.rets.count){
 
                                     //console.dir(objects[0], { depth: null });
                                     // Step 1: Split the columns by tab character (\t)
                                     const columns = objects[0].data.rets.columns.split('\t');
                                     const total_listings = objects[0].data.rets.count["@_Records"];
-                                    console.log("total_listings", total_listings)
-
+                                    
                                     // Step 2: Split the data rows by tab character (\t)
                                     const dataRows = objects[0].data.rets.data.map((row: any) => row.split('\t'));
 

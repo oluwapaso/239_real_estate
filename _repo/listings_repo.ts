@@ -428,9 +428,9 @@ export class MysqlListingsRepo implements ListingsRepo {
             //(SELECT COUNT(*) AS curr_loading FROM properties WHERE AllPixDownloaded='Loading') < 2
             //Makes sure we are not doing too much at a time, because of RETs server Limitation
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT property_id, matrix_unique_id, Images, FullAddress, City 
-            FROM properties WHERE (AllPixDownloaded='No' OR (AllPixDownloaded='Yes' AND Images='[]')) AND Status='Active' 
+            FROM properties WHERE (AllPixDownloaded='No' OR (AllPixDownloaded='Yes' AND Images='[]')) 
             AND (SELECT COUNT(*) AS curr_loading FROM properties WHERE AllPixDownloaded='Loading') < 2 
-            ORDER BY last_image_query ASC LIMIT ${limit}`);
+            ORDER BY last_image_query ASC, CASE WHEN Status='Active' THEN 0 ELSE 1 END LIMIT ${limit}`); // AND Status='Active'
             const property_ids: any[] = [];
 
             if(rows.length){
@@ -1303,10 +1303,13 @@ export class MysqlListingsRepo implements ListingsRepo {
         try{
 
             connection = await pool.getConnection();
-            const [rows] = await connection.query<RowDataPacket[]>(`SELECT c.facebook_page_id, p.property_id, p.BathsTotal, p.BedsTotal 
-            FROM company_info AS c CROSS JOIN properties AS p WHERE c.last_facebook_post<(NOW() - INTERVAL 1 HOUR) 
-            AND p.MatrixModifiedDT >= c.last_facebook_post ORDER BY RAND() LIMIT 1`); 
-            console.log("rows.length", rows.length)
+            const [rows] = await connection.query<RowDataPacket[]>(`SELECT c.facebook_page_id, p.property_id, p.BathsTotal, 
+            p.BedsTotal, p.Images, p.City, p.StateOrProvince, p.FullAddress, p.MLSNumber, p.MLSAreaMajor, p.ListPrice, p.PropertyType, 
+            p.View, p.ApproxLivingArea, p.Amenities, p.TotalArea, p.PostalCode FROM company_info AS c CROSS JOIN properties AS p 
+            WHERE c.last_facebook_post<(NOW() - INTERVAL 1 HOUR) AND p.MatrixModifiedDT >= c.last_facebook_post 
+            AND (p.AllPixDownloaded='Yes' AND p.Images!='[]' AND p.Images IS NOT NULL) AND p.PropertyType='Residential' ORDER BY RAND() 
+            LIMIT 1`); 
+            
             if(rows.length){
                 
                 const formattedRows = rows.map((row) => {

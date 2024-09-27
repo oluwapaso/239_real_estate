@@ -246,6 +246,9 @@ export type UpdateAPIParams = {
     facebook_auth_app_id: string
     facebook_auth_app_secret:number
     google_map_key: string
+    facebook_page_app_id: string 
+    facebook_page_id: string
+    facebook_page_app_secret: string
     facebook_short_token: string
     facebook_long_token: string
     sendgrid_key: string

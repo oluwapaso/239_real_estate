@@ -17,6 +17,7 @@ import { hidePageLoader } from '../../GlobalRedux/user/userSlice'
 import CustomLink from '@/components/CustomLink'
 import { FaStar } from 'react-icons/fa6'
 import { BiInfoCircle } from 'react-icons/bi'
+import { ImFacebook2 } from 'react-icons/im'
 
 const helpers = new Helpers();
 const Dashboard = () => {
@@ -102,6 +103,13 @@ const Dashboard = () => {
                     <div className='settings-card'>
                         <GiProgression className='text-7xl' />
                         <div className='w-full text-center text-xl font-semibold mt-3'>Lead Stages</div>
+                    </div>
+                </CustomLink>
+
+                <CustomLink href="/admin/facebook-page-setup">
+                    <div className='settings-card'>
+                        <ImFacebook2 className='text-7xl' />
+                        <div className='w-full text-center text-xl font-semibold mt-3'>Facebook Token</div>
                     </div>
                 </CustomLink>
 

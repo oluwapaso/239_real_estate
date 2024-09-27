@@ -61,10 +61,12 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
 
                             if (Array.isArray(objects)) {
                                 for (const object of objects) {
+                                
+                                    //const ReplyText = object.data.rets["@_ReplyText"];
                                     if (!object.contentType.includes('xml')) {
 
                                         const key = `${prop_address}-${index}.jpg`; // Define S3 object key
-
+                                        
                                         // Prepare S3 upload parameters
                                         const uploadParams = {
                                             Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME as string, // Your S3 bucket name
@@ -84,7 +86,7 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                                         }
 
                                     }else{
-                                        console.log("if (!object.contentType.includes('xml'))---->failed----") 
+                                        console.log("if (!object.contentType.includes('xml')) -----> faild.") 
                                     }
 
                                     index++;

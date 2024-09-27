@@ -150,10 +150,10 @@ const APISettings = () => {
                                 </div>
                             </div>
 
-                            <div className='w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10 hidden'>
+                            <div className='w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10'>
 
                                 <div className='lg:col-span-1'>
-                                    <div className='font-semibold'>Facebook Post API.</div>
+                                    <div className='font-semibold'>Facebook Page API.</div>
                                     <div className=''>This will be used for posting to facebook page.</div>
                                 </div>
 
@@ -162,15 +162,21 @@ const APISettings = () => {
                                     <div className='w-full grid grid-cols-1 gap-4'>
 
                                         <div className=''>
-                                            <label htmlFor="facebook_short_token" className='form-label'>Short Token</label>
-                                            <Field type="text" name="facebook_short_token" className='form-field' placeholder='Long Token' />
-                                            <ErrorMessage name="facebook_short_token" component="div" className='text-red-600' />
+                                            <label htmlFor="facebook_page_app_id" className='form-label'>FB Business App ID</label>
+                                            <Field type="text" name="facebook_page_app_id" className='form-field' placeholder='FB Business App ID' />
+                                            <ErrorMessage name="facebook_page_app_id" component="div" className='text-red-600' />
                                         </div>
 
                                         <div className=''>
-                                            <label htmlFor="facebook_long_token" className='form-label'>Long Token</label>
-                                            <Field name="facebook_long_token" className='form-field' placeholder="Long Token" />
-                                            <ErrorMessage name="facebook_long_token" component="div" className='text-red-600' />
+                                            <label htmlFor="facebook_page_app_secret" className='form-label'>FB Business App Secret</label>
+                                            <Field name="facebook_page_app_secret" className='form-field' placeholder="FB Business App Secret" />
+                                            <ErrorMessage name="facebook_page_app_secret" component="div" className='text-red-600' />
+                                        </div>
+
+                                        <div className=''>
+                                            <label htmlFor="facebook_page_id" className='form-label'>Facebook Page ID</label>
+                                            <Field name="facebook_page_id" className='form-field' placeholder="Facebook Page ID" />
+                                            <ErrorMessage name="facebook_page_id" component="div" className='text-red-600' />
                                         </div>
                                     </div>
 
@@ -200,7 +206,7 @@ const APISettings = () => {
                                             <ErrorMessage name="twillio_auth_token" component="div" className='text-red-600' />
                                         </div>
 
-                                        <div className=''>
+                                        <div className='hidden'>
                                             <label htmlFor="twillio_twiml_sid" className='form-label'>Twiml SID</label>
                                             <Field name="twillio_twiml_sid" className='form-field' placeholder="Twiml SID" />
                                             <ErrorMessage name="twillio_twiml_sid" component="div" className='text-red-600' />
