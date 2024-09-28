@@ -1423,12 +1423,12 @@ export class Helpers {
                 prop_type_query = this.rTrim(prop_type_query, "OR");
                 if(prop_type_query!=""){
                     //prop_type_query = ` AND (${prop_type_query})`;
-                    prop_type_query = ` ((${prop_type_query}) ${qry_beds} ${qry_baths})`;
+                    prop_type_query = ` (${prop_type_query} ${qry_beds} ${qry_baths})`;
                 }
 
                 sub_prop_type_query = this.rTrim(sub_prop_type_query, "OR");
                 if(sub_prop_type_query!=""){
-                    sub_prop_type_query = ` OR ${sub_prop_type_query}`;
+                    sub_prop_type_query = `${prop_type_query != "" ? " OR ":""} ${sub_prop_type_query}`;
                 }
 
                 if((prop_type_query && prop_type_query !="") || (sub_prop_type_query && sub_prop_type_query !="") || 

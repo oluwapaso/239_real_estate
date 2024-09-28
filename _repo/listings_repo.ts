@@ -274,7 +274,8 @@ export class MysqlListingsRepo implements ListingsRepo {
                     map_filter = ` ST_CONTAINS(ST_GeomFromText('POLYGON((${snappedPoly}))'), POINT(Latitude, Longitude))`;
                     drawn_filter = ` AND ${map_filter}`;
                 }
-
+                
+                // console.log(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} ORDER BY ${order_by} LIMIT ${start_from}, ${limit}  -`);
                 if(params.mobile_view == "Map"){
                     
                     [rows] = await connection.query<RowDataPacket[]>(`SELECT ${fields} FROM properties WHERE City!="0" ${search_filter} AND ${map_filter} 

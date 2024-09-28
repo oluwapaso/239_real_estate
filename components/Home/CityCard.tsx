@@ -7,9 +7,9 @@ const helper = new Helpers();
 const CityCard = ({ city }: { city: any }) => {
     return (
         <>
-            <div className='border border-primary/30 grid grid-cols-5 shadow-md hover:shadow-xl hover:scale-[1.03] duration-300 
-                cursor-pointer rounded-md overflow-hidden bg-white h-52'>
-                <div className='col-span-2 !bg-cover !bg-center' style={{ background: `url(${city?.header_image?.image_loc})` }}>
+            <div className='border border-primary/30 grid grid-cols-1 lg:grid-cols-5 shadow-md hover:shadow-xl hover:scale-[1.03] duration-300 
+                cursor-pointer rounded-md overflow-hidden bg-white h--52'>
+                <div className='col-span-2 !bg-cover !bg-center h-36 lg:h-auto' style={{ background: `url(${city?.header_image?.image_loc})` }}>
 
                 </div>
                 <div className='col-span-3 py-3 px-4 flex flex-col text-primary'>
