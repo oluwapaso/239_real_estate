@@ -122,6 +122,15 @@ const FIltersComponent = ({ filter_values, setFilterValues, tab }: {
         })
     }
 
+    const handleFilterChangeStr = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterValues((prev_val) => {
+            return {
+                ...prev_val,
+                [e.target.name]: e.target.value,
+            }
+        })
+    }
+
     const handleResetFilter = () => {
         setFilterValues({
             min_price: 0,
@@ -130,6 +139,9 @@ const FIltersComponent = ({ filter_values, setFilterValues, tab }: {
             max_beds: 0,
             min_baths: 0,
             max_baths: 0,
+            home_type: "Any",
+            must_have_pool: "No",
+            must_have_view: "No",
         });
     }
 
@@ -138,13 +150,13 @@ const FIltersComponent = ({ filter_values, setFilterValues, tab }: {
     }
 
     return (
-        <div className={`w-[100px] px-3 py-2 transition-all duration-500 cursor-pointer hidden  ${tab == "Rent" ? "xs:block" : "sm:block"}`}>
+        <div className={`w-[100px] px-3 py-2 transition-all duration-500 cursor-pointer hidden ${tab == "Rent" ? "xs:block" : "sm:block"}`}>
             <button className='flex items-center justify-between' onClick={handleShow}>
                 <span className='w-[55px] text-left'>Filters</span>
                 <span className={`${isShown ? "rotate-180" : null}`}><RiEqualizerLine size={24} /></span>
             </button>
             <div className={`status-lists w-full max-w-[700px] right-0 absolute shadow-xl bg-transparent pt-4 ${isShown ? "block" : "hidden"}`}>
-                <div className='bg-white mt-1 h-[260px] relative flex flex-col justify-end'>
+                <div className='bg-white mt-1 h-[460px] relative flex flex-col justify-end'>
                     <div className='main-filter-body flex-grow p-4'>
                         <div className='w-full'>
                             <FieldHeader text="Price Range" />
@@ -247,6 +259,62 @@ const FIltersComponent = ({ filter_values, setFilterValues, tab }: {
 
                             </div>
                         </div>
+
+                        <div className='w-full mt-7'>
+                            <div className='w-full grid grid-cols-[1fr_max-content_1fr]'>
+                                <div>
+                                    <div className='w-full'>
+                                        <FieldHeader text="Property Type" />
+                                        <div className='mt-2 w-full'>
+                                            <select className='form-control' name='home_type' value={filter_values.home_type}
+                                                onChange={(e) => { handleFilterChangeStr(e); }}>
+                                                <option value="Any">Any</option>
+                                                <option value="House">House</option>
+                                                <option value="Single Family">Single Family</option>
+                                                <option value="Condo">Condo</option>
+                                                <option value="Commercial">Commercial</option>
+                                                <option value="Land">Land</option>
+                                                <option value="Boat Dock">Boat Dock</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className='px-4 select-none text-white opacity-0'>to</div>
+
+                                <div>
+                                    <div className='w-full'>
+                                        <FieldHeader text="Must Have Pool?" />
+                                        <div className='mt-2 w-full'>
+                                            <select className='form-control' name='must_have_pool' value={filter_values.must_have_pool}
+                                                onChange={(e) => { handleFilterChangeStr(e); }}>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className='w-full mt-7'>
+                            <div className='w-full grid grid-cols-[1fr_max-content_1fr]'>
+                                <div>
+                                    <div className='w-full'>
+                                        <FieldHeader text="Must Have View?" />
+                                        <div className='mt-2 w-full'>
+                                            <select className='form-control' name='must_have_view' value={filter_values.must_have_view}
+                                                onChange={(e) => { handleFilterChangeStr(e); }}>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div className='home-filter-footer w-full h-[45px] py-1 px-2 bg-gray-200 flex justify-between items-center *:font-normal'>
                         <button className='hover:bg-white border border-gray-200 hover:border-primary px-3 py-1 text-sm 

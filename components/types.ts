@@ -24,6 +24,9 @@ export type FilterValueTypes = {
     max_beds: number,
     min_baths: number,
     max_baths: number,
+    must_have_pool?: string,
+    must_have_view?: string,
+    home_type?: string,
 }
 
 export type NeigbourhoodType = {
