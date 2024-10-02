@@ -148,7 +148,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                                     <div style="width: 100%; margin-top: 15px;">
                                         <div style="width: 100%; font-weight: bold;">${prop.FullAddress}, ${prop.City}</div>
                                         <div style="width: 100%; font-weight: bold; font-size: 25px; margin-top: 5px;">${numeral(prop.ListPrice).format("$0,0")}</div>
-                                        <div style="width: 100%; margin-top: 0px; font-size: 13px;">${properties[0].BedsTotal} BEDS, 
+                                        <div style="width: 100%; margin-top: 0px; font-size: 13px;">${properties.BedsTotal} BEDS, 
                                         ${numeral(prop.BathsTotal).format("0,0")} BATHS, ${numeral(prop.TotalArea).format("0,0")} SQFT</div>
                                         
                                         <div style="margin-top: 14px;">
