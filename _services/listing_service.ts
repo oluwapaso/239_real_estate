@@ -347,7 +347,7 @@ ${sc.Amenities ? `🎯 𝗔𝗺𝗲𝗻𝗶𝘁𝗶𝗲𝘀: ${sc.Amenities}` : 
             }
 
             await this.postPropertyWithImages(pageAccessToken, message, sc.facebook_page_id, post_images); 
-            await com_repo.UpdateLast_FB_Post();
+            await com_repo.UpdateLast_FB_Post(sc.MatrixModifiedDT);
 
             default_resp.success = true;
             default_resp.message = "New property found";

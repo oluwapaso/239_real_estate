@@ -1306,10 +1306,10 @@ export class MysqlListingsRepo implements ListingsRepo {
             connection = await pool.getConnection();
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT c.facebook_page_id, p.property_id, p.BathsTotal, 
             p.BedsTotal, p.Images, p.City, p.StateOrProvince, p.FullAddress, p.MLSNumber, p.MLSAreaMajor, p.ListPrice, p.PropertyType, 
-            p.View, p.ApproxLivingArea, p.Amenities, p.TotalArea, p.PostalCode FROM company_info AS c CROSS JOIN properties AS p 
-            WHERE c.last_facebook_post<(NOW() - INTERVAL 1 HOUR) AND p.MatrixModifiedDT >= c.last_facebook_post 
-            AND (p.AllPixDownloaded='Yes' AND p.Images!='[]' AND p.Images IS NOT NULL) AND p.PropertyType='Residential' ORDER BY RAND() 
-            LIMIT 1`); 
+            p.View, p.ApproxLivingArea, p.Amenities, p.TotalArea, p.PostalCode, p.MatrixModifiedDT FROM company_info AS c 
+            CROSS JOIN properties AS p WHERE p.MatrixModifiedDT >= c.last_facebook_post AND (p.AllPixDownloaded='Yes' 
+            AND p.Images!='[]' AND p.Images IS NOT NULL) AND p.PropertyType='Residential' ORDER BY RAND() LIMIT 1`); 
+            // c.last_facebook_post<(NOW() - INTERVAL 1 HOUR) AND
             
             if(rows.length){
                 

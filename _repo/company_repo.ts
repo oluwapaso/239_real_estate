@@ -451,7 +451,7 @@ export class MYSQLCompanyRepo implements CompanyRepo {
 
     }
 
-    public async UpdateLast_FB_Post(): Promise<APIResponseProps>{
+    public async UpdateLast_FB_Post(MatrixModifiedDT: any): Promise<APIResponseProps>{
 
         const default_rep: APIResponseProps = {
             message: "",
@@ -463,7 +463,8 @@ export class MYSQLCompanyRepo implements CompanyRepo {
         try{
              
             connection = await pool.getConnection();
-            const now = moment().format("YYYY-MM-DD HH:mm:ss");
+            const now = moment(MatrixModifiedDT).format("YYYY-MM-DD HH:mm:ss");
+            console.log("Setting ast fb update to", now)
             const [result] = await connection.query<ResultSetHeader>(`UPDATE company_info SET last_facebook_post=? WHERE company_id=?`, 
             [now, "1"]);
             if(result.affectedRows > 0){
