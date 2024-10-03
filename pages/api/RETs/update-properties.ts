@@ -96,103 +96,116 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                                     // Step 1: Split the columns by tab character (\t)
                                     const columns = objects[0].data.rets.columns.split('\t');
                                     const total_listings = objects[0].data.rets.count["@_Records"];
-                                    
-                                    // Step 2: Split the data rows by tab character (\t)
-                                    const dataRows = objects[0].data.rets.data.map((row: any) => row.split('\t'));
+                                    console.log("total_listings", total_listings)
+                                    if(Array.isArray(objects[0].data.rets.data)){
 
-                                    // Step 3: Combine columns with data rows
-                                    const processedData = dataRows.map((row: any) => {
-                                        let rowData: { [key: string]: string } = {};
-                                        columns.forEach((col: any, index: any) => {
-                                            rowData[col] = row[index] || '';
+                                        // Step 2: Split the data rows by tab character (\t)
+                                        const dataRows = objects[0].data.rets.data.map((row: any) => row.split('\t'));
+
+                                        // Step 3: Combine columns with data rows
+                                        const processedData = dataRows.map((row: any) => {
+                                            let rowData: { [key: string]: string } = {};
+                                            columns.forEach((col: any, index: any) => {
+                                                rowData[col] = row[index] || '';
+                                            });
+                                            return rowData;
                                         });
-                                        return rowData;
-                                    });
 
-                                    const cleanedData = processedData.map((obj: any) => {
-                                        return Object.fromEntries(
-                                            Object.entries(obj).filter(([key, value]) => value !== '')
-                                        );
-                                    });
+                                        const cleanedData = processedData.map((obj: any) => {
+                                            return Object.fromEntries(
+                                                Object.entries(obj).filter(([key, value]) => value !== '')
+                                            );
+                                        });
 
-                                    // Step 4: Use the processed data
-                                    //console.log("cleanedData", cleanedData);
-                                    if(cleanedData && cleanedData.length >0){
+                                        // Step 4: Use the processed data
+                                        //console.log("cleanedData", cleanedData);
+                                        if(cleanedData && cleanedData.length >0){
 
-                                        const addPromises = cleanedData.map(async (elem: any) => {
-                                
-                                            const fields: string[] = [];
-                                            const values: any[] = [];
-                                            //let values = "";
-                                            let update_cond = "";
-                                            
-                                            ListingsFields.forEach(field => {
+                                            const addPromises = cleanedData.map(async (elem: any) => {
+                                    
+                                                const fields: string[] = [];
+                                                const values: any[] = [];
+                                                //let values = "";
+                                                let update_cond = "";
                                                 
-                                                //If field exists in data object, then we are game!
-                                                if(field in elem){
+                                                ListingsFields.forEach(field => {
+                                                    
+                                                    //If field exists in data object, then we are game!
+                                                    if(field in elem){
 
-                                                    fields.push(field);
-                                                    let value = elem[field];
-                                                    //values += `'${value}',`;
+                                                        fields.push(field);
+                                                        let value = elem[field];
+                                                        //values += `'${value}',`;
 
-                                                    if(ListingsJsonFields.includes(field)){
-                                                        values.push(JSON.stringify(value));
-                                                    }else{
-                                                        values.push(`${value}`);
+                                                        if(ListingsJsonFields.includes(field)){
+                                                            values.push(JSON.stringify(value));
+                                                        }else{
+                                                            values.push(`${value}`);
+                                                        }
+                                                        
+                                                        /** Build for update **/
+                                                        update_cond += `${field}=VALUES(${field}),`;
+                                                        /** Build for update **/
+                                                        
                                                     }
-                                                    
-                                                    /** Build for update **/
-                                                    update_cond += `${field}=VALUES(${field}),`;
-                                                    /** Build for update **/
-                                                    
+
+                                                });
+                                                
+                                                if(typeof elem == "object"){
+                                                    elem = JSON.stringify(elem);
                                                 }
 
+                                                if(update_cond && update_cond!=""){
+                                                    update_cond += `PropertyClass='${prop_class}', AllPixDownloaded='No'`;   
+                                                }             
+
+                                                const field_string = fields.join(",");
+                                                if(field_string && field_string!="" && values && values.length > 0 ){
+
+                                                    const placeholders = Array.from({length: values.length}, () => "?").join(", ");
+                                                    update_cond = helpers.rTrim(update_cond, ",");
+                                                    //values = this.helpers.rTrim(values, ",");
+
+                                                    const isAdded = await propRepo.AddNewListing(prop_class, field_string, values, placeholders, 
+                                                    update_cond, elem);
+                                                    console.log("isAdded", isAdded)
+                                                }
+
+                                                counter++;
                                             });
+
+                                            await Promise.all(addPromises);
                                             
-                                            if(typeof elem == "object"){
-                                                elem = JSON.stringify(elem);
+                                            const new_skip = skip_count + counter; 
+                                            let updateSkips = "";
+                                            if (total_listings > new_skip) {
+                                                let modifiedDate = modified_date.replace("T", " ");
+                                                modifiedDate = modifiedDate.replace("+", "");
+                                                updateSkips = `UPDATE refresh_skips SET ${skip_col_date}='${modifiedDate}', ${skip_col_count}='${new_skip}' WHERE skip_id='1'`;
+                                            } else {
+                                                updateSkips = `UPDATE refresh_skips SET ${skip_col_date}=NULL, ${skip_col_count}='0' WHERE skip_id='1'`;
                                             }
 
-                                            if(update_cond && update_cond!=""){
-                                                update_cond += `PropertyClass='${prop_class}', AllPixDownloaded='No'`;   
-                                            }             
-
-                                            const field_string = fields.join(",");
-                                            if(field_string && field_string!="" && values && values.length > 0 ){
-
-                                                const placeholders = Array.from({length: values.length}, () => "?").join(", ");
-                                                update_cond = helpers.rTrim(update_cond, ",");
-                                                //values = this.helpers.rTrim(values, ",");
-
-                                                const isAdded = await propRepo.AddNewListing(prop_class, field_string, values, placeholders, 
-                                                update_cond, elem);
-                                                console.log("isAdded", isAdded)
+                                            const isUpdated = await propRepo.UpdateRefreshSkip(updateSkips);
+                                            if(isUpdated){
+                                                console.log(`${skip_col_date} will now skip ${new_skip} properties`)
+                                            }else {
+                                                console.log(`Error updating {skip_col_date} skips`)
                                             }
 
-                                            counter++;
-                                        });
+                                            console.log("Done");
 
-                                        await Promise.all(addPromises);
+                                        }else{
+
+                                            const updateSkips = `UPDATE refresh_skips SET ${skip_col_date}=NULL, ${skip_col_count}='0' WHERE skip_id='1'`;
+                                            const isUpdated = await propRepo.UpdateRefreshSkip(updateSkips);
+                                            if(isUpdated){
+                                                console.log(`${skip_col_date} will now skip 0 properties`)
+                                            }else {
+                                                console.log(`Error updating {skip_col_date} skips`)
+                                            }
+                                        }
                                         
-                                        const new_skip = skip_count + counter; 
-                                        let updateSkips = "";
-                                        if (total_listings > new_skip) {
-                                            let modifiedDate = modified_date.replace("T", " ");
-                                            modifiedDate = modifiedDate.replace("+", "");
-                                            updateSkips = `UPDATE refresh_skips SET ${skip_col_date}='${modifiedDate}', ${skip_col_count}='${new_skip}' WHERE skip_id='1'`;
-                                        } else {
-                                            updateSkips = `UPDATE refresh_skips SET ${skip_col_date}=NULL, ${skip_col_count}='0' WHERE skip_id='1'`;
-                                        }
-
-                                        const isUpdated = await propRepo.UpdateRefreshSkip(updateSkips);
-                                        if(isUpdated){
-                                            console.log(`${skip_col_date} will now skip ${new_skip} properties`)
-                                        }else {
-                                            console.log(`Error updating {skip_col_date} skips`)
-                                        }
-
-                                        console.log("Done");
-
                                     }else{
 
                                         const updateSkips = `UPDATE refresh_skips SET ${skip_col_date}=NULL, ${skip_col_count}='0' WHERE skip_id='1'`;
