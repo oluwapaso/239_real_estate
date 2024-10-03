@@ -502,9 +502,10 @@ export class MysqlListingsRepo implements ListingsRepo {
         let connection: PoolConnection | null = null;
         try{
 
-            connection = await pool.getConnection();   
-            const [up_result] = await connection.query<ResultSetHeader>(`UPDATE properties SET AllPixDownloaded='No' 
-            WHERE AllPixDownloaded='Loading'`);
+            connection = await pool.getConnection();
+            const synched = moment().format('YYYY-MM-DD HH:mm:ss');   
+            const [up_result] = await connection.query<ResultSetHeader>(`UPDATE properties SET AllPixDownloaded=?, last_image_query=? 
+            WHERE AllPixDownloaded='Loading'`,  ["No", synched]);
 
             if(up_result.affectedRows > 0) {
                 console.log("Property image updated");
