@@ -497,6 +497,34 @@ export class MysqlListingsRepo implements ListingsRepo {
 
     }
 
+    public async ReleasePropImages(): Promise<boolean>{
+
+        let connection: PoolConnection | null = null;
+        try{
+
+            connection = await pool.getConnection();   
+            const [up_result] = await connection.query<ResultSetHeader>(`UPDATE properties SET AllPixDownloaded='No' 
+            WHERE AllPixDownloaded='Loading'`);
+
+            if(up_result.affectedRows > 0) {
+                console.log("Property image updated");
+                return true;
+            } else{
+                console.log("Unable to update property image");
+                return false;
+            }
+
+        }catch(e: any){
+            console.log(e.sqlMessage);
+            return false;
+        }finally{
+            if (connection) { 
+                connection.release();
+            }
+        }
+
+    }
+
     public async AddUploadedImages(property_id:number, medias: any[]): Promise<boolean> {
 
         let connection: PoolConnection | null = null;

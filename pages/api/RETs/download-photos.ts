@@ -109,6 +109,9 @@ export default async function handler(req: NextApiRequest, resp: NextApiResponse
                     // Wait for all promises to resolve
                     await Promise.all(uploadPromises);
 
+                }else{
+                    console.log("Releasing Properties From Loading State")
+                    const update_prms = propRepo.ReleasePropImages();
                 }
 
                 // Log out
