@@ -102,32 +102,7 @@ export default async function handler(req: NextApiRequest, resp:NextApiResponse)
                                 if(index % 2 == 0){
                                     extra = '<div style="width: 2%; margin-bottom: 30px; display: inline-block; float: left; color: white;">.</div>';
                                 }
-                                /**
-                                 * 
-                                 *  <div style="width: 49%; margin-bottom: 30px; display: inline-block; float: left;">
-                                    <div style="width: 100%;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" style="width: 100%;">
-                                        <img src="${(prop.Images && prop.Images[0]) ? prop.Images[0] : no_image}" style="width: 100%; height: 180px;" />
-                                        </a>
-                                    </div>
-                                    
-                                    <div style="width: 100%; margin-top: 5px;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" 
-                                        style="width: 100%; text-decoration: none; color: #222;">
-                                        <div style="width: 100%; font-weight: bold;">${prop.FullAddress}, ${prop.City}</div>
-                                        <div style="width: 100%; font-weight: bold; font-size: 25px; margin-top: 5px;">${numeral(prop.ListPrice).format("$0,0")}</div>
-                                        <div style="width: 100%; margin-top: 0px; font-size: 13px;">${prop.BedsTotal} BEDS, 
-                                        ${numeral(properties[0].BathsTotal).format("0,0")} BATHS, ${numeral(prop.TotalArea).format("0,0")} SQFT</div>
-                                        </a>
-
-                                        <div style="margin-top: 14px;">
-                                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/listings/${prop.MLSNumber}/${prop_address}" 
-                                        style="padding: 12px 18px; text-align: center; background-color: #222; color: white; 
-                                        width: 140px; border-radius: 4px; text-decoration: none;">More Details</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                 */
+                                
                                 rest += `
                                 ${extra}
                                 <div style="width: 100%; margin-top: 15px;">
